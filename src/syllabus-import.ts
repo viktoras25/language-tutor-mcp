@@ -170,26 +170,36 @@ export function buildSyllabusImport(plan: CompiledSyllabus, contentHash: string,
     });
   }
 
-  // Every topic is an item (grammar_point, label = topic id). Existing items keep their data and attempts:
-  // the two syllabus fields are merged into data with a JSON merge patch, nothing else is touched.
-  for (const t of plan.topics) {
-    out.push({
-      sql: `INSERT INTO items (id, lang, type, label, data_json) VALUES (?1, ?2, 'grammar_point', ?3, ?4)
-            ON CONFLICT(id) DO UPDATE SET data_json = json_patch(COALESCE(items.data_json, '{}'), excluded.data_json)`,
-      params: [topicItemId(lang, t.id), lang, t.id, json({ syllabus_module: t.module, syllabus_kind: t.kind })],
-    });
-  }
-  // Mirror of syllabus_requires between items, so get_context shows prerequisites as neighbors.
-  // Direction as elsewhere: src requires dst.
-  for (const t of plan.topics) {
-    for (const r of t.requires) {
-      out.push({
-        sql: "INSERT OR IGNORE INTO edges (src, dst, type) VALUES (?1, ?2, 'requires')",
-        params: [topicItemId(lang, t.id), topicItemId(lang, r)],
-      });
-    }
-  }
+  for (const s of buildProvision(null, lang)) out.push(s);
   return out;
+}
+
+// Gives users their own copy of the topic items and prerequisite edges, which are per-user rows.
+// Statements read the syllabus_* tables, so they must run after the plan was imported.
+// userId null = every user (plan import), a value = one new user (user:add). lang null = every language.
+// Every topic is an item (grammar_point, label = topic id). Existing items keep their data and attempts:
+// the two syllabus fields are merged into data with a JSON merge patch, nothing else is touched.
+export function buildProvision(userId: string | null, lang: string | null): Statement[] {
+  return [
+    {
+      sql: `INSERT INTO items (user_id, id, lang, type, label, data_json)
+            SELECT u.id, t.lang || ':grammar_point:' || t.id, t.lang, 'grammar_point', t.id,
+              json_object('syllabus_module', t.module_id, 'syllabus_kind', t.kind)
+            FROM users u CROSS JOIN syllabus_topics t
+            WHERE (?1 IS NULL OR u.id = ?1) AND (?2 IS NULL OR t.lang = ?2)
+            ON CONFLICT(user_id, id) DO UPDATE SET data_json = json_patch(COALESCE(items.data_json, '{}'), excluded.data_json)`,
+      params: [userId, lang],
+    },
+    // Mirror of syllabus_requires between items, so get_context shows prerequisites as neighbors.
+    // Direction as elsewhere: src requires dst.
+    {
+      sql: `INSERT OR IGNORE INTO edges (user_id, src, dst, type)
+            SELECT u.id, r.lang || ':grammar_point:' || r.topic_id, r.lang || ':grammar_point:' || r.requires_id, 'requires'
+            FROM users u CROSS JOIN syllabus_requires r
+            WHERE (?1 IS NULL OR u.id = ?1) AND (?2 IS NULL OR r.lang = ?2)`,
+      params: [userId, lang],
+    },
+  ];
 }
 
 // "2026-10-15" -> "2026-10-15T00:00:00.000Z"
@@ -198,30 +208,30 @@ function seedTimestamp(date: string | undefined, fallback: string): string {
   return date.length === 10 ? `${date}T00:00:00.000Z` : date;
 }
 
-// Seed import. Meant to run once: it never overwrites a profile or a topic status that already exists,
+// Seed import for one user. Meant to run once: it never overwrites a profile or a topic status that already exists,
 // so running it again after real lessons cannot undo progress.
-export function buildSeedImport(seed: LearnerSeed, importedAt: string): Statement[] {
+export function buildSeedImport(seed: LearnerSeed, importedAt: string, userId: string): Statement[] {
   const out: Statement[] = [];
   out.push({
-    sql: `INSERT INTO learner_profile (id, ui_lang, known_langs_json, variety, packs_json) VALUES (1, ?1, ?2, ?3, ?4)
-          ON CONFLICT(id) DO NOTHING`,
-    params: [seed.profile.ui_lang, json(seed.profile.known_langs), seed.profile.variety ?? null, json(seed.profile.packs)],
+    sql: `INSERT INTO learner_profile (user_id, ui_lang, known_langs_json, variety, packs_json) VALUES (?1, ?2, ?3, ?4, ?5)
+          ON CONFLICT(user_id) DO NOTHING`,
+    params: [userId, seed.profile.ui_lang, json(seed.profile.known_langs), seed.profile.variety ?? null, json(seed.profile.packs)],
   });
   for (const topicId of Object.keys(seed.topics)) {
     const t = seed.topics[topicId];
     out.push({
-      sql: `INSERT INTO learner_topics (lang, topic_id, status, changed_at, lesson, source, note)
-            VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
-            ON CONFLICT(lang, topic_id) DO NOTHING`,
-      params: [seed.lang, topicId, t.status, seedTimestamp(t.date, importedAt), t.lesson ?? null, t.source ?? "seed", t.note ?? null],
+      sql: `INSERT INTO learner_topics (user_id, lang, topic_id, status, changed_at, lesson, source, note)
+            VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)
+            ON CONFLICT(user_id, lang, topic_id) DO NOTHING`,
+      params: [userId, seed.lang, topicId, t.status, seedTimestamp(t.date, importedAt), t.lesson ?? null, t.source ?? "seed", t.note ?? null],
     });
   }
   // item --part_of--> topic. Skipped for an item that does not exist, so nothing dangling is created.
   for (const itemId of Object.keys(seed.part_of)) {
     out.push({
-      sql: `INSERT OR IGNORE INTO edges (src, dst, type)
-            SELECT ?1, ?2, 'part_of' WHERE EXISTS (SELECT 1 FROM items WHERE id = ?1)`,
-      params: [itemId, topicItemId(seed.lang, seed.part_of[itemId])],
+      sql: `INSERT OR IGNORE INTO edges (user_id, src, dst, type)
+            SELECT ?1, ?2, ?3, 'part_of' WHERE EXISTS (SELECT 1 FROM items WHERE user_id = ?1 AND id = ?2)`,
+      params: [userId, itemId, topicItemId(seed.lang, seed.part_of[itemId])],
     });
   }
   return out;

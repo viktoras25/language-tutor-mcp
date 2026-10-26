@@ -111,17 +111,23 @@ function recentSince(): string {
 // SQL that lists the items of every topic of a language: the topic's own item and items linked with part_of.
 const TOPIC_ITEMS_SQL = `
   SELECT t.id AS topic_id, t.lang || ':grammar_point:' || t.id AS item_id
-  FROM syllabus_topics t WHERE t.lang = ?1
+  FROM syllabus_topics t WHERE t.lang = ?2
   UNION
   SELECT t.id, e.src
   FROM edges e JOIN syllabus_topics t ON e.dst = t.lang || ':grammar_point:' || t.id
-  WHERE e.type = 'part_of' AND t.lang = ?1`;
+  WHERE e.user_id = ?1 AND e.type = 'part_of' AND t.lang = ?2`;
 
 export class D1Syllabus implements SyllabusStore {
-  constructor(private db: D1Database) {}
+  constructor(
+    private db: D1Database,
+    private userId: string,
+  ) {}
 
   async getProfile(): Promise<Profile> {
-    const row = await this.db.prepare("SELECT * FROM learner_profile WHERE id = 1").first<ProfileRow>();
+    const row = await this.db
+      .prepare("SELECT * FROM learner_profile WHERE user_id = ?1")
+      .bind(this.userId)
+      .first<ProfileRow>();
     return toProfile(row);
   }
 
@@ -135,11 +141,11 @@ export class D1Syllabus implements SyllabusStore {
     };
     await this.db
       .prepare(
-        `INSERT INTO learner_profile (id, ui_lang, known_langs_json, variety, packs_json) VALUES (1, ?1, ?2, ?3, ?4)
-         ON CONFLICT(id) DO UPDATE SET ui_lang = excluded.ui_lang, known_langs_json = excluded.known_langs_json,
+        `INSERT INTO learner_profile (user_id, ui_lang, known_langs_json, variety, packs_json) VALUES (?1, ?2, ?3, ?4, ?5)
+         ON CONFLICT(user_id) DO UPDATE SET ui_lang = excluded.ui_lang, known_langs_json = excluded.known_langs_json,
            variety = excluded.variety, packs_json = excluded.packs_json`,
       )
-      .bind(next.ui_lang, JSON.stringify(next.known_langs), next.variety, JSON.stringify(next.packs))
+      .bind(this.userId, next.ui_lang, JSON.stringify(next.known_langs), next.variety, JSON.stringify(next.packs))
       .run();
     return next;
   }
@@ -149,7 +155,7 @@ export class D1Syllabus implements SyllabusStore {
     const since = recentSince();
     const results = await this.db.batch([
       this.db.prepare("SELECT variety FROM syllabus_meta WHERE lang = ?1").bind(lang),
-      this.db.prepare("SELECT * FROM learner_profile WHERE id = 1"),
+      this.db.prepare("SELECT * FROM learner_profile WHERE user_id = ?1").bind(this.userId),
       this.db.prepare("SELECT id, level, ord, title FROM syllabus_modules WHERE deprecated = 0 ORDER BY ord"),
       this.db
         .prepare(
@@ -157,19 +163,24 @@ export class D1Syllabus implements SyllabusStore {
         )
         .bind(lang),
       this.db.prepare("SELECT topic_id, requires_id FROM syllabus_requires WHERE lang = ?1").bind(lang),
-      this.db.prepare("SELECT topic_id, status, changed_at FROM learner_topics WHERE lang = ?1").bind(lang),
+      this.db
+        .prepare("SELECT topic_id, status, changed_at FROM learner_topics WHERE user_id = ?1 AND lang = ?2")
+        .bind(this.userId, lang),
       this.db
         .prepare(
           `SELECT el.topic_id, el.item_id, COALESCE(s.status, 'new') AS srs_status,
-             (SELECT COUNT(*) FROM attempts a WHERE a.item_id = el.item_id AND a.correct = 0 AND a.ts >= ?2) AS recent_wrong
+             (SELECT COUNT(*) FROM attempts a
+              WHERE a.user_id = ?1 AND a.item_id = el.item_id AND a.correct = 0 AND a.ts >= ?3) AS recent_wrong
            FROM (${TOPIC_ITEMS_SQL}) el
-           JOIN items i ON i.id = el.item_id
-           LEFT JOIN item_srs s ON s.item_id = el.item_id`,
+           JOIN items i ON i.user_id = ?1 AND i.id = el.item_id
+           LEFT JOIN item_srs s ON s.user_id = ?1 AND s.item_id = el.item_id`,
         )
-        .bind(lang, since),
+        .bind(this.userId, lang, since),
       this.db
-        .prepare("SELECT module_id, passed, ts FROM learner_checkpoints WHERE lang = ?1 ORDER BY ts, id")
-        .bind(lang),
+        .prepare(
+          "SELECT module_id, passed, ts FROM learner_checkpoints WHERE user_id = ?1 AND lang = ?2 ORDER BY ts, id",
+        )
+        .bind(this.userId, lang),
     ]);
 
     const meta = results[0].results[0] as unknown as { variety: string } | undefined;
@@ -312,32 +323,35 @@ export class D1Syllabus implements SyllabusStore {
     const itemId = itemIdOf(lang, topicId);
     const results = await this.db.batch([
       this.db.prepare("SELECT * FROM syllabus_topics WHERE lang = ?1 AND id = ?2").bind(lang, topicId),
-      this.db.prepare("SELECT * FROM learner_profile WHERE id = 1"),
-      this.db.prepare("SELECT status FROM learner_topics WHERE lang = ?1 AND topic_id = ?2").bind(lang, topicId),
+      this.db.prepare("SELECT * FROM learner_profile WHERE user_id = ?1").bind(this.userId),
+      this.db
+        .prepare("SELECT status FROM learner_topics WHERE user_id = ?1 AND lang = ?2 AND topic_id = ?3")
+        .bind(this.userId, lang, topicId),
       this.db
         .prepare(
           `SELECT t.id, t.title, lt.status
            FROM syllabus_requires r
            JOIN syllabus_topics t ON t.lang = r.lang AND t.id = r.requires_id
-           LEFT JOIN learner_topics lt ON lt.lang = r.lang AND lt.topic_id = r.requires_id
-           WHERE r.lang = ?1 AND r.topic_id = ?2 ORDER BY t.ord`,
+           LEFT JOIN learner_topics lt ON lt.user_id = ?1 AND lt.lang = r.lang AND lt.topic_id = r.requires_id
+           WHERE r.lang = ?2 AND r.topic_id = ?3 ORDER BY t.ord`,
         )
-        .bind(lang, topicId),
+        .bind(this.userId, lang, topicId),
       this.db
         .prepare(
           `SELECT el.item_id, el.relation, i.label, i.data_json, COALESCE(s.status, 'new') AS srs_status,
              COALESCE(s.streak, 0) AS streak, COALESCE(s.interval_days, 0) AS interval_days, s.due_at,
-             (SELECT COUNT(*) FROM attempts a WHERE a.item_id = el.item_id AND a.correct = 0 AND a.ts >= ?3) AS recent_wrong
+             (SELECT COUNT(*) FROM attempts a
+              WHERE a.user_id = ?1 AND a.item_id = el.item_id AND a.correct = 0 AND a.ts >= ?3) AS recent_wrong
            FROM (
              SELECT ?2 AS item_id, 'self' AS relation
              UNION ALL
-             SELECT e.src, 'part_of' FROM edges e WHERE e.dst = ?2 AND e.type = 'part_of'
+             SELECT e.src, 'part_of' FROM edges e WHERE e.user_id = ?1 AND e.dst = ?2 AND e.type = 'part_of'
            ) el
-           JOIN items i ON i.id = el.item_id
-           LEFT JOIN item_srs s ON s.item_id = el.item_id
+           JOIN items i ON i.user_id = ?1 AND i.id = el.item_id
+           LEFT JOIN item_srs s ON s.user_id = ?1 AND s.item_id = el.item_id
            ORDER BY el.relation DESC, i.label LIMIT 51`,
         )
-        .bind(lang, itemId, recentSince()),
+        .bind(this.userId, itemId, recentSince()),
     ]);
 
     const row = results[0].results[0] as unknown as TopicFullRow | undefined;
@@ -433,13 +447,16 @@ export class D1Syllabus implements SyllabusStore {
       throw new Error(`Topic "${topicId}" is deprecated${hint}`);
     }
     if (sessionId !== undefined) {
-      const session = await this.db.prepare("SELECT 1 AS x FROM sessions WHERE id = ?1").bind(sessionId).first();
+      const session = await this.db
+        .prepare("SELECT 1 AS x FROM sessions WHERE user_id = ?1 AND id = ?2")
+        .bind(this.userId, sessionId)
+        .first();
       if (!session) throw new Error(`Unknown session_id: ${sessionId}`);
     }
 
     const prevRow = await this.db
-      .prepare("SELECT status FROM learner_topics WHERE lang = ?1 AND topic_id = ?2")
-      .bind(lang, topicId)
+      .prepare("SELECT status FROM learner_topics WHERE user_id = ?1 AND lang = ?2 AND topic_id = ?3")
+      .bind(this.userId, lang, topicId)
       .first<{ status: TopicStatus }>();
     const previous: TopicStatus = prevRow === null ? "planned" : prevRow.status;
     if (statusRank(status) < statusRank(previous) && !allowRegress) {
@@ -451,10 +468,10 @@ export class D1Syllabus implements SyllabusStore {
     const reqRes = await this.db
       .prepare(
         `SELECT r.requires_id, lt.status FROM syllabus_requires r
-         LEFT JOIN learner_topics lt ON lt.lang = r.lang AND lt.topic_id = r.requires_id
-         WHERE r.lang = ?1 AND r.topic_id = ?2 ORDER BY r.requires_id`,
+         LEFT JOIN learner_topics lt ON lt.user_id = ?1 AND lt.lang = r.lang AND lt.topic_id = r.requires_id
+         WHERE r.lang = ?2 AND r.topic_id = ?3 ORDER BY r.requires_id`,
       )
-      .bind(lang, topicId)
+      .bind(this.userId, lang, topicId)
       .all<{ requires_id: string; status: TopicStatus | null }>();
     const unmet: string[] = [];
     for (const r of reqRes.results) {
@@ -463,11 +480,18 @@ export class D1Syllabus implements SyllabusStore {
 
     await this.db
       .prepare(
-        `INSERT INTO learner_topics (lang, topic_id, status, changed_at, source) VALUES (?1, ?2, ?3, ?4, ?5)
-         ON CONFLICT(lang, topic_id) DO UPDATE SET status = excluded.status, changed_at = excluded.changed_at,
+        `INSERT INTO learner_topics (user_id, lang, topic_id, status, changed_at, source) VALUES (?1, ?2, ?3, ?4, ?5, ?6)
+         ON CONFLICT(user_id, lang, topic_id) DO UPDATE SET status = excluded.status, changed_at = excluded.changed_at,
            source = excluded.source`,
       )
-      .bind(lang, topicId, status, new Date().toISOString(), sessionId === undefined ? "set_topic_status" : `session:${sessionId}`)
+      .bind(
+        this.userId,
+        lang,
+        topicId,
+        status,
+        new Date().toISOString(),
+        sessionId === undefined ? "set_topic_status" : `session:${sessionId}`,
+      )
       .run();
     return { topic_id: topicId, previous, status, unmet_requires: unmet };
   }
@@ -498,12 +522,17 @@ export class D1Syllabus implements SyllabusStore {
     const mod = await this.db.prepare("SELECT 1 AS x FROM syllabus_modules WHERE id = ?1").bind(moduleId).first();
     if (!mod) throw new Error(`Unknown module_id: ${moduleId}`);
     if (sessionId !== undefined) {
-      const session = await this.db.prepare("SELECT 1 AS x FROM sessions WHERE id = ?1").bind(sessionId).first();
+      const session = await this.db
+        .prepare("SELECT 1 AS x FROM sessions WHERE user_id = ?1 AND id = ?2")
+        .bind(this.userId, sessionId)
+        .first();
       if (!session) throw new Error(`Unknown session_id: ${sessionId}`);
     }
     await this.db
-      .prepare("INSERT INTO learner_checkpoints (lang, module_id, session_id, passed, notes, ts) VALUES (?1, ?2, ?3, ?4, ?5, ?6)")
-      .bind(lang, moduleId, sessionId ?? null, passed ? 1 : 0, notes ?? null, new Date().toISOString())
+      .prepare(
+        "INSERT INTO learner_checkpoints (user_id, lang, module_id, session_id, passed, notes, ts) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+      )
+      .bind(this.userId, lang, moduleId, sessionId ?? null, passed ? 1 : 0, notes ?? null, new Date().toISOString())
       .run();
     const plan = await this.requirePlan(lang);
     const progress = this.progressOf(plan);

@@ -1,10 +1,10 @@
 # language-memory-mcp
 
-A small remote [MCP](https://modelcontextprotocol.io) server on Cloudflare Workers + D1 that gives an AI language tutor a long-term memory: vocabulary and grammar items, a graph of links between them, practice attempts, lessons (sessions), a server-side spaced-repetition schedule, and a "course state" note. A new chat with no history can read it and know what to repeat and which lesson comes next.
+A small remote, multi-user [MCP](https://modelcontextprotocol.io) server on Cloudflare Workers + D1 that gives an AI language tutor a long-term memory: vocabulary and grammar items, a graph of links between them, practice attempts, lessons (sessions), a server-side spaced-repetition schedule, and a "course state" note. A new chat with no history can read it and know what to repeat and which lesson comes next.
 
 Transport: Streamable HTTP via `createMcpHandler` from the `agents` package (stateless).
 
-Layout: `src/store.ts` (`Store` interface) · `src/d1-store.ts` (D1 backend; syllabus part in `src/d1-syllabus.ts`) · `src/planner.ts` (next topics, progress; pure) · `src/syllabus-import.ts` (plan → SQL) · `src/tools.ts` (tools; depend only on `Store`) · `src/srs.ts` (spaced repetition) · `src/config.ts` (settings) · `src/index.ts` (auth + handler).
+Layout: `src/store.ts` (`Store` interface) · `src/d1-store.ts` (D1 backend; syllabus part in `src/d1-syllabus.ts`) · `src/planner.ts` (next topics, progress; pure) · `src/syllabus-import.ts` (plan → SQL) · `src/tools.ts` (tools; depend only on `Store`) · `src/srs.ts` (spaced repetition) · `src/config.ts` (settings) · `src/auth.ts` (token → user) · `src/users.ts` (SQL to add, rotate and revoke users) · `src/index.ts` (auth + handler).
 To use another backend, implement `Store` and change the one line in `src/index.ts` that constructs `D1Store`.
 
 ## Quick start
@@ -33,17 +33,30 @@ Worker vars in `wrangler.jsonc` (`vars`); all optional:
 | `ERROR_TYPES` | `gender,agreement,conjugation,tense,preposition,word-order,vocab,spelling,article,other` | allowed `error_type` values (`other` is always allowed); add categories specific to your language |
 | `TIMEZONE` | `UTC` | IANA zone defining "the same day" for the spaced-repetition rules |
 
-Secret: `MCP_SECRET` (see Auth).
+Secret: `MCP_SECRET`, the owner's token (see Users and auth).
 
-## Auth (temporary)
+## Users and auth
 
-A shared secret, accepted as either `Authorization: Bearer <secret>` on `/mcp`, or as a path segment `/mcp/<secret>` (for clients that cannot send headers, such as claude.ai custom connectors). Anything else returns 401.
-This is an MVP stopgap: a secret in a URL can leak through logs and history. OAuth is the planned upgrade.
+Every learner has their own data (items, attempts, spaced-repetition state, lessons, course state, profile, topic progress). Only the syllabus is shared. The server knows who is calling from a personal token, given either as `Authorization: Bearer <token>` on `/mcp`, or as a path segment `/mcp/<token>` (for clients that cannot send headers, such as claude.ai custom connectors). Anything else returns 401.
+
+- **Owner:** the user `owner` signs in with the `MCP_SECRET` worker secret, so the connector you already have keeps working. Data that existed before multi-user support (migration `0005`) belongs to `owner`.
+- **Everyone else:** you create a user and send them their URL. Tokens are random 256-bit values, shown once; only the SHA-256 is stored in the `users` table.
+
+```sh
+npm run user:add -- anna                 # prints the token and URL, writes user-add.sql
+npx wrangler d1 execute DB --remote --file user-add.sql
+npm run user:add -- anna --rotate        # new token, the old one stops working (then execute the file again)
+npm run user:add -- anna --revoke        # cuts access off, keeps the data
+```
+
+User ids are lowercase letters, digits and `-` (up to 32 characters). A new user gets their own copy of the syllabus topic items; importing a plan again does the same for every existing user. Each user sets their own profile (`set_profile`) and starts with empty progress.
+
+A token in a URL can leak through logs and history, so treat it like a password and revoke it if it gets out. OAuth is the planned upgrade if the service should ever let people sign up on their own.
 
 ## Connect a client
 
-- **claude.ai / Claude Desktop / mobile:** Settings → Connectors → Add custom connector → `https://<your-worker>/mcp/<MCP_SECRET>`, leave OAuth fields empty. Connectors are tied to your account, so they also appear on other devices; enable it in the chat.
-- **Claude Code:** `claude mcp add --transport http language-memory https://<your-worker>/mcp/<MCP_SECRET>`
+- **claude.ai / Claude Desktop / mobile:** Settings → Connectors → Add custom connector → `https://<your-worker>/mcp/<your-token>` (the owner's token is `MCP_SECRET`), leave OAuth fields empty. Connectors are tied to your account, so they also appear on other devices; enable it in the chat.
+- **Claude Code:** `claude mcp add --transport http language-memory https://<your-worker>/mcp/<your-token>`
 
 ## Tools
 
@@ -79,8 +92,8 @@ The plan lives in `syllabus/` (YAML, validated by `syllabus/schema.json`), is im
 
 ```sh
 npm run syllabus:validate                       # needs Node 22.18+; checks schema, references, cycles; writes build/<lang>.json and build/seed-*.json
-npm run syllabus:import -- --lang es --seed example --out syllabus-import.sql   # writes SQL only
-npx wrangler d1 migrations apply DB --remote    # 0004 adds the syllabus tables and the part_of edge type
+npm run syllabus:import -- --lang es --seed example --user owner --out syllabus-import.sql   # writes SQL only; --user = who the seed belongs to (default owner)
+npx wrangler d1 migrations apply DB --remote    # 0004 adds the syllabus tables and the part_of edge type, 0005 the users
 npx wrangler d1 execute DB --remote --file syllabus-import.sql
 ```
 
@@ -89,7 +102,7 @@ Back up production before the last two commands. Importing again changes nothing
 How the server decides:
 
 - Syllabus texts are plain English; the model explains them in the learner's `ui_lang` (profile).
-- A topic is the item `<lang>:grammar_point:<topic id>`. Items of finer grain are linked to it with `part_of`.
+- A topic is the item `<lang>:grammar_point:<topic id>` (one copy per user). Items of finer grain are linked to it with `part_of`.
 - Status: `planned` (no row) · `seen_via_error` · `current` · `introduced` · `assumed`. The last three count as **covered** and satisfy `requires`.
 - `next_topics`: open topics whose prerequisites are all covered. `continue` = those that follow a `current` topic, `fill` = the rest in plan order.
 - **Mastered** = covered, has at least one item, every item is SRS-`known`, no wrong answers in the last 14 days. A module is closed at full coverage, 80% mastery and a checkpoint passed after its last topic was introduced. Coverage and mastery are always reported separately.
@@ -101,7 +114,7 @@ How the server decides:
 echo 'MCP_SECRET=dev-secret' > .dev.vars        # gitignored
 npx wrangler d1 migrations apply DB --local
 npx wrangler dev                                 # http://localhost:8787
-npm test                                         # SRS, config, store, sessions, migrations, planner, syllabus import
+npm test                                         # SRS, config, store, sessions, migrations, planner, syllabus import, users and isolation
 npm run typecheck
 ```
 

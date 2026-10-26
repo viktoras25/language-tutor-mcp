@@ -9,7 +9,8 @@
     "syllabus:validate": "node scripts/syllabus-validate.ts --out build",
     "syllabus:import": "node scripts/syllabus-import.ts",
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "user:add": "node scripts/user-add.ts"
   },
   "keywords": [],
   "author": "",

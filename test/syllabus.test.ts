@@ -48,7 +48,7 @@ let store: D1Store;
 
 async function freshDb(): Promise<void> {
   ({ db, dispose } = await newDb());
-  store = new D1Store(db, "UTC", loadConfig({}).errorTypes);
+  store = new D1Store(db, "owner", "UTC", loadConfig({}).errorTypes);
 }
 
 async function run(statements: Statement[]): Promise<void> {
@@ -59,7 +59,7 @@ async function run(statements: Statement[]): Promise<void> {
 
 const importPlan = (at = "2026-10-26T10:00:00.000Z") => run(buildSyllabusImport(miniPlan(), "hash-1", at));
 const importFullPlan = () => run(buildSyllabusImport(plan, "hash-1", "2026-10-26T10:00:00.000Z"));
-const importSeed = () => run(buildSeedImport(seed, "2026-10-26T10:00:00.000Z"));
+const importSeed = () => run(buildSeedImport(seed, "2026-10-26T10:00:00.000Z", "owner"));
 
 const TABLES = [
   "items",
@@ -131,7 +131,7 @@ describe("import", () => {
 
     const other = await newDb();
     try {
-      const all = [...buildSyllabusImport(miniPlan(), "hash-1", "2026-10-26T10:00:00.000Z"), ...buildSeedImport(seed, "2026-10-26T10:00:00.000Z")];
+      const all = [...buildSyllabusImport(miniPlan(), "hash-1", "2026-10-26T10:00:00.000Z"), ...buildSeedImport(seed, "2026-10-26T10:00:00.000Z", "owner")];
       for (const s of all) await other.db.prepare(renderStatement(s)).run();
       expect(await dump(other.db)).toBe(expected);
     } finally {
@@ -338,7 +338,7 @@ describe("error types per language", () => {
   });
 
   it("does not check error types when none are configured", async () => {
-    const open = new D1Store(db, "UTC");
+    const open = new D1Store(db, "owner", "UTC");
     const id = await open.upsertItem("es", "lemma", "hablar");
     await expect(open.logAttempt({ itemId: id, correct: false, errorType: "anything" })).resolves.toBeDefined();
   });

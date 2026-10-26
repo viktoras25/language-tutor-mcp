@@ -8,7 +8,7 @@ let store: D1Store;
 
 beforeEach(async () => {
   ({ db, dispose } = await newDb());
-  store = new D1Store(db, "UTC");
+  store = new D1Store(db, "owner", "UTC");
 });
 afterEach(() => dispose());
 
