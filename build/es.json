@@ -1,0 +1,2792 @@
+{
+ "lang": "es",
+ "variety": "es-ES",
+ "modules": [
+  {
+   "id": "A1.01",
+   "level": "A1",
+   "order": 1,
+   "title": "Introductions",
+   "domains": [
+    "personal_info",
+    "countries",
+    "languages"
+   ],
+   "can_do": [
+    {
+     "id": "cd.intro.self",
+     "text": "I can say my name, where I'm from, where I live and what I do."
+    },
+    {
+     "id": "cd.intro.ask_others",
+     "text": "I can ask others the same questions, choosing informal or formal address."
+    },
+    {
+     "id": "cd.intro.languages",
+     "text": "I can say which languages I speak and how well."
+    }
+   ],
+   "checkpoint": {
+    "text": "Introduce yourself to a new colleague in 6–8 sentences, then write 3 questions for them; ask one of them formally."
+   }
+  },
+  {
+   "id": "A1.02",
+   "level": "A1",
+   "order": 2,
+   "title": "People",
+   "domains": [
+    "family",
+    "appearance",
+    "character",
+    "feelings"
+   ],
+   "can_do": [
+    {
+     "id": "cd.people.family",
+     "text": "I can talk about my family and the people close to me."
+    },
+    {
+     "id": "cd.people.describe",
+     "text": "I can describe someone's appearance and character."
+    },
+    {
+     "id": "cd.people.state",
+     "text": "I can say how someone feels right now, as opposed to what they are like in general."
+    }
+   ],
+   "checkpoint": {
+    "text": "Describe two people close to you in 8–10 sentences: appearance, character, and how they are doing this week."
+   }
+  },
+  {
+   "id": "A1.03",
+   "level": "A1",
+   "order": 3,
+   "title": "Numbers, time and prices",
+   "domains": [
+    "numbers",
+    "time",
+    "dates",
+    "money"
+   ],
+   "can_do": [
+    {
+     "id": "cd.numbers.prices",
+     "text": "I can ask what something costs and understand and say prices."
+    },
+    {
+     "id": "cd.numbers.time",
+     "text": "I can tell and ask the time and say when something happens."
+    },
+    {
+     "id": "cd.numbers.dates",
+     "text": "I can say dates, birthdays and phone numbers."
+    }
+   ],
+   "checkpoint": {
+    "text": "Write out in words 5 prices, 3 times and 2 dates from a given list, then answer 3 questions about when things happen in your week."
+   }
+  },
+  {
+   "id": "A1.04",
+   "level": "A1",
+   "order": 4,
+   "title": "Around town",
+   "domains": [
+    "city",
+    "places",
+    "directions",
+    "neighbourhood"
+   ],
+   "can_do": [
+    {
+     "id": "cd.city.where",
+     "text": "I can ask where a place is and understand a simple answer."
+    },
+    {
+     "id": "cd.city.describe_area",
+     "text": "I can say what there is in my neighbourhood and where."
+    },
+    {
+     "id": "cd.city.directions",
+     "text": "I can give and follow simple directions."
+    }
+   ],
+   "checkpoint": {
+    "text": "Describe your neighbourhood (what is there and where), then explain the way from your home to a nearby café in 4–5 steps."
+   }
+  },
+  {
+   "id": "A1.05",
+   "level": "A1",
+   "order": 5,
+   "title": "Daily routine",
+   "domains": [
+    "routine",
+    "home",
+    "chores"
+   ],
+   "can_do": [
+    {
+     "id": "cd.routine.day",
+     "text": "I can describe my typical day with times."
+    },
+    {
+     "id": "cd.routine.now",
+     "text": "I can say what I am doing right now."
+    },
+    {
+     "id": "cd.routine.frequency",
+     "text": "I can say how often I do things."
+    }
+   ],
+   "checkpoint": {
+    "text": "Describe a typical weekday and a typical Sunday (8–10 sentences) with times and frequency words, then add 2 sentences about what you are doing right now."
+   }
+  },
+  {
+   "id": "A1.06",
+   "level": "A1",
+   "order": 6,
+   "title": "Work and study",
+   "domains": [
+    "work",
+    "office",
+    "study"
+   ],
+   "can_do": [
+    {
+     "id": "cd.work.job",
+     "text": "I can say what my job is, where I work and what I do there."
+    },
+    {
+     "id": "cd.work.likes",
+     "text": "I can say what I like and dislike about my work and give a simple reason."
+    },
+    {
+     "id": "cd.work.ability",
+     "text": "I can say what I can, want and prefer to do."
+    }
+   ],
+   "checkpoint": {
+    "text": "Write a short message to a new team member: your role, a normal working day, one thing you like about the job and one you don't, with reasons (6–8 sentences)."
+   }
+  },
+  {
+   "id": "A1.07",
+   "level": "A1",
+   "order": 7,
+   "title": "Food and cafés",
+   "domains": [
+    "food",
+    "drinks",
+    "cafe",
+    "restaurant",
+    "groceries"
+   ],
+   "can_do": [
+    {
+     "id": "cd.cafe.order",
+     "text": "I can order food and drinks for myself and others."
+    },
+    {
+     "id": "cd.cafe.ask_ingredients",
+     "text": "I can ask what is in a dish and ask for a change."
+    },
+    {
+     "id": "cd.cafe.pay",
+     "text": "I can ask for the bill and pay."
+    },
+    {
+     "id": "cd.food.habits",
+     "text": "I can say what I usually eat and what I don't eat."
+    }
+   ],
+   "checkpoint": {
+    "text": "Write a café dialogue between you and a waiter (8–10 lines): order for two, ask about one ingredient, change something, ask for the bill."
+   }
+  },
+  {
+   "id": "A1.08",
+   "level": "A1",
+   "order": 8,
+   "title": "Shopping and clothes",
+   "domains": [
+    "shopping",
+    "clothes",
+    "colours",
+    "sizes"
+   ],
+   "can_do": [
+    {
+     "id": "cd.shop.choose",
+     "text": "I can ask for an item in a size or colour and ask the price."
+    },
+    {
+     "id": "cd.shop.compare",
+     "text": "I can compare two items in simple terms."
+    },
+    {
+     "id": "cd.shop.decide",
+     "text": "I can say which one I'll take, or that I'll leave it."
+    }
+   ],
+   "checkpoint": {
+    "text": "Write a shop dialogue (8–10 lines): ask for an item in your size and colour, compare two options with 'this/that', decide, and refer back to the item with a pronoun."
+   }
+  },
+  {
+   "id": "A1.09",
+   "level": "A1",
+   "order": 9,
+   "title": "Free time and tastes",
+   "domains": [
+    "hobbies",
+    "sport",
+    "music",
+    "film",
+    "skills"
+   ],
+   "can_do": [
+    {
+     "id": "cd.free.hobbies",
+     "text": "I can talk about my hobbies and sports."
+    },
+    {
+     "id": "cd.free.likes",
+     "text": "I can say what I and other people like and dislike."
+    },
+    {
+     "id": "cd.free.agree",
+     "text": "I can agree and disagree with someone's taste (me too / me neither)."
+    },
+    {
+     "id": "cd.free.skills",
+     "text": "I can say what I know how to do and whom or what I know."
+    }
+   ],
+   "checkpoint": {
+    "text": "Write about your free time: 3 things you like, 2 you don't, what a friend likes; then react to 3 given statements with 'me too / me neither / I do / I don't'."
+   }
+  },
+  {
+   "id": "A1.10",
+   "level": "A1",
+   "order": 10,
+   "title": "Plans and meeting up",
+   "domains": [
+    "plans",
+    "weather",
+    "calendar",
+    "invitations"
+   ],
+   "can_do": [
+    {
+     "id": "cd.plans.weekend",
+     "text": "I can talk about my plans for the weekend or the coming days."
+    },
+    {
+     "id": "cd.plans.arrange",
+     "text": "I can suggest a time and place to meet, accept, decline and offer an alternative."
+    },
+    {
+     "id": "cd.plans.weather",
+     "text": "I can talk about the weather and what I'll do depending on it."
+    }
+   ],
+   "checkpoint": {
+    "text": "Write a chat with a friend: propose a meeting, decline one time and offer another, agree; then describe your weekend plans including one 'if it rains, ...'."
+   }
+  },
+  {
+   "id": "A2.01",
+   "level": "A2",
+   "order": 11,
+   "title": "What I did",
+   "domains": [
+    "daily_life",
+    "weekend",
+    "past_events"
+   ],
+   "can_do": [
+    {
+     "id": "cd.past.yesterday",
+     "text": "I can say what I did yesterday or last week."
+    },
+    {
+     "id": "cd.past.weekend",
+     "text": "I can tell someone about my weekend in a few connected sentences."
+    },
+    {
+     "id": "cd.past.when",
+     "text": "I can say when something happened."
+    }
+   ],
+   "checkpoint": {
+    "text": "Describe yesterday and last weekend (10–12 sentences) using at least 6 different verbs, including irregular ones (to go, to do, to have)."
+   }
+  },
+  {
+   "id": "A2.02",
+   "level": "A2",
+   "order": 12,
+   "title": "Travel",
+   "domains": [
+    "travel",
+    "transport",
+    "accommodation",
+    "sights"
+   ],
+   "can_do": [
+    {
+     "id": "cd.travel.plan",
+     "text": "I can plan a trip and book tickets and accommodation."
+    },
+    {
+     "id": "cd.travel.tell",
+     "text": "I can tell someone about a trip I took."
+    },
+    {
+     "id": "cd.travel.purpose",
+     "text": "I can say how, why and for whom I do something."
+    }
+   ],
+   "checkpoint": {
+    "text": "Tell about a past trip (about 10 sentences: how you got there, where you stayed, what you did), then outline your next trip in 3–4 sentences."
+   }
+  },
+  {
+   "id": "A2.03",
+   "level": "A2",
+   "order": 13,
+   "title": "Experiences and recent events",
+   "domains": [
+    "experiences",
+    "achievements",
+    "today"
+   ],
+   "can_do": [
+    {
+     "id": "cd.exp.today",
+     "text": "I can say what I have done today or this week."
+    },
+    {
+     "id": "cd.exp.ever",
+     "text": "I can ask and answer whether someone has ever done something."
+    },
+    {
+     "id": "cd.exp.yet",
+     "text": "I can say what is already done and what is not done yet."
+    }
+   ],
+   "checkpoint": {
+    "text": "Write an end-of-day message to a colleague: what is done, what is not done yet; then 3 'have you ever...?' questions with your own answers."
+   }
+  },
+  {
+   "id": "A2.04",
+   "level": "A2",
+   "order": 14,
+   "title": "Then and now",
+   "domains": [
+    "childhood",
+    "habits",
+    "change"
+   ],
+   "can_do": [
+    {
+     "id": "cd.then.habits",
+     "text": "I can describe how things used to be and what I used to do."
+    },
+    {
+     "id": "cd.then.compare",
+     "text": "I can compare the past with the present."
+    },
+    {
+     "id": "cd.then.background",
+     "text": "I can describe the background situation of a past event."
+    }
+   ],
+   "checkpoint": {
+    "text": "Compare your life ten years ago with now (10–12 sentences): habits, place, work, free time."
+   }
+  },
+  {
+   "id": "A2.05",
+   "level": "A2",
+   "order": 15,
+   "title": "Health",
+   "domains": [
+    "body",
+    "health",
+    "pharmacy",
+    "doctor",
+    "emergencies"
+   ],
+   "can_do": [
+    {
+     "id": "cd.health.symptoms",
+     "text": "I can describe symptoms and say since when I have had them."
+    },
+    {
+     "id": "cd.health.advice",
+     "text": "I can understand simple advice and give it to others."
+    },
+    {
+     "id": "cd.health.help",
+     "text": "I can ask for help in an urgent situation."
+    }
+   ],
+   "checkpoint": {
+    "text": "Write a pharmacy or doctor dialogue: describe 2–3 symptoms and since when, receive and repeat back 3 pieces of advice; then give a friend 3 tips using commands."
+   }
+  },
+  {
+   "id": "A2.06",
+   "level": "A2",
+   "order": 16,
+   "title": "Home and household",
+   "domains": [
+    "home",
+    "furniture",
+    "repairs",
+    "neighbours",
+    "belongings"
+   ],
+   "can_do": [
+    {
+     "id": "cd.home.describe",
+     "text": "I can describe where I live and its pros and cons."
+    },
+    {
+     "id": "cd.home.problem",
+     "text": "I can explain that something is broken or not working."
+    },
+    {
+     "id": "cd.home.ask_help",
+     "text": "I can ask someone to do or bring something, and say whose something is."
+    }
+   ],
+   "checkpoint": {
+    "text": "Write a message to your landlord: what is broken, since when, what you need; then give a flatmate 3 instructions that refer back to objects with pronouns."
+   }
+  },
+  {
+   "id": "A2.07",
+   "level": "A2",
+   "order": 17,
+   "title": "Communication at work",
+   "domains": [
+    "meetings",
+    "email",
+    "tasks",
+    "projects"
+   ],
+   "can_do": [
+    {
+     "id": "cd.workcom.message",
+     "text": "I can write a short work message or email."
+    },
+    {
+     "id": "cd.workcom.reschedule",
+     "text": "I can reschedule a meeting and explain why."
+    },
+    {
+     "id": "cd.workcom.next_steps",
+     "text": "I can explain a task and say what will happen next."
+    }
+   ],
+   "checkpoint": {
+    "text": "Write an email that reschedules a meeting, gives the reason, proposes two new slots and describes next steps."
+   }
+  },
+  {
+   "id": "A2.08",
+   "level": "A2",
+   "order": 18,
+   "title": "Comparisons and opinions",
+   "domains": [
+    "products",
+    "cities",
+    "media",
+    "society"
+   ],
+   "can_do": [
+    {
+     "id": "cd.opinion.compare",
+     "text": "I can compare options and say which one is the best."
+    },
+    {
+     "id": "cd.opinion.give",
+     "text": "I can give my opinion with a reason."
+    },
+    {
+     "id": "cd.opinion.react",
+     "text": "I can agree or disagree with someone's opinion."
+    }
+   ],
+   "checkpoint": {
+    "text": "Compare two cities, phones or series in 8–10 sentences, pick the best one and justify it; then respond to one opposing opinion."
+   }
+  },
+  {
+   "id": "A2.09",
+   "level": "A2",
+   "order": 19,
+   "title": "Service and complaints",
+   "domains": [
+    "restaurant",
+    "shop",
+    "hotel",
+    "post",
+    "customer_service"
+   ],
+   "can_do": [
+    {
+     "id": "cd.service.complain",
+     "text": "I can politely complain and ask for a solution."
+    },
+    {
+     "id": "cd.service.request_polite",
+     "text": "I can make polite requests."
+    },
+    {
+     "id": "cd.service.report",
+     "text": "I can report what someone told me."
+    }
+   ],
+   "checkpoint": {
+    "text": "Write a complaint dialogue at a hotel or restaurant: describe the problem, politely request a solution, then tell a friend what the staff said."
+   }
+  },
+  {
+   "id": "A2.10",
+   "level": "A2",
+   "order": 20,
+   "title": "My story",
+   "domains": [
+    "biography",
+    "life_events",
+    "memories",
+    "culture"
+   ],
+   "can_do": [
+    {
+     "id": "cd.story.bio",
+     "text": "I can tell my life story with key dates."
+    },
+    {
+     "id": "cd.story.event",
+     "text": "I can narrate an event: the situation, what happened, how it ended."
+    },
+    {
+     "id": "cd.story.connect",
+     "text": "I can link events in time (when, while, after, ago, since)."
+    }
+   ],
+   "checkpoint": {
+    "text": "Write 150–200 words about an important period or event in your life: when and where, what the situation was, what happened, how it ended."
+   }
+  }
+ ],
+ "topics": [
+  {
+   "id": "subject-pronouns",
+   "module": "A1.01",
+   "kind": "grammar",
+   "requires": [],
+   "title": "Subject pronouns",
+   "summary": "yo, tú, él/ella/usted, nosotros/as, vosotros/as, ellos/ellas/ustedes. Usually dropped because the verb ending shows the person; used for emphasis or contrast.",
+   "examples": [
+    "Yo soy de Lituania, ¿y tú?",
+    "Vivimos en Leipzig."
+   ],
+   "traps": [
+    "Overusing pronouns sounds unnatural: 'Yo trabajo. Yo vivo...'",
+    "usted/ustedes take third-person verb forms."
+   ],
+   "error_tags": [
+    "pronoun",
+    "conjugation"
+   ]
+  },
+  {
+   "id": "ser-present",
+   "module": "A1.01",
+   "kind": "grammar",
+   "requires": [
+    "subject-pronouns"
+   ],
+   "title": "ser: present tense",
+   "summary": "soy, eres, es, somos, sois, son. Identity, origin, profession, nationality, characteristics.",
+   "examples": [
+    "Soy ingeniero.",
+    "Somos de Alemania."
+   ],
+   "traps": [
+    "No indefinite article before an unqualified profession: 'Soy ingeniero', not 'Soy un ingeniero'."
+   ],
+   "error_tags": [
+    "conjugation",
+    "article",
+    "ser-estar"
+   ]
+  },
+  {
+   "id": "noun-gender-number",
+   "module": "A1.01",
+   "kind": "grammar",
+   "requires": [],
+   "title": "Noun gender and plural",
+   "summary": "Every noun is masculine or feminine. -o usually m., -a usually f., -ión/-dad f. Plural: -s after a vowel, -es after a consonant.",
+   "examples": [
+    "el libro, los libros",
+    "la ciudad, las ciudades"
+   ],
+   "traps": [
+    "Gender often differs from German/Russian: el coche (das Auto), la leche (die Milch), el problema."
+   ],
+   "transfer": {
+    "de": "Never copy the German gender.",
+    "ru": "Род не совпадает с русским в большом числе слов."
+   },
+   "error_tags": [
+    "gender"
+   ]
+  },
+  {
+   "id": "articles",
+   "module": "A1.01",
+   "kind": "grammar",
+   "requires": [
+    "noun-gender-number"
+   ],
+   "title": "Definite and indefinite articles",
+   "summary": "el/la/los/las; un/una/unos/unas. Definite article also for general statements and likes: Me gusta el café.",
+   "examples": [
+    "Un café y una tostada, por favor.",
+    "El café es caro aquí."
+   ],
+   "traps": [
+    "General statements need the definite article where German/English have none: 'La vida es bella'."
+   ],
+   "transfer": {
+    "ru": "В русском артиклей нет: их легко пропустить, особенно после gustar."
+   },
+   "error_tags": [
+    "article",
+    "gender"
+   ]
+  },
+  {
+   "id": "question-words",
+   "module": "A1.01",
+   "kind": "grammar",
+   "requires": [],
+   "title": "Question words",
+   "summary": "qué, quién, dónde, de dónde, cuándo, cómo, cuánto/a/os/as, por qué, cuál. Always written with an accent; questions open with ¿.",
+   "examples": [
+    "¿De dónde eres?",
+    "¿Cuántos idiomas hablas?"
+   ],
+   "traps": [
+    "cuánto agrees with the noun: cuántas personas.",
+    "qué vs cuál: '¿Cuál es tu número?'"
+   ],
+   "error_tags": [
+    "accent",
+    "agreement",
+    "vocab"
+   ]
+  },
+  {
+   "id": "negation-no",
+   "module": "A1.01",
+   "kind": "grammar",
+   "requires": [],
+   "title": "Negation with no",
+   "summary": "no goes directly before the verb (and before object pronouns).",
+   "examples": [
+    "No hablo francés.",
+    "No me gusta."
+   ],
+   "traps": [
+    "Not after the verb as in German: 'Hablo no' is wrong."
+   ],
+   "error_tags": [
+    "word-order"
+   ]
+  },
+  {
+   "id": "usted-formal",
+   "module": "A1.01",
+   "kind": "grammar",
+   "requires": [
+    "subject-pronouns",
+    "ser-present"
+   ],
+   "title": "Formal address: usted",
+   "summary": "usted/ustedes = formal 'you', with third-person verb forms and su/sus. In Spain tú is used widely, usted with strangers of authority or older people.",
+   "examples": [
+    "¿Cómo se llama usted?",
+    "¿Es usted de aquí?"
+   ],
+   "traps": [
+    "Possessive is su, not tu: '¿Es su maleta?'"
+   ],
+   "error_tags": [
+    "register",
+    "conjugation"
+   ]
+  },
+  {
+   "id": "gender-agreement",
+   "legacy": true,
+   "module": "A1.02",
+   "kind": "grammar",
+   "requires": [
+    "articles"
+   ],
+   "title": "Adjective agreement",
+   "summary": "Adjectives agree with the noun in gender and number and usually follow it. -e/-consonant adjectives have one form for both genders.",
+   "examples": [
+    "una compañera cansada",
+    "unos zapatos grandes"
+   ],
+   "traps": [
+    "Agreement with the noun's gender, not with the speaker's: 'la reunión es larga'."
+   ],
+   "error_tags": [
+    "agreement",
+    "gender"
+   ]
+  },
+  {
+   "id": "possessive-agreement",
+   "legacy": true,
+   "module": "A1.02",
+   "kind": "grammar",
+   "requires": [
+    "noun-gender-number"
+   ],
+   "title": "Possessive adjectives",
+   "summary": "mi/mis, tu/tus, su/sus, nuestro/a/os/as, vuestro/a/os/as. They agree with the thing possessed, not the owner.",
+   "examples": [
+    "mis amigos",
+    "su vuelo (their flight)"
+   ],
+   "traps": [
+    "su is his/her/their/your(formal): ambiguity is resolved by context or 'de él'.",
+    "No reflexive 'own' as in Russian «свой»: 'mi billete'."
+   ],
+   "transfer": {
+    "ru": "«Свой» переводится по лицу: я — mi, ты — tu, он — su."
+   },
+   "error_tags": [
+    "agreement"
+   ]
+  },
+  {
+   "id": "tener-present",
+   "module": "A1.02",
+   "kind": "grammar",
+   "requires": [
+    "subject-pronouns"
+   ],
+   "title": "tener: present tense",
+   "summary": "tengo, tienes, tiene, tenemos, tenéis, tienen. Possession, age (tengo 39 años), physical states (tengo hambre).",
+   "examples": [
+    "Tengo dos hermanos.",
+    "¿Cuántos años tienes?"
+   ],
+   "traps": [
+    "Age with tener, not ser: 'Tengo 40 años'."
+   ],
+   "error_tags": [
+    "conjugation",
+    "vocab"
+   ]
+  },
+  {
+   "id": "estar-present",
+   "module": "A1.02",
+   "kind": "grammar",
+   "requires": [
+    "subject-pronouns"
+   ],
+   "title": "estar: present tense",
+   "summary": "estoy, estás, está, estamos, estáis, están. Temporary states and location.",
+   "examples": [
+    "Estoy cansado.",
+    "¿Cómo estás?"
+   ],
+   "traps": [
+    "Accent on está/están distinguishes from esta/estas."
+   ],
+   "error_tags": [
+    "conjugation",
+    "accent"
+   ]
+  },
+  {
+   "id": "ser-vs-estar",
+   "legacy": true,
+   "module": "A1.02",
+   "kind": "grammar",
+   "requires": [
+    "ser-present",
+    "estar-present"
+   ],
+   "title": "ser vs estar",
+   "summary": "ser: identity, origin, character, time, where an event takes place. estar: location of things/people, current state, result.",
+   "examples": [
+    "Es simpático, pero hoy está cansado.",
+    "La reunión es a las cinco."
+   ],
+   "traps": [
+    "Events: 'La fiesta es en mi casa' (ser).",
+    "Some adjectives change meaning: ser aburrido / estar aburrido."
+   ],
+   "error_tags": [
+    "ser-estar"
+   ]
+  },
+  {
+   "id": "muy-vs-mucho",
+   "legacy": true,
+   "module": "A1.02",
+   "kind": "grammar",
+   "requires": [
+    "gender-agreement"
+   ],
+   "title": "muy vs mucho",
+   "summary": "muy + adjective/adverb; mucho/a/os/as + noun (agrees); mucho after a verb (invariable).",
+   "examples": [
+    "Es muy alto.",
+    "Tengo mucho trabajo.",
+    "Corro mucho."
+   ],
+   "traps": [
+    "'muy mucho' does not exist; 'muchas gracias' agrees."
+   ],
+   "error_tags": [
+    "vocab",
+    "agreement"
+   ]
+  },
+  {
+   "id": "numbers-0-29",
+   "module": "A1.03",
+   "kind": "grammar",
+   "requires": [],
+   "title": "Numbers 0–29",
+   "summary": "0–15 individual words; 16–19 and 21–29 written as one word: dieciséis, veintidós.",
+   "examples": [
+    "dieciocho",
+    "veintitrés"
+   ],
+   "traps": [
+    "Not 'diez y seis'.",
+    "Accents: dieciséis, veintidós, veintitrés, veintiséis."
+   ],
+   "error_tags": [
+    "spelling",
+    "accent"
+   ]
+  },
+  {
+   "id": "numbers-31-199",
+   "legacy": true,
+   "module": "A1.03",
+   "kind": "grammar",
+   "requires": [
+    "numbers-0-29"
+   ],
+   "title": "Numbers 30–199",
+   "summary": "Tens + y + units as separate words from 31: treinta y uno. cien = exactly 100; ciento + number above that, without y.",
+   "examples": [
+    "cuarenta y cinco",
+    "ciento treinta"
+   ],
+   "traps": [
+    "'ciento y treinta' is wrong.",
+    "Units come after tens, unlike German."
+   ],
+   "transfer": {
+    "de": "Order is tens then units: 45 = cuarenta y cinco."
+   },
+   "error_tags": [
+    "spelling"
+   ]
+  },
+  {
+   "id": "numbers-hundreds",
+   "legacy": true,
+   "module": "A1.03",
+   "kind": "grammar",
+   "requires": [
+    "numbers-31-199",
+    "gender-agreement"
+   ],
+   "title": "Hundreds and thousands",
+   "summary": "doscientos ... novecientos, irregular quinientos, setecientos, novecientos. Hundreds agree in gender: doscientas personas. mil is invariable: dos mil.",
+   "examples": [
+    "quinientos euros",
+    "trescientas páginas",
+    "dos mil veintiséis"
+   ],
+   "traps": [
+    "Not 'cincocientos', 'sietecientos', 'nuevecientos'.",
+    "'un mil' is wrong for 1000."
+   ],
+   "error_tags": [
+    "spelling",
+    "agreement"
+   ]
+  },
+  {
+   "id": "uno-apocope",
+   "legacy": true,
+   "module": "A1.03",
+   "kind": "grammar",
+   "requires": [
+    "numbers-0-29",
+    "articles"
+   ],
+   "title": "uno → un/una",
+   "summary": "Before a masculine noun uno becomes un (veintiún kilómetros); before a feminine noun una; standalone uno.",
+   "examples": [
+    "treinta y un años",
+    "veintiuna personas"
+   ],
+   "traps": [
+    "'treinta y uno años' is wrong."
+   ],
+   "error_tags": [
+    "agreement",
+    "spelling"
+   ]
+  },
+  {
+   "id": "time-telling",
+   "legacy": true,
+   "module": "A1.03",
+   "kind": "grammar",
+   "requires": [
+    "numbers-0-29",
+    "ser-present"
+   ],
+   "title": "Telling the time",
+   "summary": "Es la una / Son las dos. y cuarto, y media, menos cuarto (of the next hour). a las + hour = at. ¿Qué hora es? / ¿A qué hora...?",
+   "examples": [
+    "Son las ocho menos cuarto.",
+    "La reunión es a las diez y media."
+   ],
+   "traps": [
+    "'y media' is half past the current hour, unlike German 'halb neun' (= 8:30).",
+    "cuándo asks 'when' in general; '¿A qué hora?' asks the time."
+   ],
+   "transfer": {
+    "de": "halb neun = las ocho y media.",
+    "ru": "«Полдевятого» = las ocho y media."
+   },
+   "error_tags": [
+    "vocab",
+    "preposition"
+   ]
+  },
+  {
+   "id": "dates",
+   "legacy": true,
+   "module": "A1.03",
+   "kind": "grammar",
+   "requires": [
+    "numbers-31-199"
+   ],
+   "title": "Dates",
+   "summary": "el + cardinal number + de + month + de + year. Months lowercase. Only the 1st may be 'primero'.",
+   "examples": [
+    "el veinticinco de octubre de dos mil veintiséis",
+    "Mi cumpleaños es el 25 de septiembre."
+   ],
+   "traps": [
+    "Cardinal, not ordinal numbers: 'el dos de mayo'.",
+    "Months are not capitalised."
+   ],
+   "error_tags": [
+    "spelling",
+    "article"
+   ]
+  },
+  {
+   "id": "days-of-week-article",
+   "legacy": true,
+   "module": "A1.03",
+   "kind": "grammar",
+   "requires": [
+    "articles"
+   ],
+   "title": "Days of the week with the article",
+   "summary": "el sábado = on (this) Saturday, los sábados = on Saturdays; no preposition. 'Hoy es lunes' without article.",
+   "examples": [
+    "El viernes voy a Berlín.",
+    "Los domingos corro."
+   ],
+   "traps": [
+    "'en el sábado' is wrong."
+   ],
+   "transfer": {
+    "de": "am Samstag = el sábado, samstags = los sábados."
+   },
+   "error_tags": [
+    "article",
+    "preposition"
+   ]
+  },
+  {
+   "id": "prices",
+   "legacy": true,
+   "module": "A1.03",
+   "kind": "chunk",
+   "requires": [
+    "numbers-31-199"
+   ],
+   "title": "Prices",
+   "summary": "¿Cuánto cuesta / cuestan? ¿Cuánto es? Cuesta(n)... euros. 45,50 = cuarenta y cinco euros con cincuenta.",
+   "examples": [
+    "¿Cuánto cuestan estas zapatillas?",
+    "Son doce euros con cincuenta."
+   ],
+   "traps": [
+    "'y media' is only for time, not for prices.",
+    "No subject pronoun for things: 'Cuestan 30 euros'."
+   ],
+   "error_tags": [
+    "vocab",
+    "conjugation"
+   ]
+  },
+  {
+   "id": "accent-rules",
+   "legacy": true,
+   "module": "A1.03",
+   "kind": "orthography",
+   "requires": [],
+   "title": "Stress and written accents",
+   "summary": "Words ending in a vowel, -n or -s are stressed on the second-to-last syllable; others on the last. A written accent marks exceptions only. Antepenultimate stress always gets an accent.",
+   "examples": [
+    "canción, miércoles, Madrid, correr"
+   ],
+   "traps": [
+    "Hypercorrection: adding accents to every stressed syllable.",
+    "Only the acute accent exists (no à)."
+   ],
+   "error_tags": [
+    "accent"
+   ]
+  },
+  {
+   "id": "diacritic-pairs",
+   "legacy": true,
+   "module": "A1.03",
+   "kind": "orthography",
+   "requires": [
+    "accent-rules"
+   ],
+   "title": "Meaning-distinguishing accents",
+   "summary": "tú/tu, él/el, sí/si, mí/mi, está/esta, qué/que, cómo/como, porque/por qué.",
+   "examples": [
+    "Él es mi hermano.",
+    "¿Por qué? Porque sí."
+   ],
+   "traps": [
+    "qué/cómo only in questions and exclamations, including indirect ones."
+   ],
+   "error_tags": [
+    "accent"
+   ]
+  },
+  {
+   "id": "estar-location",
+   "module": "A1.04",
+   "kind": "grammar",
+   "requires": [
+    "estar-present"
+   ],
+   "title": "estar for location",
+   "summary": "Where a known, specific thing or person is: estar + en / cerca de / al lado de...",
+   "examples": [
+    "La estación está cerca.",
+    "¿Dónde está el baño?"
+   ],
+   "traps": [
+    "Events are an exception: 'El concierto es en el parque' (ser)."
+   ],
+   "error_tags": [
+    "ser-estar"
+   ]
+  },
+  {
+   "id": "hay-vs-estar",
+   "legacy": true,
+   "module": "A1.04",
+   "kind": "grammar",
+   "requires": [
+    "estar-location",
+    "articles"
+   ],
+   "title": "hay vs estar",
+   "summary": "hay = there is/are (existence, new info, with un/una/numbers/no article). estar = where the known thing is (with el/la/proper names).",
+   "examples": [
+    "Hay un supermercado cerca.",
+    "El supermercado está en la esquina."
+   ],
+   "traps": [
+    "'Hay el banco' is wrong; 'Está un banco' is wrong."
+   ],
+   "transfer": {
+    "de": "hay ≈ es gibt."
+   },
+   "error_tags": [
+    "ser-estar",
+    "article"
+   ]
+  },
+  {
+   "id": "prepositions-place",
+   "module": "A1.04",
+   "kind": "grammar",
+   "requires": [
+    "estar-location"
+   ],
+   "title": "Prepositions of place",
+   "summary": "en, cerca de, lejos de, al lado de, delante de, detrás de, enfrente de, entre, encima de, debajo de.",
+   "examples": [
+    "La farmacia está enfrente del banco."
+   ],
+   "traps": [
+    "Compound prepositions need de, which contracts with el: 'al lado del hotel'."
+   ],
+   "error_tags": [
+    "preposition"
+   ]
+  },
+  {
+   "id": "contractions-al-del",
+   "module": "A1.04",
+   "kind": "grammar",
+   "requires": [
+    "articles"
+   ],
+   "title": "Contractions al and del",
+   "summary": "a + el = al, de + el = del. Not with la/los/las, and not with the pronoun él.",
+   "examples": [
+    "Voy al centro.",
+    "Vengo del trabajo."
+   ],
+   "traps": [
+    "'a el' / 'de el' are wrong before the article."
+   ],
+   "error_tags": [
+    "article",
+    "preposition"
+   ]
+  },
+  {
+   "id": "ir-present",
+   "module": "A1.04",
+   "kind": "grammar",
+   "requires": [
+    "subject-pronouns"
+   ],
+   "title": "ir: present tense",
+   "summary": "voy, vas, va, vamos, vais, van + a + destination.",
+   "examples": [
+    "Voy a la oficina en bici."
+   ],
+   "traps": [
+    "'yo va' — the third person form leaks into first person."
+   ],
+   "error_tags": [
+    "conjugation",
+    "preposition"
+   ]
+  },
+  {
+   "id": "a-vs-en",
+   "legacy": true,
+   "module": "A1.04",
+   "kind": "grammar",
+   "requires": [
+    "ir-present",
+    "prepositions-place"
+   ],
+   "title": "a vs en",
+   "summary": "a = direction (to); en = location (in/at) and means of transport.",
+   "examples": [
+    "Voy a casa.",
+    "Estoy en casa.",
+    "Voy en tren."
+   ],
+   "traps": [
+    "'Voy en casa' is wrong."
+   ],
+   "transfer": {
+    "ru": "a — «куда», en — «где».",
+    "de": "a ≈ nach/zu, en ≈ in/bei."
+   },
+   "error_tags": [
+    "preposition"
+   ]
+  },
+  {
+   "id": "chunk-directions",
+   "module": "A1.04",
+   "kind": "chunk",
+   "requires": [],
+   "title": "Directions (fixed phrases)",
+   "summary": "Sigue recto, gira a la derecha / izquierda, toma la primera calle, está a cinco minutos. Learned as phrases before the imperative.",
+   "examples": [
+    "Sigue recto y gira a la izquierda."
+   ],
+   "traps": [
+    "Don't explain the imperative here; treat these as fixed phrases."
+   ],
+   "error_tags": [
+    "vocab"
+   ]
+  },
+  {
+   "id": "present-regular",
+   "module": "A1.05",
+   "kind": "grammar",
+   "requires": [
+    "subject-pronouns"
+   ],
+   "title": "Present tense: regular verbs",
+   "summary": "-ar: -o, -as, -a, -amos, -áis, -an. -er: -o, -es, -e, -emos, -éis, -en. -ir: -o, -es, -e, -imos, -ís, -en.",
+   "examples": [
+    "Trabajo en casa los lunes.",
+    "¿Dónde vives?"
+   ],
+   "traps": [
+    "yo always ends in -o except soy, estoy, voy, doy.",
+    "tú always ends in -s."
+   ],
+   "error_tags": [
+    "conjugation"
+   ]
+  },
+  {
+   "id": "reflexive-verbs",
+   "legacy": true,
+   "module": "A1.05",
+   "kind": "grammar",
+   "requires": [
+    "present-regular"
+   ],
+   "title": "Reflexive verbs",
+   "summary": "me, te, se, nos, os, se + verb. The pronoun goes before a conjugated verb or is attached to an infinitive.",
+   "examples": [
+    "Me levanto a las seis.",
+    "Tengo que acostarme pronto."
+   ],
+   "traps": [
+    "The pronoun is never dropped: '¿Te acuestas?'.",
+    "no goes before the pronoun: 'No me levanto'."
+   ],
+   "error_tags": [
+    "pronoun",
+    "word-order"
+   ]
+  },
+  {
+   "id": "irregular-yo",
+   "module": "A1.05",
+   "kind": "grammar",
+   "requires": [
+    "present-regular"
+   ],
+   "title": "Irregular yo forms",
+   "summary": "hago, pongo, salgo, traigo, conozco, sé, doy, veo, digo, vengo, tengo; the other persons are mostly regular.",
+   "examples": [
+    "Salgo de casa a las ocho.",
+    "Hago deporte."
+   ],
+   "traps": [
+    "'hacio', 'salo' are wrong."
+   ],
+   "error_tags": [
+    "conjugation"
+   ]
+  },
+  {
+   "id": "estar-gerund",
+   "module": "A1.05",
+   "kind": "grammar",
+   "requires": [
+    "estar-present",
+    "present-regular"
+   ],
+   "title": "estar + gerund",
+   "summary": "Action in progress right now: estar + -ando / -iendo. Irregular: leyendo, durmiendo, diciendo.",
+   "examples": [
+    "Estoy corriendo.",
+    "¿Qué estás haciendo?"
+   ],
+   "traps": [
+    "Not used for the near future as in English: 'Mañana voy a trabajar', not 'Mañana estoy trabajando'."
+   ],
+   "error_tags": [
+    "tense",
+    "conjugation"
+   ]
+  },
+  {
+   "id": "frequency-expressions",
+   "module": "A1.05",
+   "kind": "grammar",
+   "requires": [
+    "present-regular"
+   ],
+   "title": "Frequency expressions",
+   "summary": "siempre, normalmente, a menudo, a veces, casi nunca, nunca, todos los días, una vez a la semana.",
+   "examples": [
+    "Corro tres veces a la semana."
+   ],
+   "traps": [
+    "'nunca' after the verb needs no: 'No corro nunca' = 'Nunca corro'."
+   ],
+   "error_tags": [
+    "vocab",
+    "word-order"
+   ]
+  },
+  {
+   "id": "despues-de-infinitive",
+   "legacy": true,
+   "module": "A1.05",
+   "kind": "grammar",
+   "requires": [
+    "present-regular"
+   ],
+   "title": "antes de / después de + infinitive",
+   "summary": "Before/after doing something: antes de / después de + infinitive. después alone = afterwards.",
+   "examples": [
+    "Después de correr, me ducho."
+   ],
+   "traps": [
+    "Infinitive, not a conjugated verb: 'después de corro' is wrong."
+   ],
+   "transfer": {
+    "de": "≈ nach dem Laufen."
+   },
+   "error_tags": [
+    "preposition",
+    "conjugation"
+   ]
+  },
+  {
+   "id": "stem-change-e-ie",
+   "legacy": true,
+   "module": "A1.06",
+   "kind": "grammar",
+   "requires": [
+    "present-regular"
+   ],
+   "title": "Vowel change e → ie",
+   "summary": "The stressed e becomes ie in all forms except nosotros/vosotros: quiero, quieres, quiere, queremos, queréis, quieren. Also empezar, preferir, pensar, entender, tener, venir.",
+   "examples": [
+    "Prefiero trabajar por la mañana.",
+    "Queremos cenar."
+   ],
+   "traps": [
+    "'queremos' keeps e because the stress moves."
+   ],
+   "error_tags": [
+    "conjugation"
+   ]
+  },
+  {
+   "id": "stem-change-o-ue",
+   "legacy": true,
+   "module": "A1.06",
+   "kind": "grammar",
+   "requires": [
+    "present-regular"
+   ],
+   "title": "Vowel change o → ue",
+   "summary": "Stressed o becomes ue except in nosotros/vosotros: puedo, puedes, podemos. Also volver, dormir, costar, encontrar, acostarse. jugar: u → ue.",
+   "examples": [
+    "¿Puedes venir?",
+    "Vuelvo a las seis."
+   ],
+   "traps": [
+    "'puedemos' is wrong."
+   ],
+   "error_tags": [
+    "conjugation"
+   ]
+  },
+  {
+   "id": "stem-change-e-i",
+   "module": "A1.06",
+   "kind": "grammar",
+   "requires": [
+    "present-regular"
+   ],
+   "title": "Vowel change e → i",
+   "summary": "-ir verbs like pedir, repetir, servir, decir: pido, pides, pide, pedimos, pedís, piden.",
+   "examples": [
+    "Siempre pido lo mismo."
+   ],
+   "traps": [
+    "decir also has irregular yo: digo."
+   ],
+   "error_tags": [
+    "conjugation"
+   ]
+  },
+  {
+   "id": "ir-vs-venir",
+   "legacy": true,
+   "module": "A1.06",
+   "kind": "grammar",
+   "requires": [
+    "ir-present",
+    "stem-change-e-ie"
+   ],
+   "title": "ir vs venir",
+   "summary": "venir = come towards the speaker's location; ir = go elsewhere, including towards the listener. venir: vengo, vienes, viene, venimos, venís, vienen.",
+   "examples": [
+    "¿Vienes a mi casa?",
+    "¡Ya voy!"
+   ],
+   "traps": [
+    "Answering a call: 'Ya voy' (not 'Ya vengo')."
+   ],
+   "error_tags": [
+    "vocab",
+    "conjugation"
+   ]
+  },
+  {
+   "id": "connectors-basic",
+   "module": "A1.06",
+   "kind": "grammar",
+   "requires": [],
+   "title": "Basic connectors",
+   "summary": "y (e before i-), o (u before o-), pero, porque + indicative, también, tampoco, entonces.",
+   "examples": [
+    "Me gusta mi trabajo porque aprendo mucho."
+   ],
+   "traps": [
+    "porque (because) vs por qué (why).",
+    "porque takes the normal indicative: 'porque estoy cansado'."
+   ],
+   "error_tags": [
+    "vocab",
+    "accent",
+    "mood"
+   ]
+  },
+  {
+   "id": "decir-que",
+   "legacy": true,
+   "module": "A1.06",
+   "kind": "grammar",
+   "requires": [
+    "stem-change-e-i"
+   ],
+   "title": "decir / pensar / creer + que",
+   "summary": "'that' after verbs of saying and thinking is que and can't be dropped.",
+   "examples": [
+    "Dice que viene mañana.",
+    "Creo que es buena idea."
+   ],
+   "traps": [
+    "Unlike German 'dass' or English 'that', que is mandatory."
+   ],
+   "error_tags": [
+    "word-order",
+    "other"
+   ]
+  },
+  {
+   "id": "chunk-quisiera",
+   "module": "A1.07",
+   "kind": "chunk",
+   "requires": [],
+   "title": "quisiera / me pone",
+   "summary": "Polite ordering: Quisiera..., ¿Me pone...?, Para mí..., Yo quiero... is acceptable in Spain. Learned as phrases, not as conditional.",
+   "examples": [
+    "¿Me pone un café con leche?",
+    "Para mí, la ensalada."
+   ],
+   "traps": [
+    "Don't explain the conditional here."
+   ],
+   "transfer": {
+    "de": "≈ Ich hätte gern...",
+    "ru": "≈ «Мне, пожалуйста…»"
+   },
+   "error_tags": [
+    "register",
+    "vocab"
+   ]
+  },
+  {
+   "id": "polite-requests",
+   "module": "A1.07",
+   "kind": "grammar",
+   "requires": [
+    "present-regular"
+   ],
+   "title": "Requests with ¿puede...? / ¿me trae...?",
+   "summary": "Ask for things or actions with a present-tense question: ¿Me trae la cuenta? ¿Puede cambiar...? ¿Tiene...?",
+   "examples": [
+    "¿Nos trae la cuenta, por favor?",
+    "¿Tiene algo sin gluten?"
+   ],
+   "traps": [
+    "me/nos before the verb: '¿Me trae...?', not '¿Trae me...?'."
+   ],
+   "error_tags": [
+    "pronoun",
+    "register"
+   ]
+  },
+  {
+   "id": "quantity-expressions",
+   "module": "A1.07",
+   "kind": "grammar",
+   "requires": [
+    "noun-gender-number"
+   ],
+   "title": "Quantities",
+   "summary": "un poco de, mucho/a, demasiado/a, bastante, un kilo de, una botella de, medio kilo de, nada de. Containers and measures take de + noun without article.",
+   "examples": [
+    "un kilo de tomates",
+    "Tengo demasiado trabajo."
+   ],
+   "traps": [
+    "'un kilo de los tomates' is wrong."
+   ],
+   "error_tags": [
+    "article",
+    "agreement"
+   ]
+  },
+  {
+   "id": "estar-taste",
+   "module": "A1.07",
+   "kind": "grammar",
+   "requires": [
+    "ser-vs-estar"
+   ],
+   "title": "estar + adjective for taste and food state",
+   "summary": "This specific dish: estar (Está rico, está frío). Food in general: ser (El chocolate es dulce).",
+   "examples": [
+    "La sopa está muy rica.",
+    "El café está frío."
+   ],
+   "traps": [
+    "'La paella es rica' sounds like a general statement."
+   ],
+   "error_tags": [
+    "ser-estar"
+   ]
+  },
+  {
+   "id": "demonstratives",
+   "module": "A1.08",
+   "kind": "grammar",
+   "requires": [
+    "gender-agreement"
+   ],
+   "title": "Demonstratives",
+   "summary": "este (here, near me), ese (near you / there), aquel (over there, far). Agree in gender and number; neuter esto, eso, aquello for unknown things.",
+   "examples": [
+    "Este jersey es más barato que ese.",
+    "¿Qué es eso?"
+   ],
+   "traps": [
+    "Neuter esto/eso never refers to a known noun: 'esta camisa', not 'esto camisa'."
+   ],
+   "error_tags": [
+    "agreement",
+    "vocab"
+   ]
+  },
+  {
+   "id": "direct-object-pronouns",
+   "module": "A1.08",
+   "kind": "grammar",
+   "requires": [
+    "present-regular",
+    "articles"
+   ],
+   "title": "Direct object pronouns",
+   "summary": "me, te, lo/la, nos, os, los/las replace the object; before the conjugated verb or attached to an infinitive.",
+   "examples": [
+    "Me lo llevo.",
+    "¿La camisa? La quiero en azul.",
+    "Voy a comprarlo."
+   ],
+   "traps": [
+    "Gender follows the replaced noun.",
+    "Position: 'Lo compro', not 'Compro lo'."
+   ],
+   "error_tags": [
+    "pronoun",
+    "word-order",
+    "agreement"
+   ]
+  },
+  {
+   "id": "comparatives-basic",
+   "module": "A1.08",
+   "kind": "grammar",
+   "requires": [
+    "gender-agreement"
+   ],
+   "title": "Comparatives",
+   "summary": "más / menos + adjective + que; tan + adjective + como. Irregular: mejor, peor, mayor, menor.",
+   "examples": [
+    "Esta es más barata que esa.",
+    "Es tan caro como el otro."
+   ],
+   "traps": [
+    "'más bueno' → mejor.",
+    "que, not como, after más."
+   ],
+   "error_tags": [
+    "vocab",
+    "agreement"
+   ]
+  },
+  {
+   "id": "indefinites-basic",
+   "module": "A1.08",
+   "kind": "grammar",
+   "requires": [
+    "gender-agreement"
+   ],
+   "title": "otro, todo, cada, alguno",
+   "summary": "otro/a without un: 'otra talla'. todo el / toda la + noun. cada is invariable. alguno → algún before a masculine noun.",
+   "examples": [
+    "¿Tiene otra talla?",
+    "Trabajo todos los días."
+   ],
+   "traps": [
+    "'una otra' is wrong.",
+    "'todo el día' needs the article."
+   ],
+   "error_tags": [
+    "article",
+    "agreement"
+   ]
+  },
+  {
+   "id": "gustar",
+   "legacy": true,
+   "module": "A1.09",
+   "kind": "grammar",
+   "requires": [
+    "articles"
+   ],
+   "title": "gustar and similar verbs",
+   "summary": "The thing liked is the subject: me gusta + singular/infinitive, me gustan + plural. The person is the indirect object me/te/le/nos/os/les. encantar, interesar, doler work the same way.",
+   "examples": [
+    "Me gusta el café.",
+    "Nos encantan los conciertos.",
+    "A Ana le gusta correr."
+   ],
+   "traps": [
+    "Conjugating by person ('gusto', 'encantamos').",
+    "Missing article: 'Me gusta café'."
+   ],
+   "transfer": {
+    "de": "Works like gefallen: Der Film gefällt mir → Me gusta la película.",
+    "ru": "Как «нравится»: подлежащее — то, что нравится."
+   },
+   "error_tags": [
+    "conjugation",
+    "article",
+    "pronoun"
+   ]
+  },
+  {
+   "id": "indirect-object-pronouns",
+   "module": "A1.09",
+   "kind": "grammar",
+   "requires": [
+    "gustar"
+   ],
+   "title": "Indirect object pronouns",
+   "summary": "me, te, le, nos, os, les = to/for someone. Often doubled with a + person: Le escribo a mi jefe.",
+   "examples": [
+    "Le doy el libro a Ana.",
+    "¿Me ayudas?"
+   ],
+   "traps": [
+    "le vs lo: le = to him/her, lo = him/it.",
+    "Doubling with a + person is normal, not redundant."
+   ],
+   "error_tags": [
+    "pronoun"
+   ]
+  },
+  {
+   "id": "tambien-tampoco",
+   "module": "A1.09",
+   "kind": "grammar",
+   "requires": [
+    "gustar"
+   ],
+   "title": "también / tampoco / a mí sí / a mí no",
+   "summary": "Agreeing: también (positive), tampoco (negative). Disagreeing: a mí sí / a mí no; with normal verbs: yo sí / yo no.",
+   "examples": [
+    "—Me gusta el jazz. —A mí también.",
+    "—No corro. —Yo tampoco."
+   ],
+   "traps": [
+    "With gustar use 'a mí', not 'yo': 'A mí también'."
+   ],
+   "error_tags": [
+    "pronoun",
+    "vocab"
+   ]
+  },
+  {
+   "id": "saber-vs-conocer",
+   "module": "A1.09",
+   "kind": "grammar",
+   "requires": [
+    "irregular-yo"
+   ],
+   "title": "saber vs conocer",
+   "summary": "saber = know a fact / know how to (sé nadar). conocer = be acquainted with a person, place or thing (conozco Madrid).",
+   "examples": [
+    "¿Sabes cocinar?",
+    "No conozco a tu hermano."
+   ],
+   "traps": [
+    "Personal a after conocer + person.",
+    "Ability: 'sé tocar la batería', not 'puedo'."
+   ],
+   "transfer": {
+    "de": "saber ≈ wissen / können (gelernt), conocer ≈ kennen.",
+    "ru": "saber — «знать что / уметь», conocer — «быть знакомым»."
+   },
+   "error_tags": [
+    "vocab",
+    "conjugation"
+   ]
+  },
+  {
+   "id": "ir-a-infinitive",
+   "legacy": true,
+   "module": "A1.10",
+   "kind": "grammar",
+   "requires": [
+    "ir-present"
+   ],
+   "title": "ir a + infinitive",
+   "summary": "Near future and plans: only ir is conjugated, then a + one infinitive.",
+   "examples": [
+    "Voy a correr mañana.",
+    "¿Qué vais a hacer el sábado?"
+   ],
+   "traps": [
+    "'va' for every person.",
+    "Conjugating the second verb: 'voy a tengo'."
+   ],
+   "error_tags": [
+    "conjugation",
+    "preposition"
+   ]
+  },
+  {
+   "id": "tener-que-infinitive",
+   "module": "A1.10",
+   "kind": "grammar",
+   "requires": [
+    "tener-present"
+   ],
+   "title": "tener que + infinitive",
+   "summary": "Obligation: tener que + infinitive. 'hay que' = one has to (impersonal).",
+   "examples": [
+    "Tengo que trabajar el sábado."
+   ],
+   "traps": [
+    "Don't omit que: 'tengo trabajar' is wrong."
+   ],
+   "error_tags": [
+    "conjugation",
+    "other"
+   ]
+  },
+  {
+   "id": "weather-expressions",
+   "module": "A1.10",
+   "kind": "grammar",
+   "requires": [
+    "estar-present"
+   ],
+   "title": "Weather",
+   "summary": "hace calor/frío/sol/viento/buen tiempo; está nublado; hay niebla; llueve, nieva; está lloviendo.",
+   "examples": [
+    "Hoy hace mucho frío.",
+    "Está lloviendo."
+   ],
+   "traps": [
+    "'Es frío' about the weather is wrong."
+   ],
+   "error_tags": [
+    "vocab",
+    "ser-estar"
+   ]
+  },
+  {
+   "id": "chunk-proposals",
+   "module": "A1.10",
+   "kind": "chunk",
+   "requires": [],
+   "title": "Making and answering proposals",
+   "summary": "¿Quedamos...? ¿Por qué no...? ¿Te viene bien...? Vale. Perfecto. Lo siento, no puedo. ¿Y si...?",
+   "examples": [
+    "¿Quedamos el viernes a las siete?",
+    "Lo siento, el viernes no puedo. ¿Y el sábado?"
+   ],
+   "traps": [
+    "quedar = arrange to meet in Spain."
+   ],
+   "error_tags": [
+    "vocab",
+    "register"
+   ]
+  },
+  {
+   "id": "si-present",
+   "module": "A1.10",
+   "kind": "grammar",
+   "requires": [
+    "present-regular"
+   ],
+   "title": "Real conditions: si + present",
+   "summary": "si + present, present / ir a / imperative for real conditions. si (if) has no accent; sí (yes) does.",
+   "examples": [
+    "Si llueve, voy al gimnasio."
+   ],
+   "traps": [
+    "No future after si: 'si lloverá' is wrong."
+   ],
+   "error_tags": [
+    "tense",
+    "accent"
+   ]
+  },
+  {
+   "id": "preterite-recognition",
+   "module": "A2.01",
+   "kind": "grammar",
+   "requires": [
+    "present-regular"
+   ],
+   "title": "Preterite: recognising forms",
+   "summary": "Recognise preterite forms in texts before producing them: -é/-ó endings, fue, hizo, tuvo.",
+   "examples": [
+    "Ayer fui al cine y compré palomitas."
+   ],
+   "traps": [
+    "compro (I buy) vs compró (he bought): the accent changes person and tense."
+   ],
+   "error_tags": [
+    "tense",
+    "accent"
+   ]
+  },
+  {
+   "id": "preterite-indefinido-ar",
+   "legacy": true,
+   "module": "A2.01",
+   "kind": "grammar",
+   "requires": [
+    "preterite-recognition",
+    "accent-rules"
+   ],
+   "title": "Preterite: regular -ar verbs",
+   "summary": "-é, -aste, -ó, -amos, -asteis, -aron. Spelling: -gar → -gué, -car → -qué, -zar → -cé in yo.",
+   "examples": [
+    "Ayer trabajé hasta tarde.",
+    "Pagué con tarjeta."
+   ],
+   "traps": [
+    "nosotros form equals present: trabajamos (context decides).",
+    "Missing accent on -é/-ó."
+   ],
+   "error_tags": [
+    "conjugation",
+    "accent",
+    "spelling"
+   ]
+  },
+  {
+   "id": "preterite-er-ir",
+   "module": "A2.01",
+   "kind": "grammar",
+   "requires": [
+    "preterite-indefinido-ar"
+   ],
+   "title": "Preterite: regular -er/-ir verbs",
+   "summary": "-í, -iste, -ió, -imos, -isteis, -ieron. leer/creer: leyó, leyeron.",
+   "examples": [
+    "Comimos en un restaurante griego.",
+    "¿Viviste en Rusia?"
+   ],
+   "traps": [
+    "vivimos = present and past."
+   ],
+   "error_tags": [
+    "conjugation",
+    "accent"
+   ]
+  },
+  {
+   "id": "preterite-ser-ir",
+   "module": "A2.01",
+   "kind": "grammar",
+   "requires": [
+    "preterite-indefinido-ar"
+   ],
+   "title": "Preterite of ser and ir",
+   "summary": "ser and ir share the same forms: fui, fuiste, fue, fuimos, fuisteis, fueron. No written accents.",
+   "examples": [
+    "Fui a Málaga en mayo.",
+    "Fue un viaje genial."
+   ],
+   "traps": [
+    "'fuí', 'fué' with accents are wrong."
+   ],
+   "error_tags": [
+    "conjugation",
+    "accent"
+   ]
+  },
+  {
+   "id": "preterite-irregular",
+   "module": "A2.01",
+   "kind": "grammar",
+   "requires": [
+    "preterite-er-ir"
+   ],
+   "title": "Preterite: irregular stems",
+   "summary": "Stem + -e, -iste, -o, -imos, -isteis, -ieron, no accents: hice/hizo, tuve, estuve, pude, puse, vine, quise, supe; dije/dijeron, traje/trajeron.",
+   "examples": [
+    "Ayer hice la compra.",
+    "No pude venir."
+   ],
+   "traps": [
+    "hizo with z.",
+    "dijeron, not 'dijieron'."
+   ],
+   "error_tags": [
+    "conjugation",
+    "accent",
+    "spelling"
+   ]
+  },
+  {
+   "id": "past-time-markers",
+   "module": "A2.01",
+   "kind": "grammar",
+   "requires": [],
+   "title": "Past time markers",
+   "summary": "ayer, anoche, anteayer, el lunes pasado, la semana pasada, el año pasado, en 2019, hace dos días.",
+   "examples": [
+    "Hace tres años corrí un maratón."
+   ],
+   "traps": [
+    "hace + time = ago, placed before: 'hace dos días'."
+   ],
+   "error_tags": [
+    "vocab",
+    "agreement"
+   ]
+  },
+  {
+   "id": "por-vs-para",
+   "module": "A2.02",
+   "kind": "grammar",
+   "requires": [],
+   "title": "por vs para",
+   "summary": "para: purpose, recipient, destination, deadline. por: cause, through/along, exchange/price, means, duration, 'per'.",
+   "examples": [
+    "Este regalo es para ti.",
+    "Gracias por todo.",
+    "Paseo por el parque."
+   ],
+   "traps": [
+    "Purpose + infinitive is para: 'para aprender'.",
+    "'gracias por', never 'para'."
+   ],
+   "error_tags": [
+    "por-para"
+   ]
+  },
+  {
+   "id": "transport-prepositions",
+   "module": "A2.02",
+   "kind": "grammar",
+   "requires": [
+    "prepositions-place"
+   ],
+   "title": "Travel prepositions",
+   "summary": "en tren/avión/coche, a pie, en bici; de ... a ...; desde ... hasta ...; salir de, llegar a.",
+   "examples": [
+    "Fui de Leipzig a Madrid en avión.",
+    "Llegamos a Sevilla por la noche."
+   ],
+   "traps": [
+    "'llegar en' a city is wrong: llegar a."
+   ],
+   "error_tags": [
+    "preposition"
+   ]
+  },
+  {
+   "id": "preterite-stem-change",
+   "module": "A2.02",
+   "kind": "grammar",
+   "requires": [
+    "preterite-er-ir"
+   ],
+   "title": "Preterite: -ir stem changes",
+   "summary": "-ir verbs with a present stem change also change in él/ellos: pidió, pidieron, durmió, durmieron, prefirió.",
+   "examples": [
+    "Pidió una paella.",
+    "Dormimos poco, pero ellos durmieron bien."
+   ],
+   "traps": [
+    "Only 3rd person changes: pedí, pediste, pidió."
+   ],
+   "error_tags": [
+    "conjugation"
+   ]
+  },
+  {
+   "id": "present-perfect",
+   "module": "A2.03",
+   "kind": "grammar",
+   "requires": [
+    "present-regular"
+   ],
+   "title": "Present perfect (pretérito perfecto)",
+   "summary": "haber (he, has, ha, hemos, habéis, han) + participle (-ado, -ido). Participle never agrees, nothing goes between haber and participle.",
+   "examples": [
+    "Hoy he corrido diez kilómetros.",
+    "¿Has estado en México?"
+   ],
+   "traps": [
+    "Always haber, never ser, even where German uses sein: 'He ido', not 'Soy ido'."
+   ],
+   "transfer": {
+    "de": "Only haber; no sein-Perfekt."
+   },
+   "error_tags": [
+    "conjugation",
+    "tense"
+   ]
+  },
+  {
+   "id": "participles-irregular",
+   "module": "A2.03",
+   "kind": "grammar",
+   "requires": [
+    "present-perfect"
+   ],
+   "title": "Irregular participles",
+   "summary": "hecho, dicho, visto, escrito, puesto, vuelto, abierto, roto, muerto, descubierto.",
+   "examples": [
+    "¿Has visto mi móvil?",
+    "Todavía no he escrito el informe."
+   ],
+   "traps": [
+    "'hacido', 'escribido', 'vido' are wrong."
+   ],
+   "error_tags": [
+    "conjugation"
+   ]
+  },
+  {
+   "id": "ya-todavia",
+   "module": "A2.03",
+   "kind": "grammar",
+   "requires": [
+    "present-perfect"
+   ],
+   "title": "ya / todavía no / alguna vez / nunca",
+   "summary": "ya = already, todavía no / aún no = not yet, alguna vez = ever, nunca = never; typical with the present perfect.",
+   "examples": [
+    "Ya he terminado.",
+    "Todavía no he comido."
+   ],
+   "traps": [
+    "'todavía' alone means still: 'Todavía trabajo aquí'."
+   ],
+   "error_tags": [
+    "vocab",
+    "word-order"
+   ]
+  },
+  {
+   "id": "perfect-vs-preterite",
+   "module": "A2.03",
+   "kind": "grammar",
+   "requires": [
+    "present-perfect",
+    "preterite-indefinido-ar"
+   ],
+   "variety_note": "es-ES: perfecto for today/this week/unfinished period; Latin America mostly uses the preterite there.",
+   "title": "Perfecto vs indefinido (Spain)",
+   "summary": "In Spain: perfecto for time periods that are not over (hoy, esta semana, este año) and experiences; indefinido for finished periods (ayer, el año pasado).",
+   "examples": [
+    "Esta mañana he desayunado tarde.",
+    "Ayer desayuné tarde."
+   ],
+   "traps": [
+    "'Ayer he ido' is wrong in standard Spanish."
+   ],
+   "error_tags": [
+    "tense"
+   ]
+  },
+  {
+   "id": "imperfect",
+   "module": "A2.04",
+   "kind": "grammar",
+   "requires": [
+    "present-regular"
+   ],
+   "title": "Imperfect (pretérito imperfecto)",
+   "summary": "-aba, -abas, -aba, -ábamos, -abais, -aban; -ía, -ías, -ía, -íamos, -íais, -ían. Only 3 irregular: ser (era), ir (iba), ver (veía). Past habits and descriptions.",
+   "examples": [
+    "De niño vivía en Rusia.",
+    "Antes corría todos los días."
+   ],
+   "traps": [
+    "Accent on -ábamos and on every -ía form."
+   ],
+   "error_tags": [
+    "conjugation",
+    "accent"
+   ]
+  },
+  {
+   "id": "soler-infinitive",
+   "module": "A2.04",
+   "kind": "grammar",
+   "requires": [
+    "stem-change-o-ue"
+   ],
+   "title": "soler + infinitive",
+   "summary": "Habitual action: suelo correr por la mañana; past habit: solía.",
+   "examples": [
+    "Suelo trabajar desde casa los viernes."
+   ],
+   "traps": [
+    "soler is followed directly by the infinitive, no preposition."
+   ],
+   "error_tags": [
+    "conjugation",
+    "preposition"
+   ]
+  },
+  {
+   "id": "past-aspect-basic",
+   "module": "A2.04",
+   "kind": "grammar",
+   "requires": [
+    "imperfect",
+    "preterite-irregular"
+   ],
+   "title": "Indefinido vs imperfecto: basics",
+   "summary": "Imperfect: background, description, habits, ongoing actions. Indefinido: completed events that move the story forward.",
+   "examples": [
+    "Llovía cuando salí de casa."
+   ],
+   "traps": [
+    "Duration doesn't decide: 'Viví diez años en Moscú' (completed) is indefinido."
+   ],
+   "transfer": {
+    "ru": "Похоже на несовершенный/совершенный вид, но не совпадает полностью: «жил десять лет» = viví."
+   },
+   "error_tags": [
+    "past-aspect",
+    "tense"
+   ]
+  },
+  {
+   "id": "chunk-me-duele",
+   "module": "A2.05",
+   "kind": "chunk",
+   "requires": [
+    "gustar"
+   ],
+   "title": "me duele / me duelen",
+   "summary": "Pain works like gustar: Me duele la cabeza, me duelen las piernas. Body parts take the definite article, not a possessive.",
+   "examples": [
+    "Me duele la rodilla desde el maratón."
+   ],
+   "traps": [
+    "'Mi cabeza duele' is unnatural.",
+    "Article, not possessive: 'la rodilla'."
+   ],
+   "error_tags": [
+    "conjugation",
+    "article",
+    "pronoun"
+   ]
+  },
+  {
+   "id": "tener-symptoms",
+   "module": "A2.05",
+   "kind": "grammar",
+   "requires": [
+    "tener-present"
+   ],
+   "title": "Symptoms with tener and estar",
+   "summary": "tengo fiebre / tos / gripe / dolor de...; estoy resfriado / mareado; desde hace + time.",
+   "examples": [
+    "Tengo fiebre desde hace dos días."
+   ],
+   "traps": [
+    "desde hace, not 'desde' alone, for a period."
+   ],
+   "error_tags": [
+    "vocab",
+    "preposition"
+   ]
+  },
+  {
+   "id": "deber-hay-que",
+   "module": "A2.05",
+   "kind": "grammar",
+   "requires": [
+    "tener-que-infinitive"
+   ],
+   "title": "Advice: deber, hay que, es mejor",
+   "summary": "deber + infinitive (should), hay que + infinitive (one must), es mejor / es importante + infinitive.",
+   "examples": [
+    "Debes descansar.",
+    "Hay que beber mucha agua."
+   ],
+   "traps": [
+    "'debes de' means probability, not obligation."
+   ],
+   "error_tags": [
+    "preposition",
+    "vocab"
+   ]
+  },
+  {
+   "id": "imperative-tu-affirmative",
+   "module": "A2.05",
+   "kind": "grammar",
+   "requires": [
+    "present-regular",
+    "irregular-yo"
+   ],
+   "title": "Affirmative imperative (tú)",
+   "summary": "Regular = 3rd person singular present: habla, come, escribe. Irregular: ven, ve, haz, di, pon, sal, ten, sé. vosotros: -ad/-ed/-id.",
+   "examples": [
+    "Bebe agua y descansa.",
+    "Ven a las ocho."
+   ],
+   "traps": [
+    "Negative commands use a different form (subjunctive), not covered at A2 production level."
+   ],
+   "error_tags": [
+    "mood",
+    "conjugation"
+   ]
+  },
+  {
+   "id": "imperative-pronouns",
+   "module": "A2.06",
+   "kind": "grammar",
+   "requires": [
+    "imperative-tu-affirmative",
+    "direct-object-pronouns",
+    "accent-rules"
+   ],
+   "title": "Imperative with pronouns",
+   "summary": "Pronouns attach to the affirmative imperative; the stress stays put, so an accent is often added: dímelo, tráelo, siéntate.",
+   "examples": [
+    "Tráemelo, por favor.",
+    "Llámame mañana."
+   ],
+   "traps": [
+    "Missing accent: 'damelo' → dámelo."
+   ],
+   "error_tags": [
+    "pronoun",
+    "accent"
+   ]
+  },
+  {
+   "id": "double-object-pronouns",
+   "module": "A2.06",
+   "kind": "grammar",
+   "requires": [
+    "direct-object-pronouns",
+    "indirect-object-pronouns"
+   ],
+   "title": "Double object pronouns",
+   "summary": "Indirect before direct: me lo, te la. le/les becomes se before lo/la/los/las: se lo doy.",
+   "examples": [
+    "¿El libro? Te lo dejo mañana.",
+    "Se lo he dicho a Marta."
+   ],
+   "traps": [
+    "'le lo' is wrong → se lo."
+   ],
+   "error_tags": [
+    "pronoun",
+    "word-order"
+   ]
+  },
+  {
+   "id": "estar-result",
+   "module": "A2.06",
+   "kind": "grammar",
+   "requires": [
+    "ser-vs-estar",
+    "participles-irregular"
+   ],
+   "title": "estar + participle for states",
+   "summary": "Resulting state: está roto / cerrado / abierto / apagado; participle agrees like an adjective.",
+   "examples": [
+    "La lavadora está rota.",
+    "La tienda está cerrada."
+   ],
+   "traps": [
+    "Agreement: 'la ventana está abierta'."
+   ],
+   "error_tags": [
+    "ser-estar",
+    "agreement"
+   ]
+  },
+  {
+   "id": "possessive-stressed",
+   "module": "A2.06",
+   "kind": "grammar",
+   "requires": [
+    "possessive-agreement"
+   ],
+   "title": "Stressed possessives: mío, tuyo",
+   "summary": "mío, tuyo, suyo, nuestro, vuestro — after ser or the noun, and as pronouns with the article: el mío.",
+   "examples": [
+    "¿Es tuyo este paraguas?",
+    "Mi piso es más pequeño que el tuyo."
+   ],
+   "traps": [
+    "Agree with the possessed thing: 'Esta llave es mía'."
+   ],
+   "error_tags": [
+    "agreement",
+    "pronoun"
+   ]
+  },
+  {
+   "id": "chunk-me-gustaria-podria",
+   "module": "A2.07",
+   "kind": "chunk",
+   "requires": [
+    "gustar"
+   ],
+   "title": "me gustaría / podría / ¿podrías...?",
+   "summary": "Polite wishes and requests as fixed phrases before the conditional is taught: Me gustaría..., ¿Podrías...?, ¿Podríamos...?",
+   "examples": [
+    "¿Podríamos mover la reunión al jueves?"
+   ],
+   "traps": [
+    "Don't explain the conditional paradigm here."
+   ],
+   "error_tags": [
+    "register"
+   ]
+  },
+  {
+   "id": "future-simple",
+   "module": "A2.07",
+   "kind": "grammar",
+   "requires": [
+    "present-regular"
+   ],
+   "title": "Simple future",
+   "summary": "Infinitive + -é, -ás, -á, -emos, -éis, -án. Irregular stems: har-, tendr-, podr-, saldr-, vendr-, dir-, sabr-, pondr-, querr-.",
+   "examples": [
+    "Te enviaré el informe mañana."
+   ],
+   "traps": [
+    "In speech ir a + infinitive is more common for plans."
+   ],
+   "error_tags": [
+    "conjugation",
+    "accent"
+   ]
+  },
+  {
+   "id": "connectors-discourse",
+   "module": "A2.07",
+   "kind": "grammar",
+   "requires": [
+    "connectors-basic"
+   ],
+   "title": "Discourse connectors",
+   "summary": "así que, por eso, además, aunque, sin embargo, primero, luego, al final.",
+   "examples": [
+    "Estoy enfermo, así que no puedo ir."
+   ],
+   "traps": [
+    "aunque + indicative for facts; the subjunctive case is not taught at A2."
+   ],
+   "error_tags": [
+    "vocab"
+   ]
+  },
+  {
+   "id": "superlatives",
+   "module": "A2.08",
+   "kind": "grammar",
+   "requires": [
+    "comparatives-basic"
+   ],
+   "title": "Superlatives",
+   "summary": "el/la/los/las + más/menos + adjective + de; mejor/peor. Absolute: -ísimo (carísimo).",
+   "examples": [
+    "Es la ciudad más bonita de España.",
+    "Es el mejor restaurante del barrio."
+   ],
+   "traps": [
+    "'de', not 'en': 'el más alto de la clase'."
+   ],
+   "error_tags": [
+    "preposition",
+    "agreement"
+   ]
+  },
+  {
+   "id": "comparatives-quantity",
+   "module": "A2.08",
+   "kind": "grammar",
+   "requires": [
+    "comparatives-basic"
+   ],
+   "title": "Comparing quantities",
+   "summary": "tanto/a/os/as + noun + como; más/menos + noun + que; más de / menos de + number.",
+   "examples": [
+    "No tengo tanto tiempo como antes.",
+    "Cuesta más de cien euros."
+   ],
+   "traps": [
+    "Before a number: más de, not más que."
+   ],
+   "error_tags": [
+    "agreement",
+    "preposition"
+   ]
+  },
+  {
+   "id": "opinion-chunks",
+   "module": "A2.08",
+   "kind": "chunk",
+   "requires": [
+    "decir-que"
+   ],
+   "title": "Giving opinions",
+   "summary": "Creo que..., Me parece que..., Para mí..., En mi opinión..., (No) estoy de acuerdo con..., Tienes razón.",
+   "examples": [
+    "Me parece que la segunda opción es mejor."
+   ],
+   "traps": [
+    "'Estoy de acuerdo', not 'Soy de acuerdo'."
+   ],
+   "error_tags": [
+    "ser-estar",
+    "vocab"
+   ]
+  },
+  {
+   "id": "conditional-polite",
+   "module": "A2.09",
+   "kind": "grammar",
+   "requires": [
+    "chunk-me-gustaria-podria",
+    "future-simple"
+   ],
+   "title": "Conditional for politeness",
+   "summary": "Infinitive + -ía, -ías, -ía, -íamos, -íais, -ían, same irregular stems as the future. Polite requests and wishes.",
+   "examples": [
+    "¿Podría cambiarme la habitación?",
+    "Preferiría una mesa fuera."
+   ],
+   "traps": [
+    "Same stems as the future: 'tendría', not 'tenería'."
+   ],
+   "error_tags": [
+    "conjugation",
+    "mood",
+    "register"
+   ]
+  },
+  {
+   "id": "reported-speech-basic",
+   "module": "A2.09",
+   "kind": "grammar",
+   "requires": [
+    "decir-que",
+    "preterite-irregular"
+   ],
+   "title": "Reported speech: basics",
+   "summary": "Dice que + same tense; Me dijo que + present for things still true. Questions: Me preguntó si / dónde...",
+   "examples": [
+    "El recepcionista dijo que la habitación está lista."
+   ],
+   "traps": [
+    "Tense backshift is not required at A2 when the fact still holds."
+   ],
+   "error_tags": [
+    "tense",
+    "other"
+   ]
+  },
+  {
+   "id": "negative-indefinites",
+   "module": "A2.09",
+   "kind": "grammar",
+   "requires": [
+    "negation-no",
+    "indefinites-basic"
+   ],
+   "title": "Negative words: nadie, nada, ninguno",
+   "summary": "After the verb they need no: No vino nadie. Before the verb no 'no': Nadie vino. ninguno → ningún before a masculine noun.",
+   "examples": [
+    "No hay ninguna mesa libre.",
+    "No me han dicho nada."
+   ],
+   "traps": [
+    "Double negation is required, unlike German/English.",
+    "ninguno is almost always singular."
+   ],
+   "transfer": {
+    "ru": "Двойное отрицание как в русском: «никто не пришёл» = No vino nadie."
+   },
+   "error_tags": [
+    "word-order",
+    "agreement"
+   ]
+  },
+  {
+   "id": "narrative-past",
+   "module": "A2.10",
+   "kind": "grammar",
+   "requires": [
+    "past-aspect-basic"
+   ],
+   "title": "Narrating in the past",
+   "summary": "Combine imperfect (scene, background) and indefinido (events) in a connected story.",
+   "examples": [
+    "Era 2019, vivía en Leipzig y trabajaba mucho. Un día decidí correr un maratón."
+   ],
+   "traps": [
+    "Telling a whole story in imperfect or in indefinido only."
+   ],
+   "error_tags": [
+    "past-aspect",
+    "tense"
+   ]
+  },
+  {
+   "id": "time-clauses",
+   "module": "A2.10",
+   "kind": "grammar",
+   "requires": [
+    "despues-de-infinitive",
+    "preterite-irregular"
+   ],
+   "title": "Time expressions in stories",
+   "summary": "cuando + past, mientras + imperfect, al + infinitive, hace + time (ago), desde hace + time (for, still ongoing), hace ... que.",
+   "examples": [
+    "Vivo en Alemania desde hace quince años.",
+    "Al llegar, llamé a mi madre."
+   ],
+   "traps": [
+    "Ongoing state: present + desde hace, not a past tense."
+   ],
+   "transfer": {
+    "de": "seit 15 Jahren = desde hace quince años (present tense, as in German)."
+   },
+   "error_tags": [
+    "preposition",
+    "tense"
+   ]
+  },
+  {
+   "id": "relative-que-donde",
+   "module": "A2.10",
+   "kind": "grammar",
+   "requires": [],
+   "title": "Relative clauses: que, donde",
+   "summary": "que for people and things, donde for places; lo que = what (the thing that).",
+   "examples": [
+    "La empresa donde trabajo es pequeña.",
+    "Lo que más me gusta es correr."
+   ],
+   "traps": [
+    "'el que' / 'quien' are not needed at A2 for basic clauses."
+   ],
+   "error_tags": [
+    "pronoun",
+    "word-order"
+   ]
+  }
+ ],
+ "errors": [
+  "accent",
+  "agreement",
+  "article",
+  "conjugation",
+  "gender",
+  "mood",
+  "other",
+  "past-aspect",
+  "por-para",
+  "preposition",
+  "pronoun",
+  "register",
+  "ser-estar",
+  "spelling",
+  "tense",
+  "vocab",
+  "word-order"
+ ],
+ "lexicon": [
+  {
+   "id": "es.w.cuenta",
+   "lemma": "cuenta",
+   "pos": "noun",
+   "gender": "f",
+   "gloss": "bill (in a restaurant)",
+   "module": "A1.07",
+   "pack": "core"
+  }
+ ],
+ "versions": {
+  "modules": 1,
+  "topics": 1,
+  "errors": 1
+ },
+ "error_defs": [
+  {
+   "scope": "core",
+   "id": "spelling",
+   "legacy": true,
+   "text": "Misspelled word (letters), not diacritics."
+  },
+  {
+   "scope": "core",
+   "id": "accent",
+   "text": "Missing, extra or wrong written accent/diacritic."
+  },
+  {
+   "scope": "core",
+   "id": "vocab",
+   "legacy": true,
+   "text": "Wrong or unknown word; meaning confused."
+  },
+  {
+   "scope": "core",
+   "id": "gender",
+   "legacy": true,
+   "text": "Wrong grammatical gender of a noun."
+  },
+  {
+   "scope": "core",
+   "id": "agreement",
+   "legacy": true,
+   "text": "Adjective/article/pronoun doesn't agree in gender or number."
+  },
+  {
+   "scope": "core",
+   "id": "article",
+   "legacy": true,
+   "text": "Article missing, extra or wrong type (definite/indefinite)."
+  },
+  {
+   "scope": "core",
+   "id": "conjugation",
+   "legacy": true,
+   "text": "Right tense, wrong verb form (person, number, stem)."
+  },
+  {
+   "scope": "core",
+   "id": "tense",
+   "legacy": true,
+   "text": "Wrong tense or aspect chosen."
+  },
+  {
+   "scope": "core",
+   "id": "mood",
+   "text": "Wrong mood (indicative/subjunctive/imperative/conditional)."
+  },
+  {
+   "scope": "core",
+   "id": "pronoun",
+   "text": "Wrong pronoun form or position."
+  },
+  {
+   "scope": "core",
+   "id": "preposition",
+   "legacy": true,
+   "text": "Wrong, missing or extra preposition."
+  },
+  {
+   "scope": "core",
+   "id": "word-order",
+   "legacy": true,
+   "text": "Words in the wrong order."
+  },
+  {
+   "scope": "core",
+   "id": "register",
+   "text": "Grammatically fine but wrong register or politeness level."
+  },
+  {
+   "scope": "core",
+   "id": "other",
+   "legacy": true,
+   "text": "Nothing else fits."
+  },
+  {
+   "scope": "es",
+   "id": "ser-estar",
+   "legacy": true,
+   "text": "ser and estar confused."
+  },
+  {
+   "scope": "es",
+   "id": "por-para",
+   "text": "por and para confused."
+  },
+  {
+   "scope": "es",
+   "id": "past-aspect",
+   "text": "Preterite (indefinido) and imperfect confused."
+  }
+ ]
+}

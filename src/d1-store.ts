@@ -1,5 +1,18 @@
+import { D1Syllabus } from "./d1-syllabus";
+import type { TopicStatus } from "./planner";
 import { computeSrs, EMPTY_SRS, type SrsState, type SrsStatus } from "./srs";
 import { addDays, daysBetween, normalizeTs } from "./time";
+import type {
+  CheckpointResult,
+  NextTopicsView,
+  PlanSummary,
+  Profile,
+  ProfilePatch,
+  ProgressView,
+  SyllabusView,
+  TopicCard,
+  TopicStatusChange,
+} from "./syllabus-store";
 import type {
   Attempt,
   AttemptInput,
@@ -77,10 +90,17 @@ function likePattern(text: string): string {
 }
 
 export class D1Store implements Store {
+  private syllabus: D1Syllabus;
+
+  // errorTypes = error categories from the config. When given, log_attempt accepts those plus the categories of the
+  // imported syllabus (core + the item's language). When omitted, error types are not checked here.
   constructor(
     private db: D1Database,
     private timezone: string,
-  ) {}
+    private errorTypes?: string[],
+  ) {
+    this.syllabus = new D1Syllabus(db);
+  }
 
   async upsertItem(
     lang: Lang,
@@ -123,8 +143,17 @@ export class D1Store implements Store {
   }
 
   async logAttempt(input: AttemptInput): Promise<SrsState> {
-    const exists = await this.db.prepare("SELECT 1 AS x FROM items WHERE id = ?1").bind(input.itemId).first();
-    if (!exists) throw new Error(`Unknown item_id: ${input.itemId}`);
+    const item = await this.db.prepare("SELECT lang FROM items WHERE id = ?1").bind(input.itemId).first<{ lang: string }>();
+    if (!item) throw new Error(`Unknown item_id: ${input.itemId}`);
+    if (input.errorType !== undefined && this.errorTypes !== undefined) {
+      const allowed = [...this.errorTypes];
+      for (const id of await this.syllabus.syllabusErrorTypes(item.lang)) {
+        if (!allowed.includes(id)) allowed.push(id);
+      }
+      if (!allowed.includes(input.errorType)) {
+        throw new Error(`error_type "${input.errorType}" is not valid for "${item.lang}". Valid: ${allowed.join(", ")}`);
+      }
+    }
     if (input.sessionId !== undefined) {
       const session = await this.db.prepare("SELECT 1 AS x FROM sessions WHERE id = ?1").bind(input.sessionId).first();
       if (!session) throw new Error(`Unknown session_id: ${input.sessionId}`);
@@ -367,5 +396,59 @@ export class D1Store implements Store {
       )
       .bind(lang, JSON.stringify(data), new Date().toISOString())
       .run();
+  }
+
+  // ---------- Syllabus: implemented in d1-syllabus.ts ----------
+
+  getProfile(): Promise<Profile> {
+    return this.syllabus.getProfile();
+  }
+
+  setProfile(patch: ProfilePatch): Promise<Profile> {
+    return this.syllabus.setProfile(patch);
+  }
+
+  getSyllabus(lang: Lang, level?: string, moduleId?: string): Promise<SyllabusView> {
+    return this.syllabus.getSyllabus(lang, level, moduleId);
+  }
+
+  getTopic(lang: Lang, topicId: string): Promise<TopicCard> {
+    return this.syllabus.getTopic(lang, topicId);
+  }
+
+  nextTopics(lang: Lang): Promise<NextTopicsView> {
+    return this.syllabus.nextTopics(lang);
+  }
+
+  setTopicStatus(
+    lang: Lang,
+    topicId: string,
+    status: TopicStatus,
+    sessionId?: string,
+    allowRegress?: boolean,
+  ): Promise<TopicStatusChange> {
+    return this.syllabus.setTopicStatus(lang, topicId, status, sessionId, allowRegress);
+  }
+
+  progress(lang: Lang, level?: string): Promise<ProgressView> {
+    return this.syllabus.progress(lang, level);
+  }
+
+  recordCheckpoint(
+    lang: Lang,
+    moduleId: string,
+    passed: boolean,
+    sessionId?: string,
+    notes?: string,
+  ): Promise<CheckpointResult> {
+    return this.syllabus.recordCheckpoint(lang, moduleId, passed, sessionId, notes);
+  }
+
+  planSummary(lang: Lang): Promise<PlanSummary | null> {
+    return this.syllabus.planSummary(lang);
+  }
+
+  syllabusErrorTypes(lang: Lang): Promise<string[]> {
+    return this.syllabus.syllabusErrorTypes(lang);
   }
 }

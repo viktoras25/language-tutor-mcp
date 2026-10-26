@@ -42,6 +42,6 @@ export default {
 
     const inner = new Request(url, request);
     const config = loadConfig(env);
-    return createMcpHandler(() => createServer(new D1Store(env.DB, config.timezone), config))(inner, env, ctx);
+    return createMcpHandler(() => createServer(new D1Store(env.DB, config.timezone, config.errorTypes), config))(inner, env, ctx);
   },
 } satisfies ExportedHandler<Env>;

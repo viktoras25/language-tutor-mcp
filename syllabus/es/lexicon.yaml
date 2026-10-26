@@ -1,0 +1,15 @@
+# Spanish lexicon. To be filled per level in the next step (target 30–60 entries per module).
+# Item mapping on the server: one lemma item per entry, label = lemma, data.lexicon_id = id.
+# id format: es.w.<lemma>[.<pos-or-sense>]  — immutable.
+# pack: core = for everyone; other packs (running, tech_work, travel, ...) are switched on in the learner profile.
+kind: lexicon
+lang: es
+version: 1
+entries:
+  - id: es.w.cuenta
+    lemma: cuenta
+    pos: noun
+    gender: f
+    gloss: "bill (in a restaurant)"
+    module: A1.07
+    pack: core

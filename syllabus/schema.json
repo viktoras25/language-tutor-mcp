@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://language-memory/syllabus.schema.json",
+  "title": "Language Memory syllabus files",
+  "description": "Each YAML file has a top-level `kind`; validate it against $defs/<kind>File.",
+  "$defs": {
+    "uiLang": { "enum": ["en", "ru", "de"] },
+    "targetLang": { "enum": ["es", "fr", "de", "nl", "en"] },
+    "level": { "enum": ["A1", "A2", "B1", "B2"] },
+    "moduleId": { "type": "string", "pattern": "^(A1|A2|B1|B2)\\.[0-9]{2}$" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "canDoId": { "type": "string", "pattern": "^cd\\.[a-z0-9_]+\\.[a-z0-9_]+$" },
+    "text": { "type": "string", "minLength": 1 },
+    "transfer": {
+      "type": "object",
+      "propertyNames": { "enum": ["en", "ru", "de", "lt", "fr", "nl", "es"] },
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
+
+    "modulesFile": {
+      "type": "object",
+      "required": ["kind", "version", "levels", "modules"],
+      "properties": {
+        "kind": { "const": "modules" },
+        "version": { "type": "integer", "minimum": 1 },
+        "levels": { "type": "array", "items": { "$ref": "#/$defs/level" } },
+        "modules": { "type": "array", "items": { "$ref": "#/$defs/module" }, "minItems": 1 }
+      },
+      "additionalProperties": false
+    },
+    "module": {
+      "type": "object",
+      "required": ["id", "level", "order", "title", "domains", "can_do", "checkpoint"],
+      "properties": {
+        "id": { "$ref": "#/$defs/moduleId" },
+        "level": { "$ref": "#/$defs/level" },
+        "order": { "type": "integer", "minimum": 1 },
+        "title": { "$ref": "#/$defs/text" },
+        "domains": { "type": "array", "items": { "type": "string", "pattern": "^[a-z_]+$" }, "minItems": 1 },
+        "can_do": {
+          "type": "array", "minItems": 2, "maxItems": 4,
+          "items": {
+            "type": "object", "required": ["id", "text"],
+            "properties": { "id": { "$ref": "#/$defs/canDoId" }, "text": { "$ref": "#/$defs/text" } },
+            "additionalProperties": false
+          }
+        },
+        "checkpoint": {
+          "type": "object", "required": ["text"],
+          "properties": { "text": { "$ref": "#/$defs/text" } },
+          "additionalProperties": false
+        },
+        "deprecated": { "type": "boolean" },
+        "replaced_by": { "$ref": "#/$defs/moduleId" }
+      },
+      "additionalProperties": false
+    },
+
+    "topicsFile": {
+      "type": "object",
+      "required": ["kind", "lang", "variety", "version", "topics"],
+      "properties": {
+        "kind": { "const": "topics" },
+        "lang": { "$ref": "#/$defs/targetLang" },
+        "variety": { "type": "string", "pattern": "^[a-z]{2}-[A-Z]{2}$" },
+        "version": { "type": "integer", "minimum": 1 },
+        "topics": { "type": "array", "items": { "$ref": "#/$defs/topic" }, "minItems": 1 }
+      },
+      "additionalProperties": false
+    },
+    "topic": {
+      "type": "object",
+      "required": ["id", "module", "kind", "requires", "title", "summary", "examples", "traps", "error_tags"],
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "legacy": { "type": "boolean", "description": "label already exists as a server item" },
+        "module": { "$ref": "#/$defs/moduleId" },
+        "kind": { "enum": ["grammar", "chunk", "orthography"] },
+        "requires": { "type": "array", "items": { "$ref": "#/$defs/slug" }, "uniqueItems": true },
+        "title": { "$ref": "#/$defs/text" },
+        "summary": { "$ref": "#/$defs/text" },
+        "examples": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "traps": { "type": "array", "items": { "type": "string" } },
+        "transfer": { "$ref": "#/$defs/transfer" },
+        "variety_note": { "type": "string" },
+        "error_tags": { "type": "array", "items": { "$ref": "#/$defs/slug" }, "minItems": 1 },
+        "deprecated": { "type": "boolean" },
+        "replaced_by": { "$ref": "#/$defs/slug" }
+      },
+      "additionalProperties": false
+    },
+
+    "errorsFile": {
+      "type": "object",
+      "required": ["kind", "version", "scope", "categories"],
+      "properties": {
+        "kind": { "const": "errors" },
+        "version": { "type": "integer", "minimum": 1 },
+        "scope": { "enum": ["core", "es", "fr", "de", "nl", "en"] },
+        "categories": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "required": ["id", "text"],
+            "properties": {
+              "id": { "$ref": "#/$defs/slug" },
+              "legacy": { "type": "boolean" },
+              "text": { "$ref": "#/$defs/text" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "lexiconFile": {
+      "type": "object",
+      "required": ["kind", "lang", "version", "entries"],
+      "properties": {
+        "kind": { "const": "lexicon" },
+        "lang": { "$ref": "#/$defs/targetLang" },
+        "version": { "type": "integer", "minimum": 1 },
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "lemma", "pos", "gloss", "module", "pack"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z]{2}\\.w\\.[a-z0-9_.\\-áéíóúüñ]+$" },
+              "lemma": { "type": "string", "minLength": 1 },
+              "pos": { "enum": ["noun", "verb", "adj", "adv", "prep", "conj", "pron", "num", "phrase", "interj", "det"] },
+              "gender": { "enum": ["m", "f", "mf", "n"] },
+              "gloss": { "$ref": "#/$defs/text" },
+              "module": { "$ref": "#/$defs/moduleId" },
+              "pack": { "type": "string", "pattern": "^[a-z_]+$" },
+              "domains": { "type": "array", "items": { "type": "string" } },
+              "example": { "type": "string" },
+              "deprecated": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

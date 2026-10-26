@@ -1,6 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
 import type { Config } from "./config";
+import { SETTABLE_STATUSES } from "./planner";
 import { EDGE_TYPES, ITEM_TYPES, type Store } from "./store";
 
 function text(value: unknown) {
@@ -23,13 +24,16 @@ function safe<A>(fn: (args: A) => Promise<ReturnType<typeof text>>) {
 }
 
 const itemType = z.enum(ITEM_TYPES);
+const langCode = z.string().regex(/^[a-z]{2,3}$/, "expected a language code such as ru or de");
+const slug = z.string().regex(/^[a-z][a-z0-9-]*$/, "expected lowercase letters, digits and -");
+const level = z.string().regex(/^[A-C][1-2]$/, "expected a CEFR level such as A1");
+const moduleId = z.string().regex(/^[A-C][1-2]\.\d{2}$/, "expected a module id such as A1.03");
 const isoDay = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "expected YYYY-MM-DD");
 
 export function createServer(store: Store, config: Config): McpServer {
   const lang = z.enum(config.langs as [string, ...string[]]);
-  const errorType = z.enum(config.errorTypes as [string, ...string[]]);
   const errorTypeList = config.errorTypes.join(", ");
-  const server = new McpServer({ name: "language-memory", version: "0.2.0" });
+  const server = new McpServer({ name: "language-memory", version: "0.3.0" });
 
   server.registerTool(
     "upsert_item",
@@ -67,7 +71,14 @@ export function createServer(store: Store, config: Config): McpServer {
       inputSchema: z.object({
         item_id: z.string().min(1),
         correct: z.boolean(),
-        error_type: errorType.optional().describe(`Only for wrong answers. One of: ${errorTypeList}. Use "other" if nothing fits.`),
+        error_type: z
+          .string()
+          .min(1)
+          .max(40)
+          .optional()
+          .describe(
+            `Only for wrong answers. Generic: ${errorTypeList}. If the language has a syllabus, its categories are valid too (core, e.g. accent, mood, pronoun, register, plus language-specific ones such as por-para). An invalid value is rejected with the full list for that language. Use "other" if nothing fits.`,
+          ),
         context: z.string().max(1000).optional().describe("The sentence/task and the learner's wrong answer"),
         ts: z.string().optional().describe("ISO 8601 time of the attempt, e.g. 2026-10-15T12:00:00Z"),
         session_id: z.string().optional().describe("id from start_session"),
@@ -212,10 +223,13 @@ export function createServer(store: Store, config: Config): McpServer {
     "get_course_state",
     {
       description:
-        "Read the course state (level, lessons done, learner preferences, next lesson plan). Call first in every new chat.",
+        "Read the course state (level, lessons done, learner preferences, next lesson plan). Call first in every new chat. If the language has a syllabus, `plan` also summarises it: current level and coverage, topics being taught now and what next_topics proposes.",
       inputSchema: z.object({ lang }),
     },
-    safe(async ({ lang }) => text(await store.getCourseState(lang))),
+    safe(async ({ lang }) => {
+      const state = await store.getCourseState(lang);
+      return text({ ...state, plan: await store.planSummary(lang) });
+    }),
   );
 
   server.registerTool(
@@ -229,6 +243,105 @@ export function createServer(store: Store, config: Config): McpServer {
       await store.setCourseState(lang, data);
       return text({ ok: true });
     }),
+  );
+
+  server.registerTool(
+    "get_syllabus",
+    {
+      description:
+        "The curriculum with the learner's progress (texts are in English; explain them in the learner's ui_lang): modules (with can-do goals), their topics (id, title, kind, status) and coverage/mastery counts. Compact: no summaries or examples (use get_topic for those). Narrow with level (A1, A2) or module (A1.03).",
+      inputSchema: z.object({ lang, level: level.optional(), module: moduleId.optional() }),
+    },
+    safe(async ({ lang, level, module }) => text(await store.getSyllabus(lang, level, module))),
+  );
+
+  server.registerTool(
+    "get_topic",
+    {
+      description:
+        "Lesson card for one topic: summary, examples, traps, transfer hints (only for languages the learner knows), prerequisite statuses, and the linked items with their SRS state. Call before teaching a topic.",
+      inputSchema: z.object({ lang, topic_id: slug }),
+    },
+    safe(async ({ lang, topic_id }) => text(await store.getTopic(lang, topic_id))),
+  );
+
+  server.registerTool(
+    "next_topics",
+    {
+      description:
+        "What to teach next, chosen by the server: `continue` = topics that follow the one being taught now, `fill` = earliest gaps in plan order (3 of each), `blocked` = how many open topics still wait for prerequisites. Choosing between the groups and the size of the lesson is up to you.",
+      inputSchema: z.object({ lang }),
+    },
+    safe(async ({ lang }) => text(await store.nextTopics(lang))),
+  );
+
+  server.registerTool(
+    "set_topic_status",
+    {
+      description:
+        "Mark a topic as `current` (being taught now) or `introduced` (taught in a lesson). Moving a topic back (e.g. introduced -> current or planned) is refused unless allow_regress is true. Returns prerequisites that are not covered yet; the change is made anyway.",
+      inputSchema: z.object({
+        lang,
+        topic_id: slug,
+        status: z.enum(SETTABLE_STATUSES),
+        session_id: z.string().optional().describe("id from start_session"),
+        allow_regress: z.boolean().optional().describe("true = allow moving to an earlier status"),
+      }),
+    },
+    safe(async ({ lang, topic_id, status, session_id, allow_regress }) =>
+      text(await store.setTopicStatus(lang, topic_id, status, session_id, allow_regress)),
+    ),
+  );
+
+  server.registerTool(
+    "progress",
+    {
+      description:
+        "Coverage (topics taught or assumed) and mastery (every item known, no mistakes in 14 days) per module and per level, plus checkpoint results. The two are never merged into one number.",
+      inputSchema: z.object({ lang, level: level.optional() }),
+    },
+    safe(async ({ lang, level }) => text(await store.progress(lang, level))),
+  );
+
+  server.registerTool(
+    "record_checkpoint",
+    {
+      description:
+        "Record the result of a module's checkpoint task. A module counts as closed when all its topics are covered, at least 80% mastered, and the latest checkpoint was passed after the last topic was introduced. Returns the module's progress.",
+      inputSchema: z.object({
+        lang,
+        module_id: moduleId,
+        passed: z.boolean(),
+        session_id: z.string().optional().describe("id from start_session"),
+        notes: z.string().max(2000).optional(),
+      }),
+    },
+    safe(async ({ lang, module_id, passed, session_id, notes }) =>
+      text(await store.recordCheckpoint(lang, module_id, passed, session_id, notes)),
+    ),
+  );
+
+  server.registerTool(
+    "get_profile",
+    {
+      description: "The learner's profile: ui_lang (the language to explain things in; syllabus texts are English and you translate them), known_langs, variety (e.g. es-ES) and packs of vocabulary.",
+      inputSchema: z.object({}),
+    },
+    safe(async () => text(await store.getProfile())),
+  );
+
+  server.registerTool(
+    "set_profile",
+    {
+      description: "Change profile fields. Only the fields you pass are changed; lists are replaced as a whole.",
+      inputSchema: z.object({
+        ui_lang: langCode.optional(),
+        known_langs: z.array(langCode).max(10).optional(),
+        variety: z.string().max(20).nullable().optional(),
+        packs: z.array(slug).max(20).optional(),
+      }),
+    },
+    safe(async (patch) => text(await store.setProfile(patch))),
   );
 
   return server;

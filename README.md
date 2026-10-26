@@ -4,7 +4,7 @@ A small remote [MCP](https://modelcontextprotocol.io) server on Cloudflare Worke
 
 Transport: Streamable HTTP via `createMcpHandler` from the `agents` package (stateless).
 
-Layout: `src/store.ts` (`Store` interface) · `src/d1-store.ts` (D1 backend) · `src/tools.ts` (tools; depend only on `Store`) · `src/srs.ts` (spaced repetition) · `src/config.ts` (settings) · `src/index.ts` (auth + handler).
+Layout: `src/store.ts` (`Store` interface) · `src/d1-store.ts` (D1 backend; syllabus part in `src/d1-syllabus.ts`) · `src/planner.ts` (next topics, progress; pure) · `src/syllabus-import.ts` (plan → SQL) · `src/tools.ts` (tools; depend only on `Store`) · `src/srs.ts` (spaced repetition) · `src/config.ts` (settings) · `src/index.ts` (auth + handler).
 To use another backend, implement `Store` and change the one line in `src/index.ts` that constructs `D1Store`.
 
 ## Quick start
@@ -57,8 +57,12 @@ This is an MVP stopgap: a secret in a URL can leak through logs and history. OAu
 | `get_context` | read one item: data, SRS state, neighbors, last N attempts |
 | `log_attempt` | after every answer (pass `session_id`; `ts` only when importing history) |
 | `upsert_item`, `link` | create/update items and edges (`data` is merged; `replace: true` overwrites) |
+| `get_syllabus`, `get_topic` | the curriculum with progress; one topic's lesson card (needs an imported syllabus, see below) |
+| `next_topics`, `set_topic_status` | what to teach next (chosen by the server); mark a topic `current` / `introduced` |
+| `progress`, `record_checkpoint` | coverage and mastery per module and level; result of a module checkpoint |
+| `get_profile`, `set_profile` | ui_lang, known_langs, variety, vocabulary packs |
 
-Item ids are deterministic: `<lang>:<type>:<lowercased label>` (e.g. `es:lemma:hablar`). Item types: `lemma`, `form`, `grammar_point`, `collocation`. Edge types: `form_of`, `requires`, `contrasts_with`, `collocates`. Every tool is bounded (limits and caps); none returns the whole database.
+Item ids are deterministic: `<lang>:<type>:<lowercased label>` (e.g. `es:lemma:hablar`). Item types: `lemma`, `form`, `grammar_point`, `collocation`. Edge types: `form_of`, `requires`, `contrasts_with`, `collocates`, `part_of`. Every tool is bounded (limits and caps); none returns the whole database.
 
 ## Spaced repetition
 
@@ -69,13 +73,35 @@ Computed on the server by replaying an item's whole attempt history, so back-dat
 - A correct answer on the same day (in `TIMEZONE`) as the previous attempt does not raise the interval.
 - `known` = 3 correct in a row on 3 different days; any error returns the item to `learning`. Never attempted = `new`.
 
+## Syllabus (curriculum)
+
+The plan lives in `syllabus/` (YAML, validated by `syllabus/schema.json`), is immutable and versioned: ids are never changed, retired entries get `deprecated: true`. The learner's state is kept apart from it (tables `learner_*`).
+
+```sh
+npm run syllabus:validate                       # needs Node 22.18+; checks schema, references, cycles; writes build/<lang>.json and build/seed-*.json
+npm run syllabus:import -- --lang es --seed example --out syllabus-import.sql   # writes SQL only
+npx wrangler d1 migrations apply DB --remote    # 0004 adds the syllabus tables and the part_of edge type
+npx wrangler d1 execute DB --remote --file syllabus-import.sql
+```
+
+Back up production before the last two commands. Importing again changes nothing: every statement is an upsert, `--seed` never overwrites a profile or a topic status that already exists, and existing items keep their data and attempts (only `syllabus_module` and `syllabus_kind` are merged into `data`). `build/` is committed; after editing the YAML rerun `syllabus:validate` (a test fails if `build/` is stale).
+
+How the server decides:
+
+- Syllabus texts are plain English; the model explains them in the learner's `ui_lang` (profile).
+- A topic is the item `<lang>:grammar_point:<topic id>`. Items of finer grain are linked to it with `part_of`.
+- Status: `planned` (no row) · `seen_via_error` · `current` · `introduced` · `assumed`. The last three count as **covered** and satisfy `requires`.
+- `next_topics`: open topics whose prerequisites are all covered. `continue` = those that follow a `current` topic, `fill` = the rest in plan order.
+- **Mastered** = covered, has at least one item, every item is SRS-`known`, no wrong answers in the last 14 days. A module is closed at full coverage, 80% mastery and a checkpoint passed after its last topic was introduced. Coverage and mastery are always reported separately.
+- `error_type` in `log_attempt` is checked per language: `ERROR_TYPES` + the syllabus's core categories + that language's own (e.g. `por-para` is valid for `es`, not for `de`).
+
 ## Local development and tests
 
 ```sh
 echo 'MCP_SECRET=dev-secret' > .dev.vars        # gitignored
 npx wrangler d1 migrations apply DB --local
 npx wrangler dev                                 # http://localhost:8787
-npm test                                         # SRS, config, store, sessions, migrations
+npm test                                         # SRS, config, store, sessions, migrations, planner, syllabus import
 npm run typecheck
 ```
 

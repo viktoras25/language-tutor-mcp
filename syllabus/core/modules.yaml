@@ -1,0 +1,312 @@
+# Communicative layer (CEFR "can do"). Shared by all target languages (es, fr, de, nl, en).
+# Language-specific grammar is NOT listed here: each topic in <lang>/topics.yaml points to its module.
+# IDs (module ids, can_do ids) are immutable. To retire one: deprecated: true + replaced_by: <id>.
+# Texts are plain English strings. The lesson model translates them for the learner (profile.ui_lang).
+kind: modules
+version: 1
+levels: [A1, A2]
+modules:
+
+  - id: A1.01
+    level: A1
+    order: 1
+    title: "Introductions"
+    domains: [personal_info, countries, languages]
+    can_do:
+      - id: cd.intro.self
+        text: "I can say my name, where I'm from, where I live and what I do."
+      - id: cd.intro.ask_others
+        text: "I can ask others the same questions, choosing informal or formal address."
+      - id: cd.intro.languages
+        text: "I can say which languages I speak and how well."
+    checkpoint:
+      text: "Introduce yourself to a new colleague in 6–8 sentences, then write 3 questions for them; ask one of them formally."
+
+  - id: A1.02
+    level: A1
+    order: 2
+    title: "People"
+    domains: [family, appearance, character, feelings]
+    can_do:
+      - id: cd.people.family
+        text: "I can talk about my family and the people close to me."
+      - id: cd.people.describe
+        text: "I can describe someone's appearance and character."
+      - id: cd.people.state
+        text: "I can say how someone feels right now, as opposed to what they are like in general."
+    checkpoint:
+      text: "Describe two people close to you in 8–10 sentences: appearance, character, and how they are doing this week."
+
+  - id: A1.03
+    level: A1
+    order: 3
+    title: "Numbers, time and prices"
+    domains: [numbers, time, dates, money]
+    can_do:
+      - id: cd.numbers.prices
+        text: "I can ask what something costs and understand and say prices."
+      - id: cd.numbers.time
+        text: "I can tell and ask the time and say when something happens."
+      - id: cd.numbers.dates
+        text: "I can say dates, birthdays and phone numbers."
+    checkpoint:
+      text: "Write out in words 5 prices, 3 times and 2 dates from a given list, then answer 3 questions about when things happen in your week."
+
+  - id: A1.04
+    level: A1
+    order: 4
+    title: "Around town"
+    domains: [city, places, directions, neighbourhood]
+    can_do:
+      - id: cd.city.where
+        text: "I can ask where a place is and understand a simple answer."
+      - id: cd.city.describe_area
+        text: "I can say what there is in my neighbourhood and where."
+      - id: cd.city.directions
+        text: "I can give and follow simple directions."
+    checkpoint:
+      text: "Describe your neighbourhood (what is there and where), then explain the way from your home to a nearby café in 4–5 steps."
+
+  - id: A1.05
+    level: A1
+    order: 5
+    title: "Daily routine"
+    domains: [routine, home, chores]
+    can_do:
+      - id: cd.routine.day
+        text: "I can describe my typical day with times."
+      - id: cd.routine.now
+        text: "I can say what I am doing right now."
+      - id: cd.routine.frequency
+        text: "I can say how often I do things."
+    checkpoint:
+      text: "Describe a typical weekday and a typical Sunday (8–10 sentences) with times and frequency words, then add 2 sentences about what you are doing right now."
+
+  - id: A1.06
+    level: A1
+    order: 6
+    title: "Work and study"
+    domains: [work, office, study]
+    can_do:
+      - id: cd.work.job
+        text: "I can say what my job is, where I work and what I do there."
+      - id: cd.work.likes
+        text: "I can say what I like and dislike about my work and give a simple reason."
+      - id: cd.work.ability
+        text: "I can say what I can, want and prefer to do."
+    checkpoint:
+      text: "Write a short message to a new team member: your role, a normal working day, one thing you like about the job and one you don't, with reasons (6–8 sentences)."
+
+  - id: A1.07
+    level: A1
+    order: 7
+    title: "Food and cafés"
+    domains: [food, drinks, cafe, restaurant, groceries]
+    can_do:
+      - id: cd.cafe.order
+        text: "I can order food and drinks for myself and others."
+      - id: cd.cafe.ask_ingredients
+        text: "I can ask what is in a dish and ask for a change."
+      - id: cd.cafe.pay
+        text: "I can ask for the bill and pay."
+      - id: cd.food.habits
+        text: "I can say what I usually eat and what I don't eat."
+    checkpoint:
+      text: "Write a café dialogue between you and a waiter (8–10 lines): order for two, ask about one ingredient, change something, ask for the bill."
+
+  - id: A1.08
+    level: A1
+    order: 8
+    title: "Shopping and clothes"
+    domains: [shopping, clothes, colours, sizes]
+    can_do:
+      - id: cd.shop.choose
+        text: "I can ask for an item in a size or colour and ask the price."
+      - id: cd.shop.compare
+        text: "I can compare two items in simple terms."
+      - id: cd.shop.decide
+        text: "I can say which one I'll take, or that I'll leave it."
+    checkpoint:
+      text: "Write a shop dialogue (8–10 lines): ask for an item in your size and colour, compare two options with 'this/that', decide, and refer back to the item with a pronoun."
+
+  - id: A1.09
+    level: A1
+    order: 9
+    title: "Free time and tastes"
+    domains: [hobbies, sport, music, film, skills]
+    can_do:
+      - id: cd.free.hobbies
+        text: "I can talk about my hobbies and sports."
+      - id: cd.free.likes
+        text: "I can say what I and other people like and dislike."
+      - id: cd.free.agree
+        text: "I can agree and disagree with someone's taste (me too / me neither)."
+      - id: cd.free.skills
+        text: "I can say what I know how to do and whom or what I know."
+    checkpoint:
+      text: "Write about your free time: 3 things you like, 2 you don't, what a friend likes; then react to 3 given statements with 'me too / me neither / I do / I don't'."
+
+  - id: A1.10
+    level: A1
+    order: 10
+    title: "Plans and meeting up"
+    domains: [plans, weather, calendar, invitations]
+    can_do:
+      - id: cd.plans.weekend
+        text: "I can talk about my plans for the weekend or the coming days."
+      - id: cd.plans.arrange
+        text: "I can suggest a time and place to meet, accept, decline and offer an alternative."
+      - id: cd.plans.weather
+        text: "I can talk about the weather and what I'll do depending on it."
+    checkpoint:
+      text: "Write a chat with a friend: propose a meeting, decline one time and offer another, agree; then describe your weekend plans including one 'if it rains, ...'."
+
+  - id: A2.01
+    level: A2
+    order: 11
+    title: "What I did"
+    domains: [daily_life, weekend, past_events]
+    can_do:
+      - id: cd.past.yesterday
+        text: "I can say what I did yesterday or last week."
+      - id: cd.past.weekend
+        text: "I can tell someone about my weekend in a few connected sentences."
+      - id: cd.past.when
+        text: "I can say when something happened."
+    checkpoint:
+      text: "Describe yesterday and last weekend (10–12 sentences) using at least 6 different verbs, including irregular ones (to go, to do, to have)."
+
+  - id: A2.02
+    level: A2
+    order: 12
+    title: "Travel"
+    domains: [travel, transport, accommodation, sights]
+    can_do:
+      - id: cd.travel.plan
+        text: "I can plan a trip and book tickets and accommodation."
+      - id: cd.travel.tell
+        text: "I can tell someone about a trip I took."
+      - id: cd.travel.purpose
+        text: "I can say how, why and for whom I do something."
+    checkpoint:
+      text: "Tell about a past trip (about 10 sentences: how you got there, where you stayed, what you did), then outline your next trip in 3–4 sentences."
+
+  - id: A2.03
+    level: A2
+    order: 13
+    title: "Experiences and recent events"
+    domains: [experiences, achievements, today]
+    can_do:
+      - id: cd.exp.today
+        text: "I can say what I have done today or this week."
+      - id: cd.exp.ever
+        text: "I can ask and answer whether someone has ever done something."
+      - id: cd.exp.yet
+        text: "I can say what is already done and what is not done yet."
+    checkpoint:
+      text: "Write an end-of-day message to a colleague: what is done, what is not done yet; then 3 'have you ever...?' questions with your own answers."
+
+  - id: A2.04
+    level: A2
+    order: 14
+    title: "Then and now"
+    domains: [childhood, habits, change]
+    can_do:
+      - id: cd.then.habits
+        text: "I can describe how things used to be and what I used to do."
+      - id: cd.then.compare
+        text: "I can compare the past with the present."
+      - id: cd.then.background
+        text: "I can describe the background situation of a past event."
+    checkpoint:
+      text: "Compare your life ten years ago with now (10–12 sentences): habits, place, work, free time."
+
+  - id: A2.05
+    level: A2
+    order: 15
+    title: "Health"
+    domains: [body, health, pharmacy, doctor, emergencies]
+    can_do:
+      - id: cd.health.symptoms
+        text: "I can describe symptoms and say since when I have had them."
+      - id: cd.health.advice
+        text: "I can understand simple advice and give it to others."
+      - id: cd.health.help
+        text: "I can ask for help in an urgent situation."
+    checkpoint:
+      text: "Write a pharmacy or doctor dialogue: describe 2–3 symptoms and since when, receive and repeat back 3 pieces of advice; then give a friend 3 tips using commands."
+
+  - id: A2.06
+    level: A2
+    order: 16
+    title: "Home and household"
+    domains: [home, furniture, repairs, neighbours, belongings]
+    can_do:
+      - id: cd.home.describe
+        text: "I can describe where I live and its pros and cons."
+      - id: cd.home.problem
+        text: "I can explain that something is broken or not working."
+      - id: cd.home.ask_help
+        text: "I can ask someone to do or bring something, and say whose something is."
+    checkpoint:
+      text: "Write a message to your landlord: what is broken, since when, what you need; then give a flatmate 3 instructions that refer back to objects with pronouns."
+
+  - id: A2.07
+    level: A2
+    order: 17
+    title: "Communication at work"
+    domains: [meetings, email, tasks, projects]
+    can_do:
+      - id: cd.workcom.message
+        text: "I can write a short work message or email."
+      - id: cd.workcom.reschedule
+        text: "I can reschedule a meeting and explain why."
+      - id: cd.workcom.next_steps
+        text: "I can explain a task and say what will happen next."
+    checkpoint:
+      text: "Write an email that reschedules a meeting, gives the reason, proposes two new slots and describes next steps."
+
+  - id: A2.08
+    level: A2
+    order: 18
+    title: "Comparisons and opinions"
+    domains: [products, cities, media, society]
+    can_do:
+      - id: cd.opinion.compare
+        text: "I can compare options and say which one is the best."
+      - id: cd.opinion.give
+        text: "I can give my opinion with a reason."
+      - id: cd.opinion.react
+        text: "I can agree or disagree with someone's opinion."
+    checkpoint:
+      text: "Compare two cities, phones or series in 8–10 sentences, pick the best one and justify it; then respond to one opposing opinion."
+
+  - id: A2.09
+    level: A2
+    order: 19
+    title: "Service and complaints"
+    domains: [restaurant, shop, hotel, post, customer_service]
+    can_do:
+      - id: cd.service.complain
+        text: "I can politely complain and ask for a solution."
+      - id: cd.service.request_polite
+        text: "I can make polite requests."
+      - id: cd.service.report
+        text: "I can report what someone told me."
+    checkpoint:
+      text: "Write a complaint dialogue at a hotel or restaurant: describe the problem, politely request a solution, then tell a friend what the staff said."
+
+  - id: A2.10
+    level: A2
+    order: 20
+    title: "My story"
+    domains: [biography, life_events, memories, culture]
+    can_do:
+      - id: cd.story.bio
+        text: "I can tell my life story with key dates."
+      - id: cd.story.event
+        text: "I can narrate an event: the situation, what happened, how it ended."
+      - id: cd.story.connect
+        text: "I can link events in time (when, while, after, ago, since)."
+    checkpoint:
+      text: "Write 150–200 words about an important period or event in your life: when and where, what the situation was, what happened, how it ended."

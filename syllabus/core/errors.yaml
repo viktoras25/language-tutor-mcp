@@ -1,0 +1,46 @@
+# Universal error taxonomy. Used as `error_type` in log_attempt.
+# Server enum for a language = core categories + <lang>/errors.yaml extensions.
+# IDs are kebab-case to stay compatible with attempts already recorded on the server.
+# `legacy: true` = already present in the server enum before this syllabus.
+kind: errors
+version: 1
+scope: core
+categories:
+  - id: spelling
+    legacy: true
+    text: "Misspelled word (letters), not diacritics."
+  - id: accent
+    text: "Missing, extra or wrong written accent/diacritic."
+  - id: vocab
+    legacy: true
+    text: "Wrong or unknown word; meaning confused."
+  - id: gender
+    legacy: true
+    text: "Wrong grammatical gender of a noun."
+  - id: agreement
+    legacy: true
+    text: "Adjective/article/pronoun doesn't agree in gender or number."
+  - id: article
+    legacy: true
+    text: "Article missing, extra or wrong type (definite/indefinite)."
+  - id: conjugation
+    legacy: true
+    text: "Right tense, wrong verb form (person, number, stem)."
+  - id: tense
+    legacy: true
+    text: "Wrong tense or aspect chosen."
+  - id: mood
+    text: "Wrong mood (indicative/subjunctive/imperative/conditional)."
+  - id: pronoun
+    text: "Wrong pronoun form or position."
+  - id: preposition
+    legacy: true
+    text: "Wrong, missing or extra preposition."
+  - id: word-order
+    legacy: true
+    text: "Words in the wrong order."
+  - id: register
+    text: "Grammatically fine but wrong register or politeness level."
+  - id: other
+    legacy: true
+    text: "Nothing else fits."

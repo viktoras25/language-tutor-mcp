@@ -1,0 +1,382 @@
+# Spanish grammar layer, A2. Same conventions as topics-a1.yaml.
+kind: topics
+lang: es
+variety: es-ES
+version: 1
+topics:
+
+  # ---------- A2.01 What I did ----------
+  - id: preterite-recognition
+    module: A2.01
+    kind: grammar
+    requires: [present-regular]
+    title: "Preterite: recognising forms"
+    summary: "Recognise preterite forms in texts before producing them: -é/-ó endings, fue, hizo, tuvo."
+    examples: ["Ayer fui al cine y compré palomitas."]
+    traps: ["compro (I buy) vs compró (he bought): the accent changes person and tense."]
+    error_tags: [tense, accent]
+
+  - id: preterite-indefinido-ar
+    legacy: true
+    module: A2.01
+    kind: grammar
+    requires: [preterite-recognition, accent-rules]
+    title: "Preterite: regular -ar verbs"
+    summary: "-é, -aste, -ó, -amos, -asteis, -aron. Spelling: -gar → -gué, -car → -qué, -zar → -cé in yo."
+    examples: ["Ayer trabajé hasta tarde.", "Pagué con tarjeta."]
+    traps: ["nosotros form equals present: trabajamos (context decides).", "Missing accent on -é/-ó."]
+    error_tags: [conjugation, accent, spelling]
+
+  - id: preterite-er-ir
+    module: A2.01
+    kind: grammar
+    requires: [preterite-indefinido-ar]
+    title: "Preterite: regular -er/-ir verbs"
+    summary: "-í, -iste, -ió, -imos, -isteis, -ieron. leer/creer: leyó, leyeron."
+    examples: ["Comimos en un restaurante griego.", "¿Viviste en Rusia?"]
+    traps: ["vivimos = present and past."]
+    error_tags: [conjugation, accent]
+
+  - id: preterite-ser-ir
+    module: A2.01
+    kind: grammar
+    requires: [preterite-indefinido-ar]
+    title: "Preterite of ser and ir"
+    summary: "ser and ir share the same forms: fui, fuiste, fue, fuimos, fuisteis, fueron. No written accents."
+    examples: ["Fui a Málaga en mayo.", "Fue un viaje genial."]
+    traps: ["'fuí', 'fué' with accents are wrong."]
+    error_tags: [conjugation, accent]
+
+  - id: preterite-irregular
+    module: A2.01
+    kind: grammar
+    requires: [preterite-er-ir]
+    title: "Preterite: irregular stems"
+    summary: "Stem + -e, -iste, -o, -imos, -isteis, -ieron, no accents: hice/hizo, tuve, estuve, pude, puse, vine, quise, supe; dije/dijeron, traje/trajeron."
+    examples: ["Ayer hice la compra.", "No pude venir."]
+    traps: ["hizo with z.", "dijeron, not 'dijieron'."]
+    error_tags: [conjugation, accent, spelling]
+
+  - id: past-time-markers
+    module: A2.01
+    kind: grammar
+    requires: []
+    title: "Past time markers"
+    summary: "ayer, anoche, anteayer, el lunes pasado, la semana pasada, el año pasado, en 2019, hace dos días."
+    examples: ["Hace tres años corrí un maratón."]
+    traps: ["hace + time = ago, placed before: 'hace dos días'."]
+    error_tags: [vocab, agreement]
+
+  # ---------- A2.02 Travel ----------
+  - id: por-vs-para
+    module: A2.02
+    kind: grammar
+    requires: []
+    title: "por vs para"
+    summary: "para: purpose, recipient, destination, deadline. por: cause, through/along, exchange/price, means, duration, 'per'."
+    examples: ["Este regalo es para ti.", "Gracias por todo.", "Paseo por el parque."]
+    traps: ["Purpose + infinitive is para: 'para aprender'.", "'gracias por', never 'para'."]
+    error_tags: [por-para]
+
+  - id: transport-prepositions
+    module: A2.02
+    kind: grammar
+    requires: [prepositions-place]
+    title: "Travel prepositions"
+    summary: "en tren/avión/coche, a pie, en bici; de ... a ...; desde ... hasta ...; salir de, llegar a."
+    examples: ["Fui de Leipzig a Madrid en avión.", "Llegamos a Sevilla por la noche."]
+    traps: ["'llegar en' a city is wrong: llegar a."]
+    error_tags: [preposition]
+
+  - id: preterite-stem-change
+    module: A2.02
+    kind: grammar
+    requires: [preterite-er-ir]
+    title: "Preterite: -ir stem changes"
+    summary: "-ir verbs with a present stem change also change in él/ellos: pidió, pidieron, durmió, durmieron, prefirió."
+    examples: ["Pidió una paella.", "Dormimos poco, pero ellos durmieron bien."]
+    traps: ["Only 3rd person changes: pedí, pediste, pidió."]
+    error_tags: [conjugation]
+
+  # ---------- A2.03 Experiences and recent events ----------
+  - id: present-perfect
+    module: A2.03
+    kind: grammar
+    requires: [present-regular]
+    title: "Present perfect (pretérito perfecto)"
+    summary: "haber (he, has, ha, hemos, habéis, han) + participle (-ado, -ido). Participle never agrees, nothing goes between haber and participle."
+    examples: ["Hoy he corrido diez kilómetros.", "¿Has estado en México?"]
+    traps: ["Always haber, never ser, even where German uses sein: 'He ido', not 'Soy ido'."]
+    transfer: {de: "Only haber; no sein-Perfekt."}
+    error_tags: [conjugation, tense]
+
+  - id: participles-irregular
+    module: A2.03
+    kind: grammar
+    requires: [present-perfect]
+    title: "Irregular participles"
+    summary: "hecho, dicho, visto, escrito, puesto, vuelto, abierto, roto, muerto, descubierto."
+    examples: ["¿Has visto mi móvil?", "Todavía no he escrito el informe."]
+    traps: ["'hacido', 'escribido', 'vido' are wrong."]
+    error_tags: [conjugation]
+
+  - id: ya-todavia
+    module: A2.03
+    kind: grammar
+    requires: [present-perfect]
+    title: "ya / todavía no / alguna vez / nunca"
+    summary: "ya = already, todavía no / aún no = not yet, alguna vez = ever, nunca = never; typical with the present perfect."
+    examples: ["Ya he terminado.", "Todavía no he comido."]
+    traps: ["'todavía' alone means still: 'Todavía trabajo aquí'."]
+    error_tags: [vocab, word-order]
+
+  - id: perfect-vs-preterite
+    module: A2.03
+    kind: grammar
+    requires: [present-perfect, preterite-indefinido-ar]
+    variety_note: "es-ES: perfecto for today/this week/unfinished period; Latin America mostly uses the preterite there."
+    title: "Perfecto vs indefinido (Spain)"
+    summary: "In Spain: perfecto for time periods that are not over (hoy, esta semana, este año) and experiences; indefinido for finished periods (ayer, el año pasado)."
+    examples: ["Esta mañana he desayunado tarde.", "Ayer desayuné tarde."]
+    traps: ["'Ayer he ido' is wrong in standard Spanish."]
+    error_tags: [tense]
+
+  # ---------- A2.04 Then and now ----------
+  - id: imperfect
+    module: A2.04
+    kind: grammar
+    requires: [present-regular]
+    title: "Imperfect (pretérito imperfecto)"
+    summary: "-aba, -abas, -aba, -ábamos, -abais, -aban; -ía, -ías, -ía, -íamos, -íais, -ían. Only 3 irregular: ser (era), ir (iba), ver (veía). Past habits and descriptions."
+    examples: ["De niño vivía en Rusia.", "Antes corría todos los días."]
+    traps: ["Accent on -ábamos and on every -ía form."]
+    error_tags: [conjugation, accent]
+
+  - id: soler-infinitive
+    module: A2.04
+    kind: grammar
+    requires: [stem-change-o-ue]
+    title: "soler + infinitive"
+    summary: "Habitual action: suelo correr por la mañana; past habit: solía."
+    examples: ["Suelo trabajar desde casa los viernes."]
+    traps: ["soler is followed directly by the infinitive, no preposition."]
+    error_tags: [conjugation, preposition]
+
+  - id: past-aspect-basic
+    module: A2.04
+    kind: grammar
+    requires: [imperfect, preterite-irregular]
+    title: "Indefinido vs imperfecto: basics"
+    summary: "Imperfect: background, description, habits, ongoing actions. Indefinido: completed events that move the story forward."
+    examples: ["Llovía cuando salí de casa."]
+    traps: ["Duration doesn't decide: 'Viví diez años en Moscú' (completed) is indefinido."]
+    transfer: {ru: "Похоже на несовершенный/совершенный вид, но не совпадает полностью: «жил десять лет» = viví."}
+    error_tags: [past-aspect, tense]
+
+  # ---------- A2.05 Health ----------
+  - id: chunk-me-duele
+    module: A2.05
+    kind: chunk
+    requires: [gustar]
+    title: "me duele / me duelen"
+    summary: "Pain works like gustar: Me duele la cabeza, me duelen las piernas. Body parts take the definite article, not a possessive."
+    examples: ["Me duele la rodilla desde el maratón."]
+    traps: ["'Mi cabeza duele' is unnatural.", "Article, not possessive: 'la rodilla'."]
+    error_tags: [conjugation, article, pronoun]
+
+  - id: tener-symptoms
+    module: A2.05
+    kind: grammar
+    requires: [tener-present]
+    title: "Symptoms with tener and estar"
+    summary: "tengo fiebre / tos / gripe / dolor de...; estoy resfriado / mareado; desde hace + time."
+    examples: ["Tengo fiebre desde hace dos días."]
+    traps: ["desde hace, not 'desde' alone, for a period."]
+    error_tags: [vocab, preposition]
+
+  - id: deber-hay-que
+    module: A2.05
+    kind: grammar
+    requires: [tener-que-infinitive]
+    title: "Advice: deber, hay que, es mejor"
+    summary: "deber + infinitive (should), hay que + infinitive (one must), es mejor / es importante + infinitive."
+    examples: ["Debes descansar.", "Hay que beber mucha agua."]
+    traps: ["'debes de' means probability, not obligation."]
+    error_tags: [preposition, vocab]
+
+  - id: imperative-tu-affirmative
+    module: A2.05
+    kind: grammar
+    requires: [present-regular, irregular-yo]
+    title: "Affirmative imperative (tú)"
+    summary: "Regular = 3rd person singular present: habla, come, escribe. Irregular: ven, ve, haz, di, pon, sal, ten, sé. vosotros: -ad/-ed/-id."
+    examples: ["Bebe agua y descansa.", "Ven a las ocho."]
+    traps: ["Negative commands use a different form (subjunctive), not covered at A2 production level."]
+    error_tags: [mood, conjugation]
+
+  # ---------- A2.06 Home and household ----------
+  - id: imperative-pronouns
+    module: A2.06
+    kind: grammar
+    requires: [imperative-tu-affirmative, direct-object-pronouns, accent-rules]
+    title: "Imperative with pronouns"
+    summary: "Pronouns attach to the affirmative imperative; the stress stays put, so an accent is often added: dímelo, tráelo, siéntate."
+    examples: ["Tráemelo, por favor.", "Llámame mañana."]
+    traps: ["Missing accent: 'damelo' → dámelo."]
+    error_tags: [pronoun, accent]
+
+  - id: double-object-pronouns
+    module: A2.06
+    kind: grammar
+    requires: [direct-object-pronouns, indirect-object-pronouns]
+    title: "Double object pronouns"
+    summary: "Indirect before direct: me lo, te la. le/les becomes se before lo/la/los/las: se lo doy."
+    examples: ["¿El libro? Te lo dejo mañana.", "Se lo he dicho a Marta."]
+    traps: ["'le lo' is wrong → se lo."]
+    error_tags: [pronoun, word-order]
+
+  - id: estar-result
+    module: A2.06
+    kind: grammar
+    requires: [ser-vs-estar, participles-irregular]
+    title: "estar + participle for states"
+    summary: "Resulting state: está roto / cerrado / abierto / apagado; participle agrees like an adjective."
+    examples: ["La lavadora está rota.", "La tienda está cerrada."]
+    traps: ["Agreement: 'la ventana está abierta'."]
+    error_tags: [ser-estar, agreement]
+
+  - id: possessive-stressed
+    module: A2.06
+    kind: grammar
+    requires: [possessive-agreement]
+    title: "Stressed possessives: mío, tuyo"
+    summary: "mío, tuyo, suyo, nuestro, vuestro — after ser or the noun, and as pronouns with the article: el mío."
+    examples: ["¿Es tuyo este paraguas?", "Mi piso es más pequeño que el tuyo."]
+    traps: ["Agree with the possessed thing: 'Esta llave es mía'."]
+    error_tags: [agreement, pronoun]
+
+  # ---------- A2.07 Communication at work ----------
+  - id: chunk-me-gustaria-podria
+    module: A2.07
+    kind: chunk
+    requires: [gustar]
+    title: "me gustaría / podría / ¿podrías...?"
+    summary: "Polite wishes and requests as fixed phrases before the conditional is taught: Me gustaría..., ¿Podrías...?, ¿Podríamos...?"
+    examples: ["¿Podríamos mover la reunión al jueves?"]
+    traps: ["Don't explain the conditional paradigm here."]
+    error_tags: [register]
+
+  - id: future-simple
+    module: A2.07
+    kind: grammar
+    requires: [present-regular]
+    title: "Simple future"
+    summary: "Infinitive + -é, -ás, -á, -emos, -éis, -án. Irregular stems: har-, tendr-, podr-, saldr-, vendr-, dir-, sabr-, pondr-, querr-."
+    examples: ["Te enviaré el informe mañana."]
+    traps: ["In speech ir a + infinitive is more common for plans."]
+    error_tags: [conjugation, accent]
+
+  - id: connectors-discourse
+    module: A2.07
+    kind: grammar
+    requires: [connectors-basic]
+    title: "Discourse connectors"
+    summary: "así que, por eso, además, aunque, sin embargo, primero, luego, al final."
+    examples: ["Estoy enfermo, así que no puedo ir."]
+    traps: ["aunque + indicative for facts; the subjunctive case is not taught at A2."]
+    error_tags: [vocab]
+
+  # ---------- A2.08 Comparisons and opinions ----------
+  - id: superlatives
+    module: A2.08
+    kind: grammar
+    requires: [comparatives-basic]
+    title: "Superlatives"
+    summary: "el/la/los/las + más/menos + adjective + de; mejor/peor. Absolute: -ísimo (carísimo)."
+    examples: ["Es la ciudad más bonita de España.", "Es el mejor restaurante del barrio."]
+    traps: ["'de', not 'en': 'el más alto de la clase'."]
+    error_tags: [preposition, agreement]
+
+  - id: comparatives-quantity
+    module: A2.08
+    kind: grammar
+    requires: [comparatives-basic]
+    title: "Comparing quantities"
+    summary: "tanto/a/os/as + noun + como; más/menos + noun + que; más de / menos de + number."
+    examples: ["No tengo tanto tiempo como antes.", "Cuesta más de cien euros."]
+    traps: ["Before a number: más de, not más que."]
+    error_tags: [agreement, preposition]
+
+  - id: opinion-chunks
+    module: A2.08
+    kind: chunk
+    requires: [decir-que]
+    title: "Giving opinions"
+    summary: "Creo que..., Me parece que..., Para mí..., En mi opinión..., (No) estoy de acuerdo con..., Tienes razón."
+    examples: ["Me parece que la segunda opción es mejor."]
+    traps: ["'Estoy de acuerdo', not 'Soy de acuerdo'."]
+    error_tags: [ser-estar, vocab]
+
+  # ---------- A2.09 Service and complaints ----------
+  - id: conditional-polite
+    module: A2.09
+    kind: grammar
+    requires: [chunk-me-gustaria-podria, future-simple]
+    title: "Conditional for politeness"
+    summary: "Infinitive + -ía, -ías, -ía, -íamos, -íais, -ían, same irregular stems as the future. Polite requests and wishes."
+    examples: ["¿Podría cambiarme la habitación?", "Preferiría una mesa fuera."]
+    traps: ["Same stems as the future: 'tendría', not 'tenería'."]
+    error_tags: [conjugation, mood, register]
+
+  - id: reported-speech-basic
+    module: A2.09
+    kind: grammar
+    requires: [decir-que, preterite-irregular]
+    title: "Reported speech: basics"
+    summary: "Dice que + same tense; Me dijo que + present for things still true. Questions: Me preguntó si / dónde..."
+    examples: ["El recepcionista dijo que la habitación está lista."]
+    traps: ["Tense backshift is not required at A2 when the fact still holds."]
+    error_tags: [tense, other]
+
+  - id: negative-indefinites
+    module: A2.09
+    kind: grammar
+    requires: [negation-no, indefinites-basic]
+    title: "Negative words: nadie, nada, ninguno"
+    summary: "After the verb they need no: No vino nadie. Before the verb no 'no': Nadie vino. ninguno → ningún before a masculine noun."
+    examples: ["No hay ninguna mesa libre.", "No me han dicho nada."]
+    traps: ["Double negation is required, unlike German/English.", "ninguno is almost always singular."]
+    transfer: {ru: "Двойное отрицание как в русском: «никто не пришёл» = No vino nadie."}
+    error_tags: [word-order, agreement]
+
+  # ---------- A2.10 My story ----------
+  - id: narrative-past
+    module: A2.10
+    kind: grammar
+    requires: [past-aspect-basic]
+    title: "Narrating in the past"
+    summary: "Combine imperfect (scene, background) and indefinido (events) in a connected story."
+    examples: ["Era 2019, vivía en Leipzig y trabajaba mucho. Un día decidí correr un maratón."]
+    traps: ["Telling a whole story in imperfect or in indefinido only."]
+    error_tags: [past-aspect, tense]
+
+  - id: time-clauses
+    module: A2.10
+    kind: grammar
+    requires: [despues-de-infinitive, preterite-irregular]
+    title: "Time expressions in stories"
+    summary: "cuando + past, mientras + imperfect, al + infinitive, hace + time (ago), desde hace + time (for, still ongoing), hace ... que."
+    examples: ["Vivo en Alemania desde hace quince años.", "Al llegar, llamé a mi madre."]
+    traps: ["Ongoing state: present + desde hace, not a past tense."]
+    transfer: {de: "seit 15 Jahren = desde hace quince años (present tense, as in German)."}
+    error_tags: [preposition, tense]
+
+  - id: relative-que-donde
+    module: A2.10
+    kind: grammar
+    requires: []
+    title: "Relative clauses: que, donde"
+    summary: "que for people and things, donde for places; lo que = what (the thing that)."
+    examples: ["La empresa donde trabajo es pequeña.", "Lo que más me gusta es correr."]
+    traps: ["'el que' / 'quien' are not needed at A2 for basic clauses."]
+    error_tags: [pronoun, word-order]

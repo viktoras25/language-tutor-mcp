@@ -1,0 +1,12 @@
+# Spanish-specific extensions of core/errors.yaml.
+kind: errors
+version: 1
+scope: es
+categories:
+  - id: ser-estar
+    legacy: true
+    text: "ser and estar confused."
+  - id: por-para
+    text: "por and para confused."
+  - id: past-aspect
+    text: "Preterite (indefinido) and imperfect confused."

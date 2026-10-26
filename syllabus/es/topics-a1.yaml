@@ -1,0 +1,646 @@
+# Spanish grammar layer, A1. Each topic belongs to exactly one module (where it is introduced).
+# id == server item label: the server item id is "es:grammar_point:<id>".
+# Existing server labels are reused on purpose (marked `legacy: true`) so no migration of attempts is needed.
+# kind: grammar | chunk (fixed phrase learned before its grammar) | orthography
+# Texts are English; the lesson model renders explanations in the learner's UI language (profile.ui_lang).
+# transfer: optional notes keyed by a language the learner already knows (ru, de, en).
+kind: topics
+lang: es
+variety: es-ES
+version: 1
+topics:
+
+  # ---------- A1.01 Introductions ----------
+  - id: subject-pronouns
+    module: A1.01
+    kind: grammar
+    requires: []
+    title: "Subject pronouns"
+    summary: "yo, tú, él/ella/usted, nosotros/as, vosotros/as, ellos/ellas/ustedes. Usually dropped because the verb ending shows the person; used for emphasis or contrast."
+    examples: ["Yo soy de Lituania, ¿y tú?", "Vivimos en Leipzig."]
+    traps: ["Overusing pronouns sounds unnatural: 'Yo trabajo. Yo vivo...'", "usted/ustedes take third-person verb forms."]
+    error_tags: [pronoun, conjugation]
+
+  - id: ser-present
+    module: A1.01
+    kind: grammar
+    requires: [subject-pronouns]
+    title: "ser: present tense"
+    summary: "soy, eres, es, somos, sois, son. Identity, origin, profession, nationality, characteristics."
+    examples: ["Soy ingeniero.", "Somos de Alemania."]
+    traps: ["No indefinite article before an unqualified profession: 'Soy ingeniero', not 'Soy un ingeniero'."]
+    error_tags: [conjugation, article, ser-estar]
+
+  - id: noun-gender-number
+    module: A1.01
+    kind: grammar
+    requires: []
+    title: "Noun gender and plural"
+    summary: "Every noun is masculine or feminine. -o usually m., -a usually f., -ión/-dad f. Plural: -s after a vowel, -es after a consonant."
+    examples: ["el libro, los libros", "la ciudad, las ciudades"]
+    traps: ["Gender often differs from German/Russian: el coche (das Auto), la leche (die Milch), el problema."]
+    transfer: {de: "Never copy the German gender.", ru: "Род не совпадает с русским в большом числе слов."}
+    error_tags: [gender]
+
+  - id: articles
+    module: A1.01
+    kind: grammar
+    requires: [noun-gender-number]
+    title: "Definite and indefinite articles"
+    summary: "el/la/los/las; un/una/unos/unas. Definite article also for general statements and likes: Me gusta el café."
+    examples: ["Un café y una tostada, por favor.", "El café es caro aquí."]
+    traps: ["General statements need the definite article where German/English have none: 'La vida es bella'."]
+    transfer: {ru: "В русском артиклей нет: их легко пропустить, особенно после gustar."}
+    error_tags: [article, gender]
+
+  - id: question-words
+    module: A1.01
+    kind: grammar
+    requires: []
+    title: "Question words"
+    summary: "qué, quién, dónde, de dónde, cuándo, cómo, cuánto/a/os/as, por qué, cuál. Always written with an accent; questions open with ¿."
+    examples: ["¿De dónde eres?", "¿Cuántos idiomas hablas?"]
+    traps: ["cuánto agrees with the noun: cuántas personas.", "qué vs cuál: '¿Cuál es tu número?'"]
+    error_tags: [accent, agreement, vocab]
+
+  - id: negation-no
+    module: A1.01
+    kind: grammar
+    requires: []
+    title: "Negation with no"
+    summary: "no goes directly before the verb (and before object pronouns)."
+    examples: ["No hablo francés.", "No me gusta."]
+    traps: ["Not after the verb as in German: 'Hablo no' is wrong."]
+    error_tags: [word-order]
+
+  - id: usted-formal
+    module: A1.01
+    kind: grammar
+    requires: [subject-pronouns, ser-present]
+    title: "Formal address: usted"
+    summary: "usted/ustedes = formal 'you', with third-person verb forms and su/sus. In Spain tú is used widely, usted with strangers of authority or older people."
+    examples: ["¿Cómo se llama usted?", "¿Es usted de aquí?"]
+    traps: ["Possessive is su, not tu: '¿Es su maleta?'"]
+    error_tags: [register, conjugation]
+
+  # ---------- A1.02 People ----------
+  - id: gender-agreement
+    legacy: true
+    module: A1.02
+    kind: grammar
+    requires: [articles]
+    title: "Adjective agreement"
+    summary: "Adjectives agree with the noun in gender and number and usually follow it. -e/-consonant adjectives have one form for both genders."
+    examples: ["una compañera cansada", "unos zapatos grandes"]
+    traps: ["Agreement with the noun's gender, not with the speaker's: 'la reunión es larga'."]
+    error_tags: [agreement, gender]
+
+  - id: possessive-agreement
+    legacy: true
+    module: A1.02
+    kind: grammar
+    requires: [noun-gender-number]
+    title: "Possessive adjectives"
+    summary: "mi/mis, tu/tus, su/sus, nuestro/a/os/as, vuestro/a/os/as. They agree with the thing possessed, not the owner."
+    examples: ["mis amigos", "su vuelo (their flight)"]
+    traps: ["su is his/her/their/your(formal): ambiguity is resolved by context or 'de él'.", "No reflexive 'own' as in Russian «свой»: 'mi billete'."]
+    transfer: {ru: "«Свой» переводится по лицу: я — mi, ты — tu, он — su."}
+    error_tags: [agreement]
+
+  - id: tener-present
+    module: A1.02
+    kind: grammar
+    requires: [subject-pronouns]
+    title: "tener: present tense"
+    summary: "tengo, tienes, tiene, tenemos, tenéis, tienen. Possession, age (tengo 39 años), physical states (tengo hambre)."
+    examples: ["Tengo dos hermanos.", "¿Cuántos años tienes?"]
+    traps: ["Age with tener, not ser: 'Tengo 40 años'."]
+    error_tags: [conjugation, vocab]
+
+  - id: estar-present
+    module: A1.02
+    kind: grammar
+    requires: [subject-pronouns]
+    title: "estar: present tense"
+    summary: "estoy, estás, está, estamos, estáis, están. Temporary states and location."
+    examples: ["Estoy cansado.", "¿Cómo estás?"]
+    traps: ["Accent on está/están distinguishes from esta/estas."]
+    error_tags: [conjugation, accent]
+
+  - id: ser-vs-estar
+    legacy: true
+    module: A1.02
+    kind: grammar
+    requires: [ser-present, estar-present]
+    title: "ser vs estar"
+    summary: "ser: identity, origin, character, time, where an event takes place. estar: location of things/people, current state, result."
+    examples: ["Es simpático, pero hoy está cansado.", "La reunión es a las cinco."]
+    traps: ["Events: 'La fiesta es en mi casa' (ser).", "Some adjectives change meaning: ser aburrido / estar aburrido."]
+    error_tags: [ser-estar]
+
+  - id: muy-vs-mucho
+    legacy: true
+    module: A1.02
+    kind: grammar
+    requires: [gender-agreement]
+    title: "muy vs mucho"
+    summary: "muy + adjective/adverb; mucho/a/os/as + noun (agrees); mucho after a verb (invariable)."
+    examples: ["Es muy alto.", "Tengo mucho trabajo.", "Corro mucho."]
+    traps: ["'muy mucho' does not exist; 'muchas gracias' agrees."]
+    error_tags: [vocab, agreement]
+
+  # ---------- A1.03 Numbers, time and prices ----------
+  - id: numbers-0-29
+    module: A1.03
+    kind: grammar
+    requires: []
+    title: "Numbers 0–29"
+    summary: "0–15 individual words; 16–19 and 21–29 written as one word: dieciséis, veintidós."
+    examples: ["dieciocho", "veintitrés"]
+    traps: ["Not 'diez y seis'.", "Accents: dieciséis, veintidós, veintitrés, veintiséis."]
+    error_tags: [spelling, accent]
+
+  - id: numbers-31-199
+    legacy: true
+    module: A1.03
+    kind: grammar
+    requires: [numbers-0-29]
+    title: "Numbers 30–199"
+    summary: "Tens + y + units as separate words from 31: treinta y uno. cien = exactly 100; ciento + number above that, without y."
+    examples: ["cuarenta y cinco", "ciento treinta"]
+    traps: ["'ciento y treinta' is wrong.", "Units come after tens, unlike German."]
+    transfer: {de: "Order is tens then units: 45 = cuarenta y cinco."}
+    error_tags: [spelling]
+
+  - id: numbers-hundreds
+    legacy: true
+    module: A1.03
+    kind: grammar
+    requires: [numbers-31-199, gender-agreement]
+    title: "Hundreds and thousands"
+    summary: "doscientos ... novecientos, irregular quinientos, setecientos, novecientos. Hundreds agree in gender: doscientas personas. mil is invariable: dos mil."
+    examples: ["quinientos euros", "trescientas páginas", "dos mil veintiséis"]
+    traps: ["Not 'cincocientos', 'sietecientos', 'nuevecientos'.", "'un mil' is wrong for 1000."]
+    error_tags: [spelling, agreement]
+
+  - id: uno-apocope
+    legacy: true
+    module: A1.03
+    kind: grammar
+    requires: [numbers-0-29, articles]
+    title: "uno → un/una"
+    summary: "Before a masculine noun uno becomes un (veintiún kilómetros); before a feminine noun una; standalone uno."
+    examples: ["treinta y un años", "veintiuna personas"]
+    traps: ["'treinta y uno años' is wrong."]
+    error_tags: [agreement, spelling]
+
+  - id: time-telling
+    legacy: true
+    module: A1.03
+    kind: grammar
+    requires: [numbers-0-29, ser-present]
+    title: "Telling the time"
+    summary: "Es la una / Son las dos. y cuarto, y media, menos cuarto (of the next hour). a las + hour = at. ¿Qué hora es? / ¿A qué hora...?"
+    examples: ["Son las ocho menos cuarto.", "La reunión es a las diez y media."]
+    traps: ["'y media' is half past the current hour, unlike German 'halb neun' (= 8:30).", "cuándo asks 'when' in general; '¿A qué hora?' asks the time."]
+    transfer: {de: "halb neun = las ocho y media.", ru: "«Полдевятого» = las ocho y media."}
+    error_tags: [vocab, preposition]
+
+  - id: dates
+    legacy: true
+    module: A1.03
+    kind: grammar
+    requires: [numbers-31-199]
+    title: "Dates"
+    summary: "el + cardinal number + de + month + de + year. Months lowercase. Only the 1st may be 'primero'."
+    examples: ["el veinticinco de octubre de dos mil veintiséis", "Mi cumpleaños es el 25 de septiembre."]
+    traps: ["Cardinal, not ordinal numbers: 'el dos de mayo'.", "Months are not capitalised."]
+    error_tags: [spelling, article]
+
+  - id: days-of-week-article
+    legacy: true
+    module: A1.03
+    kind: grammar
+    requires: [articles]
+    title: "Days of the week with the article"
+    summary: "el sábado = on (this) Saturday, los sábados = on Saturdays; no preposition. 'Hoy es lunes' without article."
+    examples: ["El viernes voy a Berlín.", "Los domingos corro."]
+    traps: ["'en el sábado' is wrong."]
+    transfer: {de: "am Samstag = el sábado, samstags = los sábados."}
+    error_tags: [article, preposition]
+
+  - id: prices
+    legacy: true
+    module: A1.03
+    kind: chunk
+    requires: [numbers-31-199]
+    title: "Prices"
+    summary: "¿Cuánto cuesta / cuestan? ¿Cuánto es? Cuesta(n)... euros. 45,50 = cuarenta y cinco euros con cincuenta."
+    examples: ["¿Cuánto cuestan estas zapatillas?", "Son doce euros con cincuenta."]
+    traps: ["'y media' is only for time, not for prices.", "No subject pronoun for things: 'Cuestan 30 euros'."]
+    error_tags: [vocab, conjugation]
+
+  - id: accent-rules
+    legacy: true
+    module: A1.03
+    kind: orthography
+    requires: []
+    title: "Stress and written accents"
+    summary: "Words ending in a vowel, -n or -s are stressed on the second-to-last syllable; others on the last. A written accent marks exceptions only. Antepenultimate stress always gets an accent."
+    examples: ["canción, miércoles, Madrid, correr"]
+    traps: ["Hypercorrection: adding accents to every stressed syllable.", "Only the acute accent exists (no à)."]
+    error_tags: [accent]
+
+  - id: diacritic-pairs
+    legacy: true
+    module: A1.03
+    kind: orthography
+    requires: [accent-rules]
+    title: "Meaning-distinguishing accents"
+    summary: "tú/tu, él/el, sí/si, mí/mi, está/esta, qué/que, cómo/como, porque/por qué."
+    examples: ["Él es mi hermano.", "¿Por qué? Porque sí."]
+    traps: ["qué/cómo only in questions and exclamations, including indirect ones."]
+    error_tags: [accent]
+
+  # ---------- A1.04 Around town ----------
+  - id: estar-location
+    module: A1.04
+    kind: grammar
+    requires: [estar-present]
+    title: "estar for location"
+    summary: "Where a known, specific thing or person is: estar + en / cerca de / al lado de..."
+    examples: ["La estación está cerca.", "¿Dónde está el baño?"]
+    traps: ["Events are an exception: 'El concierto es en el parque' (ser)."]
+    error_tags: [ser-estar]
+
+  - id: hay-vs-estar
+    legacy: true
+    module: A1.04
+    kind: grammar
+    requires: [estar-location, articles]
+    title: "hay vs estar"
+    summary: "hay = there is/are (existence, new info, with un/una/numbers/no article). estar = where the known thing is (with el/la/proper names)."
+    examples: ["Hay un supermercado cerca.", "El supermercado está en la esquina."]
+    traps: ["'Hay el banco' is wrong; 'Está un banco' is wrong."]
+    transfer: {de: "hay ≈ es gibt."}
+    error_tags: [ser-estar, article]
+
+  - id: prepositions-place
+    module: A1.04
+    kind: grammar
+    requires: [estar-location]
+    title: "Prepositions of place"
+    summary: "en, cerca de, lejos de, al lado de, delante de, detrás de, enfrente de, entre, encima de, debajo de."
+    examples: ["La farmacia está enfrente del banco."]
+    traps: ["Compound prepositions need de, which contracts with el: 'al lado del hotel'."]
+    error_tags: [preposition]
+
+  - id: contractions-al-del
+    module: A1.04
+    kind: grammar
+    requires: [articles]
+    title: "Contractions al and del"
+    summary: "a + el = al, de + el = del. Not with la/los/las, and not with the pronoun él."
+    examples: ["Voy al centro.", "Vengo del trabajo."]
+    traps: ["'a el' / 'de el' are wrong before the article."]
+    error_tags: [article, preposition]
+
+  - id: ir-present
+    module: A1.04
+    kind: grammar
+    requires: [subject-pronouns]
+    title: "ir: present tense"
+    summary: "voy, vas, va, vamos, vais, van + a + destination."
+    examples: ["Voy a la oficina en bici."]
+    traps: ["'yo va' — the third person form leaks into first person."]
+    error_tags: [conjugation, preposition]
+
+  - id: a-vs-en
+    legacy: true
+    module: A1.04
+    kind: grammar
+    requires: [ir-present, prepositions-place]
+    title: "a vs en"
+    summary: "a = direction (to); en = location (in/at) and means of transport."
+    examples: ["Voy a casa.", "Estoy en casa.", "Voy en tren."]
+    traps: ["'Voy en casa' is wrong."]
+    transfer: {ru: "a — «куда», en — «где».", de: "a ≈ nach/zu, en ≈ in/bei."}
+    error_tags: [preposition]
+
+  - id: chunk-directions
+    module: A1.04
+    kind: chunk
+    requires: []
+    title: "Directions (fixed phrases)"
+    summary: "Sigue recto, gira a la derecha / izquierda, toma la primera calle, está a cinco minutos. Learned as phrases before the imperative."
+    examples: ["Sigue recto y gira a la izquierda."]
+    traps: ["Don't explain the imperative here; treat these as fixed phrases."]
+    error_tags: [vocab]
+
+  # ---------- A1.05 Daily routine ----------
+  - id: present-regular
+    module: A1.05
+    kind: grammar
+    requires: [subject-pronouns]
+    title: "Present tense: regular verbs"
+    summary: "-ar: -o, -as, -a, -amos, -áis, -an. -er: -o, -es, -e, -emos, -éis, -en. -ir: -o, -es, -e, -imos, -ís, -en."
+    examples: ["Trabajo en casa los lunes.", "¿Dónde vives?"]
+    traps: ["yo always ends in -o except soy, estoy, voy, doy.", "tú always ends in -s."]
+    error_tags: [conjugation]
+
+  - id: reflexive-verbs
+    legacy: true
+    module: A1.05
+    kind: grammar
+    requires: [present-regular]
+    title: "Reflexive verbs"
+    summary: "me, te, se, nos, os, se + verb. The pronoun goes before a conjugated verb or is attached to an infinitive."
+    examples: ["Me levanto a las seis.", "Tengo que acostarme pronto."]
+    traps: ["The pronoun is never dropped: '¿Te acuestas?'.", "no goes before the pronoun: 'No me levanto'."]
+    error_tags: [pronoun, word-order]
+
+  - id: irregular-yo
+    module: A1.05
+    kind: grammar
+    requires: [present-regular]
+    title: "Irregular yo forms"
+    summary: "hago, pongo, salgo, traigo, conozco, sé, doy, veo, digo, vengo, tengo; the other persons are mostly regular."
+    examples: ["Salgo de casa a las ocho.", "Hago deporte."]
+    traps: ["'hacio', 'salo' are wrong."]
+    error_tags: [conjugation]
+
+  - id: estar-gerund
+    module: A1.05
+    kind: grammar
+    requires: [estar-present, present-regular]
+    title: "estar + gerund"
+    summary: "Action in progress right now: estar + -ando / -iendo. Irregular: leyendo, durmiendo, diciendo."
+    examples: ["Estoy corriendo.", "¿Qué estás haciendo?"]
+    traps: ["Not used for the near future as in English: 'Mañana voy a trabajar', not 'Mañana estoy trabajando'."]
+    error_tags: [tense, conjugation]
+
+  - id: frequency-expressions
+    module: A1.05
+    kind: grammar
+    requires: [present-regular]
+    title: "Frequency expressions"
+    summary: "siempre, normalmente, a menudo, a veces, casi nunca, nunca, todos los días, una vez a la semana."
+    examples: ["Corro tres veces a la semana."]
+    traps: ["'nunca' after the verb needs no: 'No corro nunca' = 'Nunca corro'."]
+    error_tags: [vocab, word-order]
+
+  - id: despues-de-infinitive
+    legacy: true
+    module: A1.05
+    kind: grammar
+    requires: [present-regular]
+    title: "antes de / después de + infinitive"
+    summary: "Before/after doing something: antes de / después de + infinitive. después alone = afterwards."
+    examples: ["Después de correr, me ducho."]
+    traps: ["Infinitive, not a conjugated verb: 'después de corro' is wrong."]
+    transfer: {de: "≈ nach dem Laufen."}
+    error_tags: [preposition, conjugation]
+
+  # ---------- A1.06 Work and study ----------
+  - id: stem-change-e-ie
+    legacy: true
+    module: A1.06
+    kind: grammar
+    requires: [present-regular]
+    title: "Vowel change e → ie"
+    summary: "The stressed e becomes ie in all forms except nosotros/vosotros: quiero, quieres, quiere, queremos, queréis, quieren. Also empezar, preferir, pensar, entender, tener, venir."
+    examples: ["Prefiero trabajar por la mañana.", "Queremos cenar."]
+    traps: ["'queremos' keeps e because the stress moves."]
+    error_tags: [conjugation]
+
+  - id: stem-change-o-ue
+    legacy: true
+    module: A1.06
+    kind: grammar
+    requires: [present-regular]
+    title: "Vowel change o → ue"
+    summary: "Stressed o becomes ue except in nosotros/vosotros: puedo, puedes, podemos. Also volver, dormir, costar, encontrar, acostarse. jugar: u → ue."
+    examples: ["¿Puedes venir?", "Vuelvo a las seis."]
+    traps: ["'puedemos' is wrong."]
+    error_tags: [conjugation]
+
+  - id: stem-change-e-i
+    module: A1.06
+    kind: grammar
+    requires: [present-regular]
+    title: "Vowel change e → i"
+    summary: "-ir verbs like pedir, repetir, servir, decir: pido, pides, pide, pedimos, pedís, piden."
+    examples: ["Siempre pido lo mismo."]
+    traps: ["decir also has irregular yo: digo."]
+    error_tags: [conjugation]
+
+  - id: ir-vs-venir
+    legacy: true
+    module: A1.06
+    kind: grammar
+    requires: [ir-present, stem-change-e-ie]
+    title: "ir vs venir"
+    summary: "venir = come towards the speaker's location; ir = go elsewhere, including towards the listener. venir: vengo, vienes, viene, venimos, venís, vienen."
+    examples: ["¿Vienes a mi casa?", "¡Ya voy!"]
+    traps: ["Answering a call: 'Ya voy' (not 'Ya vengo')."]
+    error_tags: [vocab, conjugation]
+
+  - id: connectors-basic
+    module: A1.06
+    kind: grammar
+    requires: []
+    title: "Basic connectors"
+    summary: "y (e before i-), o (u before o-), pero, porque + indicative, también, tampoco, entonces."
+    examples: ["Me gusta mi trabajo porque aprendo mucho."]
+    traps: ["porque (because) vs por qué (why).", "porque takes the normal indicative: 'porque estoy cansado'."]
+    error_tags: [vocab, accent, mood]
+
+  - id: decir-que
+    legacy: true
+    module: A1.06
+    kind: grammar
+    requires: [stem-change-e-i]
+    title: "decir / pensar / creer + que"
+    summary: "'that' after verbs of saying and thinking is que and can't be dropped."
+    examples: ["Dice que viene mañana.", "Creo que es buena idea."]
+    traps: ["Unlike German 'dass' or English 'that', que is mandatory."]
+    error_tags: [word-order, other]
+
+  # ---------- A1.07 Food and cafés ----------
+  - id: chunk-quisiera
+    module: A1.07
+    kind: chunk
+    requires: []
+    title: "quisiera / me pone"
+    summary: "Polite ordering: Quisiera..., ¿Me pone...?, Para mí..., Yo quiero... is acceptable in Spain. Learned as phrases, not as conditional."
+    examples: ["¿Me pone un café con leche?", "Para mí, la ensalada."]
+    traps: ["Don't explain the conditional here."]
+    transfer: {de: "≈ Ich hätte gern...", ru: "≈ «Мне, пожалуйста…»"}
+    error_tags: [register, vocab]
+
+  - id: polite-requests
+    module: A1.07
+    kind: grammar
+    requires: [present-regular]
+    title: "Requests with ¿puede...? / ¿me trae...?"
+    summary: "Ask for things or actions with a present-tense question: ¿Me trae la cuenta? ¿Puede cambiar...? ¿Tiene...?"
+    examples: ["¿Nos trae la cuenta, por favor?", "¿Tiene algo sin gluten?"]
+    traps: ["me/nos before the verb: '¿Me trae...?', not '¿Trae me...?'."]
+    error_tags: [pronoun, register]
+
+  - id: quantity-expressions
+    module: A1.07
+    kind: grammar
+    requires: [noun-gender-number]
+    title: "Quantities"
+    summary: "un poco de, mucho/a, demasiado/a, bastante, un kilo de, una botella de, medio kilo de, nada de. Containers and measures take de + noun without article."
+    examples: ["un kilo de tomates", "Tengo demasiado trabajo."]
+    traps: ["'un kilo de los tomates' is wrong."]
+    error_tags: [article, agreement]
+
+  - id: estar-taste
+    module: A1.07
+    kind: grammar
+    requires: [ser-vs-estar]
+    title: "estar + adjective for taste and food state"
+    summary: "This specific dish: estar (Está rico, está frío). Food in general: ser (El chocolate es dulce)."
+    examples: ["La sopa está muy rica.", "El café está frío."]
+    traps: ["'La paella es rica' sounds like a general statement."]
+    error_tags: [ser-estar]
+
+  # ---------- A1.08 Shopping and clothes ----------
+  - id: demonstratives
+    module: A1.08
+    kind: grammar
+    requires: [gender-agreement]
+    title: "Demonstratives"
+    summary: "este (here, near me), ese (near you / there), aquel (over there, far). Agree in gender and number; neuter esto, eso, aquello for unknown things."
+    examples: ["Este jersey es más barato que ese.", "¿Qué es eso?"]
+    traps: ["Neuter esto/eso never refers to a known noun: 'esta camisa', not 'esto camisa'."]
+    error_tags: [agreement, vocab]
+
+  - id: direct-object-pronouns
+    module: A1.08
+    kind: grammar
+    requires: [present-regular, articles]
+    title: "Direct object pronouns"
+    summary: "me, te, lo/la, nos, os, los/las replace the object; before the conjugated verb or attached to an infinitive."
+    examples: ["Me lo llevo.", "¿La camisa? La quiero en azul.", "Voy a comprarlo."]
+    traps: ["Gender follows the replaced noun.", "Position: 'Lo compro', not 'Compro lo'."]
+    error_tags: [pronoun, word-order, agreement]
+
+  - id: comparatives-basic
+    module: A1.08
+    kind: grammar
+    requires: [gender-agreement]
+    title: "Comparatives"
+    summary: "más / menos + adjective + que; tan + adjective + como. Irregular: mejor, peor, mayor, menor."
+    examples: ["Esta es más barata que esa.", "Es tan caro como el otro."]
+    traps: ["'más bueno' → mejor.", "que, not como, after más."]
+    error_tags: [vocab, agreement]
+
+  - id: indefinites-basic
+    module: A1.08
+    kind: grammar
+    requires: [gender-agreement]
+    title: "otro, todo, cada, alguno"
+    summary: "otro/a without un: 'otra talla'. todo el / toda la + noun. cada is invariable. alguno → algún before a masculine noun."
+    examples: ["¿Tiene otra talla?", "Trabajo todos los días."]
+    traps: ["'una otra' is wrong.", "'todo el día' needs the article."]
+    error_tags: [article, agreement]
+
+  # ---------- A1.09 Free time and tastes ----------
+  - id: gustar
+    legacy: true
+    module: A1.09
+    kind: grammar
+    requires: [articles]
+    title: "gustar and similar verbs"
+    summary: "The thing liked is the subject: me gusta + singular/infinitive, me gustan + plural. The person is the indirect object me/te/le/nos/os/les. encantar, interesar, doler work the same way."
+    examples: ["Me gusta el café.", "Nos encantan los conciertos.", "A Ana le gusta correr."]
+    traps: ["Conjugating by person ('gusto', 'encantamos').", "Missing article: 'Me gusta café'."]
+    transfer: {de: "Works like gefallen: Der Film gefällt mir → Me gusta la película.", ru: "Как «нравится»: подлежащее — то, что нравится."}
+    error_tags: [conjugation, article, pronoun]
+
+  - id: indirect-object-pronouns
+    module: A1.09
+    kind: grammar
+    requires: [gustar]
+    title: "Indirect object pronouns"
+    summary: "me, te, le, nos, os, les = to/for someone. Often doubled with a + person: Le escribo a mi jefe."
+    examples: ["Le doy el libro a Ana.", "¿Me ayudas?"]
+    traps: ["le vs lo: le = to him/her, lo = him/it.", "Doubling with a + person is normal, not redundant."]
+    error_tags: [pronoun]
+
+  - id: tambien-tampoco
+    module: A1.09
+    kind: grammar
+    requires: [gustar]
+    title: "también / tampoco / a mí sí / a mí no"
+    summary: "Agreeing: también (positive), tampoco (negative). Disagreeing: a mí sí / a mí no; with normal verbs: yo sí / yo no."
+    examples: ["—Me gusta el jazz. —A mí también.", "—No corro. —Yo tampoco."]
+    traps: ["With gustar use 'a mí', not 'yo': 'A mí también'."]
+    error_tags: [pronoun, vocab]
+
+  - id: saber-vs-conocer
+    module: A1.09
+    kind: grammar
+    requires: [irregular-yo]
+    title: "saber vs conocer"
+    summary: "saber = know a fact / know how to (sé nadar). conocer = be acquainted with a person, place or thing (conozco Madrid)."
+    examples: ["¿Sabes cocinar?", "No conozco a tu hermano."]
+    traps: ["Personal a after conocer + person.", "Ability: 'sé tocar la batería', not 'puedo'."]
+    transfer: {de: "saber ≈ wissen / können (gelernt), conocer ≈ kennen.", ru: "saber — «знать что / уметь», conocer — «быть знакомым»."}
+    error_tags: [vocab, conjugation]
+
+  # ---------- A1.10 Plans and meeting up ----------
+  - id: ir-a-infinitive
+    legacy: true
+    module: A1.10
+    kind: grammar
+    requires: [ir-present]
+    title: "ir a + infinitive"
+    summary: "Near future and plans: only ir is conjugated, then a + one infinitive."
+    examples: ["Voy a correr mañana.", "¿Qué vais a hacer el sábado?"]
+    traps: ["'va' for every person.", "Conjugating the second verb: 'voy a tengo'."]
+    error_tags: [conjugation, preposition]
+
+  - id: tener-que-infinitive
+    module: A1.10
+    kind: grammar
+    requires: [tener-present]
+    title: "tener que + infinitive"
+    summary: "Obligation: tener que + infinitive. 'hay que' = one has to (impersonal)."
+    examples: ["Tengo que trabajar el sábado."]
+    traps: ["Don't omit que: 'tengo trabajar' is wrong."]
+    error_tags: [conjugation, other]
+
+  - id: weather-expressions
+    module: A1.10
+    kind: grammar
+    requires: [estar-present]
+    title: "Weather"
+    summary: "hace calor/frío/sol/viento/buen tiempo; está nublado; hay niebla; llueve, nieva; está lloviendo."
+    examples: ["Hoy hace mucho frío.", "Está lloviendo."]
+    traps: ["'Es frío' about the weather is wrong."]
+    error_tags: [vocab, ser-estar]
+
+  - id: chunk-proposals
+    module: A1.10
+    kind: chunk
+    requires: []
+    title: "Making and answering proposals"
+    summary: "¿Quedamos...? ¿Por qué no...? ¿Te viene bien...? Vale. Perfecto. Lo siento, no puedo. ¿Y si...?"
+    examples: ["¿Quedamos el viernes a las siete?", "Lo siento, el viernes no puedo. ¿Y el sábado?"]
+    traps: ["quedar = arrange to meet in Spain."]
+    error_tags: [vocab, register]
+
+  - id: si-present
+    module: A1.10
+    kind: grammar
+    requires: [present-regular]
+    title: "Real conditions: si + present"
+    summary: "si + present, present / ir a / imperative for real conditions. si (if) has no accent; sí (yes) does."
+    examples: ["Si llueve, voy al gimnasio."]
+    traps: ["No future after si: 'si lloverá' is wrong."]
+    error_tags: [tense, accent]

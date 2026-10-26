@@ -1,7 +1,8 @@
 import type { SrsState, SrsStatus } from "./srs";
+import type { PlanSummary, SyllabusStore } from "./syllabus-store";
 
 export const ITEM_TYPES = ["lemma", "form", "grammar_point", "collocation"] as const;
-export const EDGE_TYPES = ["form_of", "requires", "contrasts_with", "collocates"] as const;
+export const EDGE_TYPES = ["form_of", "requires", "contrasts_with", "collocates", "part_of"] as const;
 
 export type Lang = string;
 export type ItemType = (typeof ITEM_TYPES)[number];
@@ -110,13 +111,14 @@ export interface Stats {
 }
 
 export interface CourseState {
+  plan?: PlanSummary | null; // set by the tool layer when a syllabus is imported for the language
   lang: string;
   data: unknown;
   updated_at: string | null;
 }
 
 // Backend-agnostic storage. Tools depend only on this.
-export interface Store {
+export interface Store extends SyllabusStore {
   upsertItem(lang: Lang, type: ItemType, label: string, data?: Record<string, unknown>, replace?: boolean): Promise<string>;
   link(src: string, dst: string, type: EdgeType): Promise<void>;
   logAttempt(input: AttemptInput): Promise<SrsState>;
