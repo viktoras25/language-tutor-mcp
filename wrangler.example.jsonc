@@ -1,0 +1,24 @@
+// Copy to wrangler.jsonc (gitignored) and fill in your values:  cp wrangler.example.jsonc wrangler.jsonc
+{
+  "name": "language-memory-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "language-memory", // the name you gave to `wrangler d1 create`
+      "database_id": "<YOUR_D1_DATABASE_ID>", // printed by `wrangler d1 create`
+      "migrations_dir": "migrations"
+    }
+  ],
+  // All optional; these are the behaviors you can tune.
+  "vars": {
+    // Language codes the tools accept (used as the first part of item ids, e.g. "es:lemma:hablar").
+    "LANGS": "en,es,de,fr,it,pt,nl",
+    // Allowed values of log_attempt.error_type ("other" is always allowed). Add your language's own categories.
+    "ERROR_TYPES": "gender,agreement,conjugation,tense,preposition,word-order,vocab,spelling,article,other",
+    // IANA time zone that defines "the same day" for spaced repetition, e.g. "Europe/London", "America/New_York".
+    "TIMEZONE": "UTC"
+  }
+}
