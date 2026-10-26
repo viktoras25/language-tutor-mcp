@@ -1,3 +1,5 @@
+import { assertTimeZone } from "./time";
+
 // Deployment-specific settings, read from Worker vars (wrangler.jsonc "vars") with generic defaults.
 export interface Config {
   langs: string[]; // language codes the tools accept
@@ -33,9 +35,9 @@ export function loadConfig(env: ConfigEnv): Config {
 
   const timezone = env.TIMEZONE === undefined || env.TIMEZONE.trim() === "" ? "UTC" : env.TIMEZONE.trim();
   try {
-    new Intl.DateTimeFormat("en-CA", { timeZone: timezone });
-  } catch {
-    throw new Error(`TIMEZONE: "${timezone}" is not a valid IANA time zone, e.g. UTC or Europe/London`);
+    assertTimeZone(timezone);
+  } catch (e) {
+    throw new Error(`TIMEZONE: ${(e as Error).message}`);
   }
   return { langs, errorTypes, timezone };
 }

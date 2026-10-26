@@ -1,5 +1,5 @@
 import { computeSrs, EMPTY_SRS, type SrsState, type SrsStatus } from "./srs";
-import { addDays, normalizeTs } from "./time";
+import { addDays, daysBetween, normalizeTs } from "./time";
 import type {
   Attempt,
   AttemptInput,
@@ -74,10 +74,6 @@ function toSession(row: SessionRow): Session {
 // Escapes LIKE wildcards so user text is matched literally (used with ESCAPE '\').
 function likePattern(text: string): string {
   return `%${text.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
-}
-
-function daysBetween(fromDay: string, toDay: string): number {
-  return Math.round((Date.parse(toDay) - Date.parse(fromDay)) / 86400000);
 }
 
 export class D1Store implements Store {
