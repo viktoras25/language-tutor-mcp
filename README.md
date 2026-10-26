@@ -103,7 +103,7 @@ How the server decides:
 
 - Syllabus texts are plain English; the model explains them in the learner's `ui_lang` (profile).
 - A topic is the item `<lang>:grammar_point:<topic id>` (one copy per user). Items of finer grain are linked to it with `part_of`.
-- Status: `planned` (no row) · `seen_via_error` · `current` · `introduced` · `assumed`. The last three count as **covered** and satisfy `requires`.
+- Status: `planned` (no row) · `seen_via_error` · `current` · `introduced` · `assumed`. The last three count as **covered** and satisfy `requires`. `assumed` comes from the seed or from `set_topic_status` inside a session of kind `placement`.
 - `next_topics`: open topics whose prerequisites are all covered. `continue` = those that follow a `current` topic, `fill` = the rest in plan order.
 - **Mastered** = covered, has at least one item, every item is SRS-`known`, no wrong answers in the last 14 days. A module is closed at full coverage, 80% mastery and a checkpoint passed after its last topic was introduced. Coverage and mastery are always reported separately.
 - `error_type` in `log_attempt` is checked per language: `ERROR_TYPES` + the syllabus's core categories + that language's own (e.g. `por-para` is valid for `es`, not for `de`).

@@ -446,12 +446,19 @@ export class D1Syllabus implements SyllabusStore {
       const hint = topic.replaced_by === null ? "" : `, use "${topic.replaced_by}" instead`;
       throw new Error(`Topic "${topicId}" is deprecated${hint}`);
     }
+    let sessionKind: string | undefined = undefined;
     if (sessionId !== undefined) {
       const session = await this.db
-        .prepare("SELECT 1 AS x FROM sessions WHERE user_id = ?1 AND id = ?2")
+        .prepare("SELECT kind FROM sessions WHERE user_id = ?1 AND id = ?2")
         .bind(this.userId, sessionId)
-        .first();
+        .first<{ kind: string }>();
       if (!session) throw new Error(`Unknown session_id: ${sessionId}`);
+      sessionKind = session.kind;
+    }
+    if (status === "assumed" && sessionKind !== "placement") {
+      throw new Error(
+        `"assumed" can only be set inside a placement session (start_session with kind "placement", then pass its session_id)`,
+      );
     }
 
     const prevRow = await this.db

@@ -3,8 +3,8 @@
 
 export type TopicStatus = "planned" | "seen_via_error" | "current" | "introduced" | "assumed";
 
-// Statuses a learner may be put into by hand (set_topic_status). The others come from the seed or from `planned`.
-export const SETTABLE_STATUSES = ["current", "introduced", "planned"] as const;
+// Statuses a learner may be put into by hand (set_topic_status). `assumed` is accepted only inside a placement session.
+export const SETTABLE_STATUSES = ["current", "introduced", "assumed", "planned"] as const;
 
 export interface PlanModule {
   id: string;

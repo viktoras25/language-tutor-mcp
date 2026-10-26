@@ -299,6 +299,17 @@ describe("set_topic_status", () => {
     const row = await db.prepare("SELECT source FROM learner_topics WHERE topic_id = 'usted-formal'").first<{ source: string }>();
     expect(row!.source).toBe(`session:${sid}`);
   });
+
+  it("allows assumed only inside a placement session", async () => {
+    await expect(store.setTopicStatus("es", "usted-formal", "assumed")).rejects.toThrow(/placement/);
+    const lesson = await store.startSession("es", "Lesson 14");
+    await expect(store.setTopicStatus("es", "usted-formal", "assumed", lesson)).rejects.toThrow(/placement/);
+    const placement = await store.startSession("es", "Placement test", undefined, "placement");
+    const r = await store.setTopicStatus("es", "usted-formal", "assumed", placement);
+    expect(r.status).toBe("assumed");
+    const row = await db.prepare("SELECT source FROM learner_topics WHERE topic_id = 'usted-formal'").first<{ source: string }>();
+    expect(row!.source).toBe(`session:${placement}`);
+  });
 });
 
 describe("checkpoints", () => {

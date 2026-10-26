@@ -279,7 +279,7 @@ export function createServer(store: Store, config: Config): McpServer {
     "set_topic_status",
     {
       description:
-        "Mark a topic as `current` (being taught now) or `introduced` (taught in a lesson). Moving a topic back (e.g. introduced -> current or planned) is refused unless allow_regress is true. Returns prerequisites that are not covered yet; the change is made anyway.",
+        "Mark a topic as `current` (being taught now) or `introduced` (taught in a lesson). `assumed` (known from before, confirmed by a placement test) is accepted only with the session_id of a session started with kind \"placement\". Moving a topic back (e.g. introduced -> current or planned) is refused unless allow_regress is true. Returns prerequisites that are not covered yet; the change is made anyway.",
       inputSchema: z.object({
         lang,
         topic_id: slug,
