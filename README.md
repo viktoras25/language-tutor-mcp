@@ -1,4 +1,4 @@
-# language-memory-mcp
+# language-tutor-mcp
 
 A small remote, multi-user [MCP](https://modelcontextprotocol.io) server on Cloudflare Workers + D1 that gives an AI language tutor a long-term memory: vocabulary and grammar items, a graph of links between them, practice attempts, lessons (sessions), a server-side spaced-repetition schedule, and a "course state" note. A new chat with no history can read it and know what to repeat and which lesson comes next.
 
@@ -23,7 +23,7 @@ openssl rand -hex 32 | npx wrangler secret put MCP_SECRET    # save this value, 
 npx wrangler deploy
 ```
 
-Deploy prints `https://language-memory-mcp.<your-subdomain>.workers.dev`.
+Deploy prints `https://language-tutor-mcp.<your-subdomain>.workers.dev`.
 
 ## Run it locally (SQLite, no Cloudflare)
 

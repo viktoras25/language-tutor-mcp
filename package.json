@@ -1,5 +1,5 @@
 {
-  "name": "language-memory-mcp",
+  "name": "language-tutor-mcp",
   "version": "1.0.0",
   "description": "Remote MCP server that gives an AI language tutor a long-term memory (Cloudflare Workers + D1, or local SQLite)",
   "main": "index.js",
