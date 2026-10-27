@@ -1,7 +1,7 @@
 {
   "name": "language-memory-mcp",
   "version": "1.0.0",
-  "description": "",
+  "description": "Remote MCP server that gives an AI language tutor a long-term memory (Cloudflare Workers + D1, or local SQLite)",
   "main": "index.js",
   "scripts": {
     "test": "vitest run",
@@ -10,11 +10,15 @@
     "syllabus:import": "node scripts/syllabus-import.ts",
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "user:add": "node scripts/user-add.ts"
+    "user:add": "node scripts/user-add.ts",
+    "local:exec": "node dist/local-exec.mjs",
+    "test:sqlite": "TEST_DB=sqlite vitest run",
+    "build:local": "esbuild src/local.ts scripts/local-exec.ts --bundle --platform=node --format=esm --target=node22 --external:node:sqlite --outdir=dist --out-extension:.js=.mjs --entry-names=[name]",
+    "local": "node dist/local.mjs"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Viktoras Bezaras",
+  "license": "MIT",
   "type": "module",
   "dependencies": {
     "@modelcontextprotocol/server": "^2.3.1",

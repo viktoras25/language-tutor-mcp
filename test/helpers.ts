@@ -20,6 +20,7 @@ export async function runSql(db: D1Database, file: string): Promise<void> {
 }
 
 export async function newDb(upTo?: string): Promise<{ db: D1Database; dispose: () => Promise<void> }> {
+  if (process.env.TEST_DB === "sqlite") return newSqliteDb(upTo);
   const mf = new Miniflare({ workers: [{
     modules: true,
     script: "export default { fetch() { return new Response('ok') } }",
@@ -32,4 +33,22 @@ export async function newDb(upTo?: string): Promise<{ db: D1Database; dispose: (
     await runSql(db, f);
   }
   return { db, dispose: () => mf.dispose() };
+}
+
+// Same schema on a local SQLite file (in memory), through the adapter used by the stdio entry point.
+export async function newSqliteDb(upTo?: string): Promise<{ db: D1Database; dispose: () => Promise<void> }> {
+  const { SqliteD1 } = await import("../src/sqlite-d1");
+  const { migrate } = await import("../src/migrate");
+  const lite = new SqliteD1(":memory:");
+  if (upTo === undefined) {
+    migrate(lite, MIGRATIONS);
+  } else {
+    lite.exec("PRAGMA foreign_keys = OFF");
+    for (const f of migrationFiles()) {
+      if (f > upTo) break;
+      lite.exec(readFileSync(join(MIGRATIONS, f), "utf8"));
+    }
+    lite.exec("PRAGMA foreign_keys = ON");
+  }
+  return { db: lite.asD1(), dispose: async () => lite.close() };
 }

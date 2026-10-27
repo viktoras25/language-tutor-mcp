@@ -2,6 +2,8 @@
 
 A small remote, multi-user [MCP](https://modelcontextprotocol.io) server on Cloudflare Workers + D1 that gives an AI language tutor a long-term memory: vocabulary and grammar items, a graph of links between them, practice attempts, lessons (sessions), a server-side spaced-repetition schedule, and a "course state" note. A new chat with no history can read it and know what to repeat and which lesson comes next.
 
+> **Status:** this is a new project. Authentication is deliberately simple: a personal secret token per user (in the URL path or an `Authorization: Bearer` header), with no OAuth and no self-service sign-up. That is fine for running your own instance or sharing it with a few people you trust; it is not hardened for an open public service. Expect rough edges and breaking changes.
+
 Transport: Streamable HTTP via `createMcpHandler` from the `agents` package (stateless).
 
 Layout: `src/store.ts` (`Store` interface) · `src/d1-store.ts` (D1 backend; syllabus part in `src/d1-syllabus.ts`) · `src/planner.ts` (next topics, progress; pure) · `src/syllabus-import.ts` (plan → SQL) · `src/tools.ts` (tools; depend only on `Store`) · `src/srs.ts` (spaced repetition) · `src/config.ts` (settings) · `src/auth.ts` (token → user) · `src/users.ts` (SQL to add, rotate and revoke users) · `src/index.ts` (auth + handler).
@@ -22,6 +24,29 @@ npx wrangler deploy
 ```
 
 Deploy prints `https://language-memory-mcp.<your-subdomain>.workers.dev`.
+
+## Run it locally (SQLite, no Cloudflare)
+
+The same tools run on your own machine over stdio, with one SQLite file as the database. One person, no tokens, nothing leaves the computer. Needs Node 22.13+ (uses the built-in `node:sqlite`).
+
+```sh
+npm install
+npm run build:local                                    # writes dist/local.mjs and dist/local-exec.mjs
+claude mcp add language-memory -- node $(pwd)/dist/local.mjs     # Claude Code; for Claude Desktop add the same command to its MCP config
+```
+
+The database is created and migrated on first start. Settings (environment variables): `LANGUAGE_MEMORY_DB` (file, default `~/.language-memory/memory.db`), `LANGUAGE_MEMORY_USER` (user id, default `owner`), and the same `LANGS`, `ERROR_TYPES`, `TIMEZONE` as below.
+
+```sh
+npm run syllabus:validate && npm run syllabus:import -- --lang es --out syllabus-import.sql
+npm run local:exec -- syllabus-import.sql              # loads the syllabus into the local file
+
+# move an existing cloud database to the local file (and keep it as a backup either way)
+npx wrangler d1 export DB --remote --output backups/cloud.sql
+npm run local:exec -- backups/cloud.sql "$HOME/.language-memory/memory.db" --raw
+```
+
+`--raw` loads a dump as it is, without running migrations first. The local adapter (`src/sqlite-d1.ts`) gives the SQLite file the small part of the D1 API that the stores use, so the queries exist once and behave the same in both places. `npm run test:sqlite` runs the whole suite against SQLite (about a second); `npm test` runs it on the D1 emulator.
 
 ## Settings
 

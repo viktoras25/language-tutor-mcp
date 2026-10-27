@@ -1,0 +1,67 @@
+# EXAMPLE LEARNER STATE, not curriculum. Shows the seed format; import it for the first learner
+# (`npm run syllabus:import -- --lang es --seed example`) or copy it and describe your own progress.
+# status: assumed = known before the course started (placement), not taught in lessons;
+#         introduced = topic was taught in a lesson;
+#         seen_via_error = item exists because of a corrected mistake, the topic itself was not taught yet;
+#         current = being taught now. Topics not listed = planned.
+#         current = being taught now. Topics not listed = planned.
+kind: learner_seed
+learner: example
+lang: es
+profile:
+  ui_lang: en
+  known_langs: [ru, de, en]
+  variety: es-ES
+  packs: [core, running, tech_work, travel]
+
+topics:
+  # assumed = known before lessons (placement test); satisfies `requires`,
+  # counts toward coverage, not toward mastery.
+  subject-pronouns:          {status: assumed, date: "2026-10-15", source: placement}
+  noun-gender-number:        {status: assumed, date: "2026-10-15", source: placement}
+  articles:                  {status: assumed, date: "2026-10-15", source: placement}
+  question-words:            {status: assumed, date: "2026-10-15", source: placement}
+  negation-no:               {status: assumed, date: "2026-10-15", source: placement}
+  ser-present:              {status: introduced, date: "2026-10-15", lesson: 1}
+  estar-present:             {status: introduced, date: "2026-10-15", lesson: 1}
+  ser-vs-estar:              {status: introduced, date: "2026-10-15", lesson: 1}
+  time-telling:              {status: introduced, date: "2026-10-15", lesson: 2}
+  ir-present:                {status: introduced, date: "2026-10-15", lesson: 2}
+  stem-change-e-ie:          {status: introduced, date: "2026-10-15", lesson: 2}
+  stem-change-o-ue:          {status: introduced, date: "2026-10-15", lesson: 2}
+  present-regular:           {status: introduced, date: "2026-10-15", lesson: 2, note: "endings taught via person-endings / present-yo-ending"}
+  irregular-yo:              {status: introduced, date: "2026-10-15", lesson: 2, note: "partial: hago, tengo only"}
+  tener-present:             {status: introduced, date: "2026-10-16", lesson: 3}
+  ir-vs-venir:               {status: introduced, date: "2026-10-16", lesson: 3}
+  tener-que-infinitive:      {status: introduced, date: "2026-10-16", lesson: 3}
+  gustar:                    {status: introduced, date: "2026-10-17", lesson: 4, note: "re-taught in lesson 7"}
+  ir-a-infinitive:           {status: introduced, date: "2026-10-18", lesson: 5}
+  days-of-week-article:      {status: introduced, date: "2026-10-18", lesson: 5}
+  possessive-agreement:      {status: introduced, date: "2026-10-19", lesson: 6}
+  reflexive-verbs:           {status: introduced, date: "2026-10-20", lesson: 7}
+  numbers-0-29:              {status: introduced, date: "2026-10-21", lesson: 8}
+  numbers-31-199:            {status: introduced, date: "2026-10-21", lesson: 8}
+  numbers-hundreds:          {status: introduced, date: "2026-10-21", lesson: 8}
+  uno-apocope:               {status: introduced, date: "2026-10-21", lesson: 8}
+  dates:                     {status: introduced, date: "2026-10-21", lesson: 8}
+  prices:                    {status: introduced, date: "2026-10-21", lesson: 8}
+  accent-rules:              {status: introduced, date: "2026-10-22", lesson: 9}
+  diacritic-pairs:           {status: introduced, date: "2026-10-22", lesson: 9}
+  preterite-recognition:     {status: introduced, date: "2026-10-23", lesson: 10}
+  preterite-indefinido-ar:   {status: current,    date: "2026-10-24", lesson: 11, note: "next: fui, hice, tuve"}
+  gender-agreement:          {status: seen_via_error, date: "2026-10-17"}
+  muy-vs-mucho:              {status: seen_via_error, date: "2026-10-19"}
+  despues-de-infinitive:     {status: seen_via_error, date: "2026-10-20"}
+  hay-vs-estar:              {status: seen_via_error, date: "2026-10-21"}
+  decir-que:                 {status: seen_via_error, date: "2026-10-22"}
+  a-vs-en:                   {status: seen_via_error, date: "2026-10-24"}
+  connectors-basic:          {status: seen_via_error, date: "2026-10-25", note: "via indicative-after-porque"}
+
+# Existing server items that are finer-grained than a syllabus topic.
+# Keep the items (attempts stay attached) and link them: item --part_of--> topic.
+part_of:
+  "es:grammar_point:person-endings":            present-regular
+  "es:grammar_point:present-yo-ending":         present-regular
+  "es:grammar_point:numbers-16-29":             numbers-0-29
+  "es:grammar_point:indicative-after-porque":   connectors-basic
+  "es:grammar_point:levantarse-vs-acostarse":   reflexive-verbs
