@@ -89,22 +89,22 @@ describe("isolation between users", () => {
     await expect(boris.logAttempt({ itemId: secret, correct: true })).rejects.toThrow(/Unknown item_id/);
   });
 
-  it("keeps sessions private: they cannot be read, ended, or used by another user", async () => {
+  it("keeps sessions private: they cannot be read, updated, or used by another user", async () => {
     const anna = storeOf("anna");
     const boris = storeOf("boris");
-    const sid = await anna.startSession("es", "Anna's lesson");
+    const sid = (await anna.saveSession({ lang: "es", title: "Anna's lesson" })).id;
     const item = await boris.upsertItem("es", "lemma", "comer");
 
     expect(await boris.getSession(sid)).toBeNull();
     expect((await boris.listSessions("es", 50)).map((s) => s.id)).not.toContain(sid);
     expect((await anna.listSessions("es", 50)).map((s) => s.id)).toContain(sid);
-    await expect(boris.endSession(sid)).rejects.toThrow(/Unknown session id/);
+    await expect(boris.saveSession({ id: sid, summary: "x" })).rejects.toThrow(/Unknown session id/);
     await expect(boris.logAttempt({ itemId: item, correct: true, sessionId: sid })).rejects.toThrow(/Unknown session_id/);
     await expect(boris.setTopicStatus("es", "ser-present", "current", sid)).rejects.toThrow(/Unknown session_id/);
     await expect(boris.recordCheckpoint("es", plan.modules[0].id, true, sid)).rejects.toThrow(/Unknown session_id/);
 
-    await anna.endSession(sid, "done");
-    expect((await anna.getSession(sid))!.status).toBe("closed");
+    await anna.saveSession({ id: sid, summary: "done" });
+    expect((await anna.getSession(sid))!.summary).toBe("done");
   });
 
   it("keeps course state, profile, topic progress and checkpoints per user", async () => {

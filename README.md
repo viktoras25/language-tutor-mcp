@@ -88,13 +88,13 @@ A token in a URL can leak through logs and history, so treat it like a password 
 | Tool | When to call |
 |---|---|
 | `get_course_state` / `set_course_state` | first thing in a chat / end of a lesson (set replaces the whole object) |
-| `list_sessions`, `get_session` | start of a chat: recent lessons; `status: open` = started but never ended |
-| `start_session` → `end_session` | around each lesson |
+| `list_sessions`, `get_session` | start of a chat: recent lessons with summary, score, next_step |
+| `save_session` | once per graded turn: the first call (no `id`) creates the lesson, later calls add to it; carries new `items`, `links` and `attempts` in one go; the last call sets `summary`, `score`, `next_step` |
 | `due_items` | plan the lesson: what to repeat (errors in the last 3 days first, then oldest due) |
 | `find_items`, `weak_items`, `stats` | pick new material, drill weak spots, overview |
 | `get_context` | read one item: data, SRS state, neighbors, last N attempts |
-| `log_attempt` | after every answer (pass `session_id`; `ts` only when importing history) |
-| `upsert_item`, `link` | create/update items and edges (`data` is merged; `replace: true` overwrites) |
+| `log_attempt` | one answer outside a lesson (`ts` only when importing history); in a lesson use `save_session` |
+| `upsert_item`, `link` | create/update single items and edges outside a lesson (`data` is merged; `replace: true` overwrites) |
 | `get_syllabus`, `get_topic` | the curriculum with progress; one topic's lesson card (needs an imported syllabus, see below) |
 | `next_topics`, `set_topic_status` | what to teach next (chosen by the server); mark a topic `current` / `introduced` |
 | `progress`, `record_checkpoint` | coverage and mastery per module and level; result of a module checkpoint |

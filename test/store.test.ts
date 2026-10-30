@@ -55,31 +55,69 @@ describe("dueItems", () => {
 });
 
 describe("sessions", () => {
-  it("shows open vs closed and groups attempts", async () => {
+  it("creates on first save, then adds and overwrites only the given fields", async () => {
     const id = await lemma("hablar");
-    const s1 = await store.startSession("es", "Lesson 1", "ser/estar");
-    const s2 = await store.startSession("es", "Lesson 2");
-    await store.logAttempt({ itemId: id, correct: false, errorType: "conjugation", sessionId: s1 });
-    await store.endSession(s1, "went ok", 80, "do lesson 2");
+    const s1 = await store.saveSession({ lang: "es", title: "Lesson 1", plan: "ser/estar" });
+    expect(s1.lang).toBe("es");
+    await store.logAttempts([{ itemId: id, correct: false, errorType: "conjugation", sessionId: s1.id }]);
+    await store.saveSession({ id: s1.id, summary: "went ok", score: 80, nextStep: "do lesson 2" });
+    await store.saveSession({ id: s1.id, score: 90 }); // a corrected grade
 
-    const list = await store.listSessions("es", 5);
-    const byId = Object.fromEntries(list.map((s) => [s.id, s]));
-    expect(byId[s1]).toMatchObject({ status: "closed", score: 80, next_step: "do lesson 2", attempts_count: 1 });
-    expect(byId[s2]).toMatchObject({ status: "open", ended_at: null, attempts_count: 0 });
+    const [s] = await store.listSessions("es", 5);
+    expect(s).toMatchObject({ id: s1.id, title: "Lesson 1", plan: "ser/estar", summary: "went ok", score: 90, next_step: "do lesson 2", attempts_count: 1 });
+    expect(s.updated_at >= s.started_at).toBe(true);
 
-    const detail = await store.getSession(s1);
+    const detail = await store.getSession(s1.id);
     expect(detail!.attempts).toHaveLength(1);
     expect(detail!.attempts[0]).toMatchObject({ label: "hablar", error_type: "conjugation", correct: false });
-    await expect(store.endSession(s1)).rejects.toThrow(/already closed/);
-    await expect(store.endSession("s_nope")).rejects.toThrow(/Unknown session/);
     expect(await store.getSession("s_nope")).toBeNull();
   });
 
+  it("rejects a new session without lang or title, an unknown id and a different lang", async () => {
+    await expect(store.saveSession({ lang: "es" })).rejects.toThrow(/needs lang and title/);
+    await expect(store.saveSession({ id: "s_nope", summary: "x" })).rejects.toThrow(/Unknown session id/);
+    const { id } = await store.saveSession({ lang: "es", title: "t" });
+    await expect(store.saveSession({ id, lang: "de" })).rejects.toThrow(/is for "es"/);
+  });
+
+  it("shows sessions from before save_session with updated_at = started_at", async () => {
+    await db
+      .prepare("INSERT INTO sessions (user_id, id, lang, kind, title, started_at) VALUES ('owner', 's_old', 'es', 'lesson', 'old', '2026-10-01T10:00:00.000Z')")
+      .run();
+    expect((await store.listSessions("es", 5))[0]).toMatchObject({ id: "s_old", updated_at: "2026-10-01T10:00:00.000Z" });
+  });
+
   it("lists newest first and respects limit", async () => {
-    await store.startSession("es", "first");
+    await store.saveSession({ lang: "es", title: "first" });
     await new Promise((r) => setTimeout(r, 5));
-    await store.startSession("es", "second");
+    await store.saveSession({ lang: "es", title: "second" });
     expect((await store.listSessions("es", 1)).map((s) => s.title)).toEqual(["second"]);
+  });
+});
+
+describe("logAttempts", () => {
+  it("writes all attempts and recomputes each item once", async () => {
+    const a = await lemma("a");
+    const b = await lemma("b");
+    const srs = await store.logAttempts([
+      { itemId: a, correct: true, ts: "2026-10-01T12:00:00Z" },
+      { itemId: a, correct: true, ts: "2026-10-03T12:00:00Z" },
+      { itemId: b, correct: false, errorType: "vocab" },
+    ]);
+    expect(Object.keys(srs).sort()).toEqual([a, b]);
+    expect(srs[a]).toMatchObject({ streak: 2, interval_days: 3 });
+    expect(srs[b]).toMatchObject({ streak: 0, status: "learning" });
+    expect(await store.logAttempts([])).toEqual({});
+  });
+
+  it("writes nothing when one attempt is invalid", async () => {
+    const a = await lemma("a");
+    const strict = new D1Store(db, "owner", "UTC", ["vocab", "other"]);
+    await expect(strict.logAttempts([{ itemId: a, correct: true }, { itemId: "nope", correct: true }])).rejects.toThrow(/Unknown item_id: nope/);
+    await expect(strict.logAttempts([{ itemId: a, correct: true }, { itemId: a, correct: false, errorType: "made-up" }])).rejects.toThrow(/not valid/);
+    await expect(strict.logAttempts([{ itemId: a, correct: true }, { itemId: a, correct: true, ts: "soon" }])).rejects.toThrow(/ISO 8601/);
+    await expect(strict.logAttempts([{ itemId: a, correct: true, sessionId: "s_nope" }])).rejects.toThrow(/Unknown session_id/);
+    expect((await store.getContext(a, 50))!.attempts).toEqual([]);
   });
 });
 

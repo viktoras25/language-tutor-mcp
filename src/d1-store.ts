@@ -27,6 +27,7 @@ import type {
   Lang,
   Session,
   SessionDetail,
+  SessionInput,
   Stats,
   Store,
   WeakItem,
@@ -81,7 +82,8 @@ function toAttempt(row: AttemptRow): Attempt {
 }
 
 function toSession(row: SessionRow): Session {
-  return { ...row, status: row.ended_at === null ? "open" : "closed" };
+  const { ended_at, ...rest } = row;
+  return { ...rest, updated_at: ended_at ?? row.started_at }; // sessions from before save_session may have no ended_at
 }
 
 // Escapes LIKE wildcards so user text is matched literally (used with ESCAPE '\').
@@ -145,43 +147,58 @@ export class D1Store implements Store {
   }
 
   async logAttempt(input: AttemptInput): Promise<SrsState> {
-    const item = await this.db
-      .prepare("SELECT lang FROM items WHERE user_id = ?1 AND id = ?2")
-      .bind(this.userId, input.itemId)
-      .first<{ lang: string }>();
-    if (!item) throw new Error(`Unknown item_id: ${input.itemId}`);
-    if (input.errorType !== undefined && this.errorTypes !== undefined) {
-      const allowed = [...this.errorTypes];
-      for (const id of await this.syllabus.syllabusErrorTypes(item.lang)) {
-        if (!allowed.includes(id)) allowed.push(id);
+    return (await this.logAttempts([input]))[input.itemId];
+  }
+
+  async logAttempts(inputs: AttemptInput[]): Promise<Record<string, SrsState>> {
+    if (inputs.length === 0) return {};
+    const itemIds = [...new Set(inputs.map((a) => a.itemId))];
+    const marks = itemIds.map((_, i) => `?${i + 2}`).join(",");
+    const itemRes = await this.db
+      .prepare(`SELECT id, lang FROM items WHERE user_id = ?1 AND id IN (${marks})`)
+      .bind(this.userId, ...itemIds)
+      .all<{ id: string; lang: string }>();
+    const langOf = new Map(itemRes.results.map((r) => [r.id, r.lang]));
+    const allowedByLang = new Map<string, string[]>();
+    const knownSessions = new Set<string>();
+
+    // Check everything first, so a bad attempt leaves nothing written.
+    const rows: [string, string, number, string | null, string | null, string | null][] = [];
+    for (const input of inputs) {
+      const lang = langOf.get(input.itemId);
+      if (lang === undefined) throw new Error(`Unknown item_id: ${input.itemId}`);
+      if (input.errorType !== undefined && this.errorTypes !== undefined) {
+        let allowed = allowedByLang.get(lang);
+        if (allowed === undefined) {
+          allowed = [...this.errorTypes];
+          for (const id of await this.syllabus.syllabusErrorTypes(lang)) {
+            if (!allowed.includes(id)) allowed.push(id);
+          }
+          allowedByLang.set(lang, allowed);
+        }
+        if (!allowed.includes(input.errorType)) {
+          throw new Error(`error_type "${input.errorType}" is not valid for "${lang}". Valid: ${allowed.join(", ")}`);
+        }
       }
-      if (!allowed.includes(input.errorType)) {
-        throw new Error(`error_type "${input.errorType}" is not valid for "${item.lang}". Valid: ${allowed.join(", ")}`);
+      if (input.sessionId !== undefined && !knownSessions.has(input.sessionId)) {
+        const session = await this.db
+          .prepare("SELECT 1 AS x FROM sessions WHERE user_id = ?1 AND id = ?2")
+          .bind(this.userId, input.sessionId)
+          .first();
+        if (!session) throw new Error(`Unknown session_id: ${input.sessionId}`);
+        knownSessions.add(input.sessionId);
       }
+      const ts = input.ts === undefined ? new Date().toISOString() : normalizeTs(input.ts);
+      rows.push([input.itemId, ts, input.correct ? 1 : 0, input.errorType ?? null, input.context ?? null, input.sessionId ?? null]);
     }
-    if (input.sessionId !== undefined) {
-      const session = await this.db
-        .prepare("SELECT 1 AS x FROM sessions WHERE user_id = ?1 AND id = ?2")
-        .bind(this.userId, input.sessionId)
-        .first();
-      if (!session) throw new Error(`Unknown session_id: ${input.sessionId}`);
-    }
-    const ts = input.ts === undefined ? new Date().toISOString() : normalizeTs(input.ts);
-    await this.db
-      .prepare(
-        "INSERT INTO attempts (user_id, item_id, ts, correct, error_type, context, session_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
-      )
-      .bind(
-        this.userId,
-        input.itemId,
-        ts,
-        input.correct ? 1 : 0,
-        input.errorType ?? null,
-        input.context ?? null,
-        input.sessionId ?? null,
-      )
-      .run();
-    return this.recomputeSrs(input.itemId);
+
+    const insert = this.db.prepare(
+      "INSERT INTO attempts (user_id, item_id, ts, correct, error_type, context, session_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+    );
+    await this.db.batch(rows.map((r) => insert.bind(this.userId, ...r)));
+    const out: Record<string, SrsState> = {};
+    for (const id of itemIds) out[id] = await this.recomputeSrs(id);
+    return out;
   }
 
   // Replays the item's full history, so back-dated imports end up with the right state.
@@ -248,28 +265,59 @@ export class D1Store implements Store {
     return { item: toItem(row), srs, outgoing, incoming, neighbors, attempts: attemptRows.map(toAttempt) };
   }
 
-  async startSession(lang: Lang, title: string, plan?: string, kind = "lesson"): Promise<string> {
-    const id = `s_${crypto.randomUUID().slice(0, 8)}`;
+  // The column ended_at keeps its old name; it now holds the time of the last save (shown as updated_at).
+  async saveSession(input: SessionInput): Promise<{ id: string; lang: Lang }> {
+    const now = new Date().toISOString();
+    if (input.id === undefined) {
+      if (input.lang === undefined || input.title === undefined) throw new Error("A new session needs lang and title");
+      const id = `s_${crypto.randomUUID().slice(0, 8)}`;
+      await this.db
+        .prepare(
+          `INSERT INTO sessions (user_id, id, lang, kind, title, plan, started_at, ended_at, summary, score, next_step)
+           VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?7, ?8, ?9, ?10)`,
+        )
+        .bind(
+          this.userId,
+          id,
+          input.lang,
+          input.kind ?? "lesson",
+          input.title,
+          input.plan ?? null,
+          now,
+          input.summary ?? null,
+          input.score ?? null,
+          input.nextStep ?? null,
+        )
+        .run();
+      return { id, lang: input.lang };
+    }
+    const row = await this.db
+      .prepare("SELECT lang FROM sessions WHERE user_id = ?1 AND id = ?2")
+      .bind(this.userId, input.id)
+      .first<{ lang: string }>();
+    if (!row) throw new Error(`Unknown session id: ${input.id}`);
+    if (input.lang !== undefined && input.lang !== row.lang) {
+      throw new Error(`Session ${input.id} is for "${row.lang}", not "${input.lang}"`);
+    }
     await this.db
       .prepare(
-        "INSERT INTO sessions (user_id, id, lang, kind, title, plan, started_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+        `UPDATE sessions SET ended_at = ?3, kind = COALESCE(?4, kind), title = COALESCE(?5, title), plan = COALESCE(?6, plan),
+           summary = COALESCE(?7, summary), score = COALESCE(?8, score), next_step = COALESCE(?9, next_step)
+         WHERE user_id = ?1 AND id = ?2`,
       )
-      .bind(this.userId, id, lang, kind, title, plan ?? null, new Date().toISOString())
+      .bind(
+        this.userId,
+        input.id,
+        now,
+        input.kind ?? null,
+        input.title ?? null,
+        input.plan ?? null,
+        input.summary ?? null,
+        input.score ?? null,
+        input.nextStep ?? null,
+      )
       .run();
-    return id;
-  }
-
-  async endSession(id: string, summary?: string, score?: number, nextStep?: string): Promise<void> {
-    const row = await this.db
-      .prepare("SELECT ended_at FROM sessions WHERE user_id = ?1 AND id = ?2")
-      .bind(this.userId, id)
-      .first<{ ended_at: string | null }>();
-    if (!row) throw new Error(`Unknown session id: ${id}`);
-    if (row.ended_at !== null) throw new Error(`Session ${id} is already closed (${row.ended_at})`);
-    await this.db
-      .prepare("UPDATE sessions SET ended_at = ?3, summary = ?4, score = ?5, next_step = ?6 WHERE user_id = ?1 AND id = ?2")
-      .bind(this.userId, id, new Date().toISOString(), summary ?? null, score ?? null, nextStep ?? null)
-      .run();
+    return { id: input.id, lang: row.lang };
   }
 
   async listSessions(lang: Lang, limit: number): Promise<Session[]> {

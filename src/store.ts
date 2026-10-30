@@ -59,12 +59,23 @@ export interface Session {
   title: string;
   plan: string | null;
   started_at: string;
-  ended_at: string | null;
-  status: "open" | "closed";
+  updated_at: string;
   summary: string | null;
   score: number | null;
   next_step: string | null;
   attempts_count: number;
+}
+
+// Fields of save_session. No id = create (lang and title required); with id = only the given fields are overwritten.
+export interface SessionInput {
+  id?: string;
+  lang?: Lang;
+  kind?: string;
+  title?: string;
+  plan?: string;
+  summary?: string;
+  score?: number;
+  nextStep?: string;
 }
 
 export interface SessionDetail extends Session {
@@ -122,10 +133,11 @@ export interface Store extends SyllabusStore {
   upsertItem(lang: Lang, type: ItemType, label: string, data?: Record<string, unknown>, replace?: boolean): Promise<string>;
   link(src: string, dst: string, type: EdgeType): Promise<void>;
   logAttempt(input: AttemptInput): Promise<SrsState>;
+  // All or nothing: every attempt is checked before any is written. Returns the new state of each item touched.
+  logAttempts(inputs: AttemptInput[]): Promise<Record<string, SrsState>>;
   getContext(itemId: string, attemptsLimit: number): Promise<ItemContext | null>;
 
-  startSession(lang: Lang, title: string, plan?: string, kind?: string): Promise<string>;
-  endSession(id: string, summary?: string, score?: number, nextStep?: string): Promise<void>;
+  saveSession(input: SessionInput): Promise<{ id: string; lang: Lang }>;
   listSessions(lang: Lang, limit: number): Promise<Session[]>;
   getSession(id: string): Promise<SessionDetail | null>;
 

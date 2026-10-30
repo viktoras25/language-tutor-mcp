@@ -294,7 +294,7 @@ describe("set_topic_status", () => {
   it("rejects unknown topics and unknown sessions, and records the session as the source", async () => {
     await expect(store.setTopicStatus("es", "no-such-topic", "current")).rejects.toThrow(/Unknown topic_id/);
     await expect(store.setTopicStatus("es", "usted-formal", "current", "s_nope")).rejects.toThrow(/Unknown session_id/);
-    const sid = await store.startSession("es", "Lesson 14");
+    const sid = (await store.saveSession({ lang: "es", title: "Lesson 14" })).id;
     await store.setTopicStatus("es", "usted-formal", "current", sid);
     const row = await db.prepare("SELECT source FROM learner_topics WHERE topic_id = 'usted-formal'").first<{ source: string }>();
     expect(row!.source).toBe(`session:${sid}`);
@@ -302,9 +302,9 @@ describe("set_topic_status", () => {
 
   it("allows assumed only inside a placement session", async () => {
     await expect(store.setTopicStatus("es", "usted-formal", "assumed")).rejects.toThrow(/placement/);
-    const lesson = await store.startSession("es", "Lesson 14");
+    const lesson = (await store.saveSession({ lang: "es", title: "Lesson 14" })).id;
     await expect(store.setTopicStatus("es", "usted-formal", "assumed", lesson)).rejects.toThrow(/placement/);
-    const placement = await store.startSession("es", "Placement test", undefined, "placement");
+    const placement = (await store.saveSession({ lang: "es", title: "Placement test", kind: "placement" })).id;
     const r = await store.setTopicStatus("es", "usted-formal", "assumed", placement);
     expect(r.status).toBe("assumed");
     const row = await db.prepare("SELECT source FROM learner_topics WHERE topic_id = 'usted-formal'").first<{ source: string }>();
@@ -319,7 +319,7 @@ describe("checkpoints", () => {
   it("records a result and reports the module's progress", async () => {
     await importPlan();
     await importSeed();
-    const sid = await store.startSession("es", "Check A1.03");
+    const sid = (await store.saveSession({ lang: "es", title: "Check A1.03" })).id;
     const r = await store.recordCheckpoint("es", "A1.03", true, sid, "all good");
     expect(r.module).toMatchObject({ module_id: "A1.03", covered: 1, total: 1, checkpoint: { passed: true } });
     // everything in it is covered but nothing is mastered yet, so the module stays open

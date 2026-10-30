@@ -457,7 +457,7 @@ export class D1Syllabus implements SyllabusStore {
     }
     if (status === "assumed" && sessionKind !== "placement") {
       throw new Error(
-        `"assumed" can only be set inside a placement session (start_session with kind "placement", then pass its session_id)`,
+        `"assumed" can only be set inside a placement session (save_session with kind "placement", then pass its id)`,
       );
     }
 

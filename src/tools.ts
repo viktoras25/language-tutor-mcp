@@ -33,7 +33,7 @@ const isoDay = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "expected YYYY-MM-DD");
 export function createServer(store: Store, config: Config): McpServer {
   const lang = z.enum(config.langs as [string, ...string[]]);
   const errorTypeList = config.errorTypes.join(", ");
-  const server = new McpServer({ name: "language-memory", version: "0.3.0" });
+  const server = new McpServer({ name: "language-memory", version: "0.4.0" });
 
   server.registerTool(
     "upsert_item",
@@ -67,7 +67,7 @@ export function createServer(store: Store, config: Config): McpServer {
     "log_attempt",
     {
       description:
-        "Record one answer for an item after the learner responds. Updates the spaced-repetition state server-side and returns it (next due_at, streak, status). Pass session_id of the current lesson. Use ts only to import history with real dates; otherwise it is now.",
+        "Record one answer for an item. In a lesson prefer save_session, which records many answers at once. Updates the spaced-repetition state server-side and returns it (next due_at, streak, status). Use ts only to import history with real dates; otherwise it is now.",
       inputSchema: z.object({
         item_id: z.string().min(1),
         correct: z.boolean(),
@@ -81,7 +81,7 @@ export function createServer(store: Store, config: Config): McpServer {
           ),
         context: z.string().max(1000).optional().describe("The sentence/task and the learner's wrong answer"),
         ts: z.string().optional().describe("ISO 8601 time of the attempt, e.g. 2026-10-15T12:00:00Z"),
-        session_id: z.string().optional().describe("id from start_session"),
+        session_id: z.string().optional().describe("id from save_session"),
       }),
     },
     safe(async ({ item_id, correct, error_type, context, ts, session_id }) => {
@@ -114,35 +114,73 @@ export function createServer(store: Store, config: Config): McpServer {
   );
 
   server.registerTool(
-    "start_session",
+    "save_session",
     {
       description:
-        "Call at the very start of a lesson/review/test, before asking questions. Returns a session id to pass to log_attempt and end_session. A session never ended shows as status=open (lesson without a recorded result).",
+        "Record a lesson (review, test, placement) in one call, with its new items and graded answers. Without id it creates the session (lang and title required) and returns the id; with id it adds to that session and overwrites only the fields you pass. Call once per graded turn, and with summary, score and next_step when the lesson ends. Order inside a call: items are upserted, then links, then attempts, so attempts can use ids of items created in the same call (ids are <lang>:<type>:<lowercased label>). Attempts are all or nothing; if one is invalid the session and items are still saved, and the error names the session id to retry with.",
       inputSchema: z.object({
-        lang,
-        title: z.string().min(1).max(200),
+        id: z.string().min(1).optional().describe("omit to create a new session"),
+        lang: lang.optional(),
+        title: z.string().min(1).max(200).optional(),
+        kind: z.string().min(1).max(50).optional().describe('default "lesson"; "placement" allows set_topic_status assumed'),
         plan: z.string().max(4000).optional().describe("What the lesson intends to cover"),
-        kind: z.string().min(1).max(50).optional().describe('default "lesson"'),
-      }),
-    },
-    safe(async ({ lang, title, plan, kind }) => text({ id: await store.startSession(lang, title, plan, kind) })),
-  );
-
-  server.registerTool(
-    "end_session",
-    {
-      description:
-        "Call when the lesson is finished. Records the outcome so the next chat knows where things stand. Fails if the session is already closed.",
-      inputSchema: z.object({
-        id: z.string().min(1),
         summary: z.string().max(4000).optional().describe("What was covered and how it went"),
         score: z.number().min(0).max(100).optional().describe("Percent correct, 0-100"),
         next_step: z.string().max(2000).optional().describe("What the next lesson should do first"),
+        items: z
+          .array(
+            z.object({
+              type: itemType,
+              label: z.string().min(1).max(200),
+              data: z.record(z.string(), z.unknown()).optional(),
+              replace: z.boolean().optional().describe("true = overwrite data instead of merging"),
+            }),
+          )
+          .max(30)
+          .optional()
+          .describe("Created or updated in the session's language, as upsert_item"),
+        links: z
+          .array(z.object({ src: z.string().min(1), dst: z.string().min(1), type: z.enum(EDGE_TYPES) }))
+          .max(30)
+          .optional(),
+        attempts: z
+          .array(
+            z.object({
+              item_id: z.string().min(1),
+              correct: z.boolean(),
+              error_type: z.string().min(1).max(40).optional().describe(`Only for wrong answers. Generic: ${errorTypeList}, or a syllabus category`),
+              context: z.string().max(1000).optional().describe("The sentence/task and the learner's wrong answer"),
+              ts: z.string().optional().describe("ISO 8601; only when recording a past lesson"),
+            }),
+          )
+          .max(50)
+          .optional(),
       }),
     },
-    safe(async ({ id, summary, score, next_step }) => {
-      await store.endSession(id, summary, score, next_step);
-      return text({ ok: true });
+    safe(async ({ id, lang, title, kind, plan, summary, score, next_step, items, links, attempts }) => {
+      const session = await store.saveSession({ id, lang, title, kind, plan, summary, score, nextStep: next_step });
+      const itemIds: string[] = [];
+      for (const it of items ?? []) itemIds.push(await store.upsertItem(session.lang, it.type, it.label, it.data, it.replace));
+      try {
+        for (const l of links ?? []) await store.link(l.src, l.dst, l.type);
+        const srs = await store.logAttempts(
+          (attempts ?? []).map((a) => ({
+            itemId: a.item_id,
+            correct: a.correct,
+            errorType: a.error_type,
+            context: a.context,
+            ts: a.ts,
+            sessionId: session.id,
+          })),
+        );
+        const brief = Object.fromEntries(Object.entries(srs).map(([k, v]) => [k, { status: v.status, due_at: v.due_at }]));
+        return text({ id: session.id, items: itemIds, srs: brief });
+      } catch (e) {
+        const saved = itemIds.length > 0 ? ` and items ${itemIds.join(", ")}` : "";
+        return failure(
+          `Session ${session.id}${saved} saved, but no attempts were recorded: ${(e as Error).message}. Fix it and call again with id=${session.id}, resending links and attempts (links are never duplicated).`,
+        );
+      }
     }),
   );
 
@@ -150,7 +188,7 @@ export function createServer(store: Store, config: Config): McpServer {
     "list_sessions",
     {
       description:
-        "Call at the start of a new chat to see recent lessons (newest first) with summary, score and next_step. status=open means the lesson was started but never ended.",
+        "Call at the start of a new chat to see recent lessons (newest first) with summary, score and next_step. updated_at = last save; a lesson without score or next_step was not finished.",
       inputSchema: z.object({ lang, limit: z.number().int().min(1).max(50).optional().describe("default 5") }),
     },
     safe(async ({ lang, limit }) => text(await store.listSessions(lang, limit ?? 5))),
@@ -284,7 +322,7 @@ export function createServer(store: Store, config: Config): McpServer {
         lang,
         topic_id: slug,
         status: z.enum(SETTABLE_STATUSES),
-        session_id: z.string().optional().describe("id from start_session"),
+        session_id: z.string().optional().describe("id from save_session"),
         allow_regress: z.boolean().optional().describe("true = allow moving to an earlier status"),
       }),
     },
@@ -312,7 +350,7 @@ export function createServer(store: Store, config: Config): McpServer {
         lang,
         module_id: moduleId,
         passed: z.boolean(),
-        session_id: z.string().optional().describe("id from start_session"),
+        session_id: z.string().optional().describe("id from save_session"),
         notes: z.string().max(2000).optional(),
       }),
     },
