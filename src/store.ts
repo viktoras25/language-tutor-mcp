@@ -29,6 +29,7 @@ export interface Attempt {
   item_id: string;
   ts: string;
   correct: boolean;
+  credit: number | null;
   error_type: string | null;
   context: string | null;
   session_id: string | null;
@@ -45,7 +46,9 @@ export interface ItemContext {
 
 export interface AttemptInput {
   itemId: string;
-  correct: boolean;
+  // At least one of correct / credit is required. credit (0..1) wins if both are given; correct = credit >= 1.
+  correct?: boolean;
+  credit?: number;
   errorType?: ErrorType;
   context?: string;
   ts?: string;

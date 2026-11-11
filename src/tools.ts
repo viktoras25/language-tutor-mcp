@@ -70,7 +70,13 @@ export function createServer(store: Store, config: Config): McpServer {
         "Record one answer for an item. In a lesson prefer save_session, which records many answers at once. Updates the spaced-repetition state server-side and returns it (next due_at, streak, status). Use ts only to import history with real dates; otherwise it is now.",
       inputSchema: z.object({
         item_id: z.string().min(1),
-        correct: z.boolean(),
+        correct: z.boolean().optional().describe("Give correct or credit. If only correct is given, credit is 1 or 0"),
+        credit: z
+          .number()
+          .min(0)
+          .max(1)
+          .optional()
+          .describe("Partial credit 0..1 (usually 0, 0.5 or 1; 0.3 and 0.7 are fine). Wins over correct; correct is stored as credit >= 1"),
         error_type: z
           .string()
           .min(1)
@@ -84,10 +90,11 @@ export function createServer(store: Store, config: Config): McpServer {
         session_id: z.string().optional().describe("id from save_session"),
       }),
     },
-    safe(async ({ item_id, correct, error_type, context, ts, session_id }) => {
+    safe(async ({ item_id, correct, credit, error_type, context, ts, session_id }) => {
       const srs = await store.logAttempt({
         itemId: item_id,
         correct,
+        credit,
         errorType: error_type,
         context,
         ts,
@@ -147,7 +154,8 @@ export function createServer(store: Store, config: Config): McpServer {
           .array(
             z.object({
               item_id: z.string().min(1),
-              correct: z.boolean(),
+              correct: z.boolean().optional().describe("Give correct or credit. If only correct is given, credit is 1 or 0"),
+              credit: z.number().min(0).max(1).optional().describe("Partial credit 0..1 (usually 0, 0.5 or 1). Wins over correct"),
               error_type: z.string().min(1).max(40).optional().describe(`Only for wrong answers. Generic: ${errorTypeList}, or a syllabus category`),
               context: z.string().max(1000).optional().describe("The sentence/task and the learner's wrong answer"),
               ts: z.string().optional().describe("ISO 8601; only when recording a past lesson"),
@@ -167,6 +175,7 @@ export function createServer(store: Store, config: Config): McpServer {
           (attempts ?? []).map((a) => ({
             itemId: a.item_id,
             correct: a.correct,
+            credit: a.credit,
             errorType: a.error_type,
             context: a.context,
             ts: a.ts,

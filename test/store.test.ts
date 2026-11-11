@@ -185,3 +185,61 @@ describe("migrations", () => {
     expect(ts!.ts).toBe("2026-10-25T11:01:16.000Z");
   });
 });
+
+describe("credit", () => {
+  const credits = async (id: string) =>
+    (await db.prepare("SELECT correct, credit FROM attempts WHERE item_id = ?1 ORDER BY id").bind(id).all<{ correct: number; credit: number }>()).results;
+
+  it("stores credit; correct is credit >= 1", async () => {
+    const id = await lemma("hablar");
+    await store.logAttempt({ itemId: id, credit: 0.7 });
+    await store.logAttempt({ itemId: id, credit: 1 });
+    await store.logAttempt({ itemId: id, credit: 0 });
+    expect(await credits(id)).toEqual([
+      { correct: 0, credit: 0.7 },
+      { correct: 1, credit: 1 },
+      { correct: 0, credit: 0 },
+    ]);
+  });
+
+  it("derives credit from correct alone; credit wins when both are given", async () => {
+    const id = await lemma("hablar");
+    await store.logAttempt({ itemId: id, correct: true });
+    await store.logAttempt({ itemId: id, correct: false });
+    await store.logAttempt({ itemId: id, correct: true, credit: 0.3 });
+    expect(await credits(id)).toEqual([
+      { correct: 1, credit: 1 },
+      { correct: 0, credit: 0 },
+      { correct: 0, credit: 0.3 },
+    ]);
+  });
+
+  it("rejects credit outside 0..1 and attempts with neither field", async () => {
+    const id = await lemma("hablar");
+    await expect(store.logAttempt({ itemId: id, credit: 1.1 })).rejects.toThrow(/between 0 and 1/);
+    await expect(store.logAttempt({ itemId: id, credit: -0.1 })).rejects.toThrow(/between 0 and 1/);
+    await expect(store.logAttempt({ itemId: id })).rejects.toThrow(/correct or credit/);
+    expect(await credits(id)).toEqual([]);
+  });
+
+  it("returns credit on attempts in get_context", async () => {
+    const id = await lemma("hablar");
+    await store.logAttempt({ itemId: id, credit: 0.5 });
+    expect((await store.getContext(id, 5))!.attempts[0]).toMatchObject({ correct: false, credit: 0.5 });
+  });
+
+  it("migration 0006 backfills credit from correct", async () => {
+    const { db: old, dispose: d } = await newDb("0005_users.sql");
+    try {
+      await old.prepare("INSERT INTO items (user_id, id, lang, type, label, created_at) VALUES ('owner','es:lemma:x','es','lemma','x','2026-01-01T00:00:00Z')").run();
+      for (const c of [1, 0]) {
+        await old.prepare("INSERT INTO attempts (user_id, item_id, ts, correct) VALUES ('owner','es:lemma:x','2026-01-01T00:00:00Z', ?1)").bind(c).run();
+      }
+      await runSql(old, "0006_lessons.sql");
+      const rows = (await old.prepare("SELECT correct, credit FROM attempts ORDER BY id").all<{ correct: number; credit: number }>()).results;
+      expect(rows).toEqual([{ correct: 1, credit: 1 }, { correct: 0, credit: 0 }]);
+    } finally {
+      await d();
+    }
+  });
+});

@@ -251,6 +251,7 @@ describe("migration 0005", () => {
       await exec("INSERT INTO learner_checkpoints (lang,module_id,passed,ts) VALUES ('es','m1',1,'2026-10-20T10:00:00.000Z')");
 
       await runSql(d, "0005_users.sql");
+      await runSql(d, "0006_lessons.sql"); // the store reads attempts.credit
 
       const owner = new D1Store(d, "owner", "UTC");
       const ctx = await owner.getContext("es:lemma:a", 10);

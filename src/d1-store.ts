@@ -47,6 +47,7 @@ interface AttemptRow {
   item_id: string;
   ts: string;
   correct: number;
+  credit: number | null;
   error_type: string | null;
   context: string | null;
   session_id: string | null;
@@ -163,8 +164,13 @@ export class D1Store implements Store {
     const knownSessions = new Set<string>();
 
     // Check everything first, so a bad attempt leaves nothing written.
-    const rows: [string, string, number, string | null, string | null, string | null][] = [];
+    const rows: [string, string, number, number, string | null, string | null, string | null][] = [];
     for (const input of inputs) {
+      const credit = input.credit ?? (input.correct === undefined ? undefined : input.correct ? 1 : 0);
+      if (credit === undefined) throw new Error(`Attempt for ${input.itemId} needs correct or credit`);
+      if (!Number.isFinite(credit) || credit < 0 || credit > 1) {
+        throw new Error(`credit must be between 0 and 1, got ${credit} (item ${input.itemId})`);
+      }
       const lang = langOf.get(input.itemId);
       if (lang === undefined) throw new Error(`Unknown item_id: ${input.itemId}`);
       if (input.errorType !== undefined && this.errorTypes !== undefined) {
@@ -189,11 +195,11 @@ export class D1Store implements Store {
         knownSessions.add(input.sessionId);
       }
       const ts = input.ts === undefined ? new Date().toISOString() : normalizeTs(input.ts);
-      rows.push([input.itemId, ts, input.correct ? 1 : 0, input.errorType ?? null, input.context ?? null, input.sessionId ?? null]);
+      rows.push([input.itemId, ts, credit >= 1 ? 1 : 0, credit, input.errorType ?? null, input.context ?? null, input.sessionId ?? null]);
     }
 
     const insert = this.db.prepare(
-      "INSERT INTO attempts (user_id, item_id, ts, correct, error_type, context, session_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+      "INSERT INTO attempts (user_id, item_id, ts, correct, credit, error_type, context, session_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
     );
     await this.db.batch(rows.map((r) => insert.bind(this.userId, ...r)));
     const out: Record<string, SrsState> = {};
@@ -234,7 +240,7 @@ export class D1Store implements Store {
       this.db.prepare("SELECT src, dst, type FROM edges WHERE user_id = ?1 AND dst = ?2 LIMIT 50").bind(this.userId, itemId),
       this.db
         .prepare(
-          `SELECT id, item_id, ts, correct, error_type, context, session_id FROM attempts
+          `SELECT id, item_id, ts, correct, credit, error_type, context, session_id FROM attempts
            WHERE user_id = ?1 AND item_id = ?2 ORDER BY ts DESC, id DESC LIMIT ?3`,
         )
         .bind(this.userId, itemId, attemptsLimit),
@@ -342,7 +348,7 @@ export class D1Store implements Store {
     if (!row) return null;
     const res = await this.db
       .prepare(
-        `SELECT a.id, a.item_id, a.ts, a.correct, a.error_type, a.context, a.session_id, i.label
+        `SELECT a.id, a.item_id, a.ts, a.correct, a.credit, a.error_type, a.context, a.session_id, i.label
          FROM attempts a LEFT JOIN items i ON i.user_id = a.user_id AND i.id = a.item_id
          WHERE a.user_id = ?1 AND a.session_id = ?2 ORDER BY a.ts, a.id LIMIT 500`,
       )
