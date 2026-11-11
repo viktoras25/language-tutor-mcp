@@ -293,7 +293,7 @@ describe("session status", () => {
     expect(await store.getSession(id)).toMatchObject({ status: "abandoned", notes: "n", summary: "kept", title: "t" });
   });
 
-  it("migration 0007 marks existing sessions with no attempts and no score as abandoned", async () => {
+  it("migration 0007 marks existing sessions with no attempts, no score and no summary as abandoned", async () => {
     const { db: old, dispose: d } = await newDb("0006_lessons.sql");
     try {
       const ins = (id: string, score: number | null) =>
@@ -301,6 +301,8 @@ describe("session status", () => {
       await ins("s_empty", null);
       await ins("s_scored", 50);
       await ins("s_answered", null);
+      await ins("s_imported", null);
+      await old.prepare("UPDATE sessions SET summary = 'imported history' WHERE id = 's_imported'").run();
       await old.prepare("INSERT INTO items (user_id, id, lang, type, label, created_at) VALUES ('owner','es:lemma:x','es','lemma','x','2026-01-01T00:00:00Z')").run();
       await old.prepare("INSERT INTO attempts (user_id, item_id, ts, correct, credit, session_id) VALUES ('owner','es:lemma:x','2026-01-01T00:00:00Z',1,1,'s_answered')").run();
       await runSql(old, "0007_session_status.sql");
@@ -308,6 +310,7 @@ describe("session status", () => {
       expect(rows).toEqual([
         { id: "s_answered", status: "graded" },
         { id: "s_empty", status: "abandoned" },
+        { id: "s_imported", status: "graded" },
         { id: "s_scored", status: "graded" },
       ]);
     } finally {
