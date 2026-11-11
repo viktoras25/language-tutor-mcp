@@ -1,4 +1,4 @@
-import { addDays, localDay } from "./time";
+import { addDays, daysBetween, localDay } from "./time";
 
 export const INTERVAL_LADDER = [1, 3, 7, 14, 30, 60, 120];
 export const KNOWN_STREAK_DAYS = 3;
@@ -26,11 +26,6 @@ export const EMPTY_SRS: SrsState = { status: "new", interval_days: 0, due_at: nu
 
 function nextInterval(current: number): number {
   return INTERVAL_LADDER.find((x) => x > current) ?? INTERVAL_LADDER[INTERVAL_LADDER.length - 1];
-}
-
-// Whole local days between two local days (YYYY-MM-DD).
-function daysBetween(from: string, to: string): number {
-  return Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000);
 }
 
 // Replays the whole history in chronological order. Callers pass attempts already sorted by (ts, id).
