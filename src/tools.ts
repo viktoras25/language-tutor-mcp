@@ -1,6 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
 import type { Config } from "./config";
+import { INSTRUCTIONS, USAGE_GUIDE } from "./guide";
 import { SETTABLE_STATUSES } from "./planner";
 import { EDGE_TYPES, ITEM_TYPES, SESSION_STATUSES, type Store } from "./store";
 
@@ -33,7 +34,17 @@ const isoDay = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "expected YYYY-MM-DD");
 export function createServer(store: Store, config: Config): McpServer {
   const lang = z.enum(config.langs as [string, ...string[]]);
   const errorTypeList = config.errorTypes.join(", ");
-  const server = new McpServer({ name: "language-memory", version: "0.4.0" });
+  const server = new McpServer({ name: "language-memory", version: "0.4.0" }, { instructions: INSTRUCTIONS });
+
+  server.registerTool(
+    "usage_guide",
+    {
+      description:
+        "How a tutor uses this server: which tool serves which need, what to read before a lesson, how to record and close one, and what never to do. Call once per conversation, before the first read or write.",
+      inputSchema: z.object({}),
+    },
+    safe(async () => text(USAGE_GUIDE)),
+  );
 
   server.registerTool(
     "upsert_item",

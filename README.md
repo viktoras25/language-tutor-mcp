@@ -87,6 +87,7 @@ A token in a URL can leak through logs and history, so treat it like a password 
 
 | Tool | When to call |
 |---|---|
+| `usage_guide` | once per chat, before anything else: how a tutor should use the tools below (source: `src/guide.ts`; the server instructions point to it) |
 | `get_course_state` / `set_course_state` | first thing in a chat / end of a lesson (set replaces the whole object) |
 | `list_sessions`, `get_session` | start of a chat: recent lessons with summary, score, next_step |
 | `save_session` | once per graded turn: the first call (no `id`) creates the lesson, later calls add to it; carries new `items`, `links` and `attempts` in one go; the last call sets `summary`, `score`, `next_step` |
