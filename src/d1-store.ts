@@ -210,11 +210,11 @@ export class D1Store implements Store {
   // Replays the item's full history, so back-dated imports end up with the right state.
   private async recomputeSrs(itemId: string): Promise<SrsState> {
     const res = await this.db
-      .prepare("SELECT ts, correct FROM attempts WHERE user_id = ?1 AND item_id = ?2 ORDER BY ts, id")
+      .prepare("SELECT ts, correct, credit FROM attempts WHERE user_id = ?1 AND item_id = ?2 ORDER BY ts, id")
       .bind(this.userId, itemId)
-      .all<{ ts: string; correct: number }>();
+      .all<{ ts: string; correct: number; credit: number | null }>();
     const srs = computeSrs(
-      res.results.map((r) => ({ ts: r.ts, correct: r.correct === 1 })),
+      res.results.map((r) => ({ ts: r.ts, correct: r.correct === 1, credit: r.credit })),
       this.timezone,
     );
     await this.db
