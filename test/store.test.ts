@@ -243,3 +243,75 @@ describe("credit", () => {
     }
   });
 });
+
+describe("session status", () => {
+  it("defaults to graded, so callers that send no status behave as before", async () => {
+    const { id } = await store.saveSession({ lang: "es", title: "L1" });
+    expect(await store.getSession(id)).toMatchObject({ status: "graded", delivered_at: null, notes: null });
+    expect((await store.listSessions("es", 5)).map((s) => s.id)).toEqual([id]);
+  });
+
+  it("a pending session is hidden from list_sessions unless include_pending is set", async () => {
+    const graded = await store.saveSession({ lang: "es", title: "done" });
+    const pending = await store.saveSession({ lang: "es", title: "waiting", status: "pending", notes: "bring back ser" });
+    expect((await store.listSessions("es", 5)).map((s) => s.id)).toEqual([graded.id]);
+    const all = await store.listSessions("es", 5, true);
+    expect(all.map((s) => s.id).sort()).toEqual([graded.id, pending.id].sort());
+    expect(await store.getSession(pending.id)).toMatchObject({ status: "pending", notes: "bring back ser" });
+    expect((await store.getSession(pending.id))!.delivered_at).not.toBeNull();
+  });
+
+  it("a new pending session abandons the old one in the same language only", async () => {
+    const a = await store.saveSession({ lang: "es", title: "a", status: "pending" });
+    const de = await store.saveSession({ lang: "de", title: "de", status: "pending" });
+    const b = await store.saveSession({ lang: "es", title: "b", status: "pending" });
+    expect((await store.getSession(a.id))!.status).toBe("abandoned");
+    expect((await store.getSession(b.id))!.status).toBe("pending");
+    expect((await store.getSession(de.id))!.status).toBe("pending");
+  });
+
+  it("saving an attempt for a pending session makes it graded", async () => {
+    const item = await lemma("hablar");
+    const { id } = await store.saveSession({ lang: "es", title: "waiting", status: "pending" });
+    await store.logAttempts([{ itemId: item, correct: true, sessionId: id }]);
+    expect((await store.getSession(id))!.status).toBe("graded");
+    expect((await store.listSessions("es", 5)).map((s) => s.id)).toEqual([id]);
+  });
+
+  it("an abandoned session comes back to graded when the learner answers late", async () => {
+    const item = await lemma("hablar");
+    const old = await store.saveSession({ lang: "es", title: "old", status: "pending" });
+    await store.saveSession({ lang: "es", title: "new", status: "pending" });
+    expect((await store.getSession(old.id))!.status).toBe("abandoned");
+    await store.logAttempt({ itemId: item, credit: 1, sessionId: old.id });
+    expect((await store.getSession(old.id))!.status).toBe("graded");
+  });
+
+  it("status and notes can be set on an existing session; other fields stay", async () => {
+    const { id } = await store.saveSession({ lang: "es", title: "t", summary: "kept" });
+    await store.saveSession({ id, status: "abandoned", notes: "n" });
+    expect(await store.getSession(id)).toMatchObject({ status: "abandoned", notes: "n", summary: "kept", title: "t" });
+  });
+
+  it("migration 0007 marks existing sessions with no attempts and no score as abandoned", async () => {
+    const { db: old, dispose: d } = await newDb("0006_lessons.sql");
+    try {
+      const ins = (id: string, score: number | null) =>
+        old.prepare("INSERT INTO sessions (user_id, id, lang, kind, title, started_at, score) VALUES ('owner', ?1, 'es', 'lesson', 't', '2026-01-01T00:00:00Z', ?2)").bind(id, score).run();
+      await ins("s_empty", null);
+      await ins("s_scored", 50);
+      await ins("s_answered", null);
+      await old.prepare("INSERT INTO items (user_id, id, lang, type, label, created_at) VALUES ('owner','es:lemma:x','es','lemma','x','2026-01-01T00:00:00Z')").run();
+      await old.prepare("INSERT INTO attempts (user_id, item_id, ts, correct, credit, session_id) VALUES ('owner','es:lemma:x','2026-01-01T00:00:00Z',1,1,'s_answered')").run();
+      await runSql(old, "0007_session_status.sql");
+      const rows = (await old.prepare("SELECT id, status FROM sessions ORDER BY id").all<{ id: string; status: string }>()).results;
+      expect(rows).toEqual([
+        { id: "s_answered", status: "graded" },
+        { id: "s_empty", status: "abandoned" },
+        { id: "s_scored", status: "graded" },
+      ]);
+    } finally {
+      await d();
+    }
+  });
+});

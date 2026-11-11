@@ -28,6 +28,7 @@ import type {
   Session,
   SessionDetail,
   SessionInput,
+  SessionStatus,
   Stats,
   Store,
   WeakItem,
@@ -65,6 +66,9 @@ interface SessionRow {
   score: number | null;
   next_step: string | null;
   attempts_count: number;
+  status: SessionStatus;
+  delivered_at: string | null;
+  notes: string | null;
 }
 
 function toItem(row: ItemRow): Item {
@@ -201,7 +205,12 @@ export class D1Store implements Store {
     const insert = this.db.prepare(
       "INSERT INTO attempts (user_id, item_id, ts, correct, credit, error_type, context, session_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
     );
-    await this.db.batch(rows.map((r) => insert.bind(this.userId, ...r)));
+    // Answering a delivered lesson makes it graded (also revives one that was abandoned in the meantime).
+    const markGraded = this.db.prepare("UPDATE sessions SET status = 'graded' WHERE user_id = ?1 AND id = ?2 AND status <> 'graded'");
+    await this.db.batch([
+      ...rows.map((r) => insert.bind(this.userId, ...r)),
+      ...[...knownSessions].map((id) => markGraded.bind(this.userId, id)),
+    ]);
     const out: Record<string, SrsState> = {};
     for (const id of itemIds) out[id] = await this.recomputeSrs(id);
     return out;
@@ -277,10 +286,11 @@ export class D1Store implements Store {
     if (input.id === undefined) {
       if (input.lang === undefined || input.title === undefined) throw new Error("A new session needs lang and title");
       const id = `s_${crypto.randomUUID().slice(0, 8)}`;
-      await this.db
+      const status = input.status ?? "graded";
+      const insert = this.db
         .prepare(
-          `INSERT INTO sessions (user_id, id, lang, kind, title, plan, started_at, ended_at, summary, score, next_step)
-           VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?7, ?8, ?9, ?10)`,
+          `INSERT INTO sessions (user_id, id, lang, kind, title, plan, started_at, ended_at, summary, score, next_step, status, delivered_at, notes)
+           VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?7, ?8, ?9, ?10, ?11, ?12, ?13)`,
         )
         .bind(
           this.userId,
@@ -293,8 +303,11 @@ export class D1Store implements Store {
           input.summary ?? null,
           input.score ?? null,
           input.nextStep ?? null,
-        )
-        .run();
+          status,
+          status === "pending" ? now : null,
+          input.notes ?? null,
+        );
+      await this.db.batch(status === "pending" ? [this.abandonPending(input.lang, id), insert] : [insert]);
       return { id, lang: input.lang };
     }
     const row = await this.db
@@ -305,10 +318,12 @@ export class D1Store implements Store {
     if (input.lang !== undefined && input.lang !== row.lang) {
       throw new Error(`Session ${input.id} is for "${row.lang}", not "${input.lang}"`);
     }
-    await this.db
+    const update = this.db
       .prepare(
         `UPDATE sessions SET ended_at = ?3, kind = COALESCE(?4, kind), title = COALESCE(?5, title), plan = COALESCE(?6, plan),
-           summary = COALESCE(?7, summary), score = COALESCE(?8, score), next_step = COALESCE(?9, next_step)
+           summary = COALESCE(?7, summary), score = COALESCE(?8, score), next_step = COALESCE(?9, next_step),
+           status = COALESCE(?10, status), notes = COALESCE(?11, notes),
+           delivered_at = CASE WHEN ?10 = 'pending' AND delivered_at IS NULL THEN ?3 ELSE delivered_at END
          WHERE user_id = ?1 AND id = ?2`,
       )
       .bind(
@@ -321,18 +336,27 @@ export class D1Store implements Store {
         input.summary ?? null,
         input.score ?? null,
         input.nextStep ?? null,
-      )
-      .run();
+        input.status ?? null,
+        input.notes ?? null,
+      );
+    await this.db.batch(input.status === "pending" ? [this.abandonPending(row.lang, input.id), update] : [update]);
     return { id: input.id, lang: row.lang };
   }
 
-  async listSessions(lang: Lang, limit: number): Promise<Session[]> {
+  // At most one pending session per language: a newer delivery replaces the old one (nothing is deleted).
+  private abandonPending(lang: Lang, exceptId: string) {
+    return this.db
+      .prepare("UPDATE sessions SET status = 'abandoned' WHERE user_id = ?1 AND lang = ?2 AND status = 'pending' AND id <> ?3")
+      .bind(this.userId, lang, exceptId);
+  }
+
+  async listSessions(lang: Lang, limit: number, includePending = false): Promise<Session[]> {
     const res = await this.db
       .prepare(
         `SELECT s.*, (SELECT COUNT(*) FROM attempts a WHERE a.user_id = s.user_id AND a.session_id = s.id) AS attempts_count
-         FROM sessions s WHERE s.user_id = ?1 AND s.lang = ?2 ORDER BY s.started_at DESC LIMIT ?3`,
+         FROM sessions s WHERE s.user_id = ?1 AND s.lang = ?2 AND (?4 = 1 OR s.status = 'graded') ORDER BY s.started_at DESC LIMIT ?3`,
       )
-      .bind(this.userId, lang, limit)
+      .bind(this.userId, lang, limit, includePending ? 1 : 0)
       .all<SessionRow>();
     return res.results.map(toSession);
   }

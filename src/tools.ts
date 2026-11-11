@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
 import type { Config } from "./config";
 import { SETTABLE_STATUSES } from "./planner";
-import { EDGE_TYPES, ITEM_TYPES, type Store } from "./store";
+import { EDGE_TYPES, ITEM_TYPES, SESSION_STATUSES, type Store } from "./store";
 
 function text(value: unknown) {
   return { content: [{ type: "text" as const, text: typeof value === "string" ? value : JSON.stringify(value, null, 2) }] };
@@ -134,6 +134,13 @@ export function createServer(store: Store, config: Config): McpServer {
         summary: z.string().max(4000).optional().describe("What was covered and how it went"),
         score: z.number().min(0).max(100).optional().describe("Percent correct, 0-100"),
         next_step: z.string().max(2000).optional().describe("What the next lesson should do first"),
+        status: z
+          .enum(SESSION_STATUSES)
+          .optional()
+          .describe(
+            'default "graded". Use "pending" when a lesson is delivered but not answered yet (e.g. an unattended daily run): it stays out of list_sessions until answered, and a new pending session abandons the previous pending one. Any attempt saved for the session makes it graded.',
+          ),
+        notes: z.string().max(2000).optional().describe("Short teacher notes for the next lesson"),
         items: z
           .array(
             z.object({
@@ -165,8 +172,8 @@ export function createServer(store: Store, config: Config): McpServer {
           .optional(),
       }),
     },
-    safe(async ({ id, lang, title, kind, plan, summary, score, next_step, items, links, attempts }) => {
-      const session = await store.saveSession({ id, lang, title, kind, plan, summary, score, nextStep: next_step });
+    safe(async ({ id, lang, title, kind, plan, summary, score, next_step, status, notes, items, links, attempts }) => {
+      const session = await store.saveSession({ id, lang, title, kind, plan, summary, score, nextStep: next_step, status, notes });
       const itemIds: string[] = [];
       for (const it of items ?? []) itemIds.push(await store.upsertItem(session.lang, it.type, it.label, it.data, it.replace));
       try {
@@ -197,10 +204,14 @@ export function createServer(store: Store, config: Config): McpServer {
     "list_sessions",
     {
       description:
-        "Call at the start of a new chat to see recent lessons (newest first) with summary, score and next_step. updated_at = last save; a lesson without score or next_step was not finished.",
-      inputSchema: z.object({ lang, limit: z.number().int().min(1).max(50).optional().describe("default 5") }),
+        "Call at the start of a new chat to see recent lessons (newest first) with summary, score and next_step. updated_at = last save; a lesson without score or next_step was not finished. Only answered (graded) lessons are listed unless include_pending is true, which adds delivered-but-unanswered (pending) and abandoned ones.",
+      inputSchema: z.object({
+        lang,
+        limit: z.number().int().min(1).max(50).optional().describe("default 5"),
+        include_pending: z.boolean().optional().describe("also list pending and abandoned sessions; default false"),
+      }),
     },
-    safe(async ({ lang, limit }) => text(await store.listSessions(lang, limit ?? 5))),
+    safe(async ({ lang, limit, include_pending }) => text(await store.listSessions(lang, limit ?? 5, include_pending ?? false))),
   );
 
   server.registerTool(

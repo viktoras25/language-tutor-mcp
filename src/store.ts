@@ -8,6 +8,8 @@ export type Lang = string;
 export type ItemType = (typeof ITEM_TYPES)[number];
 export type EdgeType = (typeof EDGE_TYPES)[number];
 export type ErrorType = string;
+export const SESSION_STATUSES = ["pending", "graded", "abandoned"] as const;
+export type SessionStatus = (typeof SESSION_STATUSES)[number];
 
 export interface Item {
   id: string;
@@ -67,6 +69,9 @@ export interface Session {
   score: number | null;
   next_step: string | null;
   attempts_count: number;
+  status: SessionStatus;
+  delivered_at: string | null; // when a pending lesson was delivered
+  notes: string | null;
 }
 
 // Fields of save_session. No id = create (lang and title required); with id = only the given fields are overwritten.
@@ -79,6 +84,9 @@ export interface SessionInput {
   summary?: string;
   score?: number;
   nextStep?: string;
+  // Default graded. pending = delivered, not answered yet; a new pending session abandons the old one (same lang).
+  status?: SessionStatus;
+  notes?: string;
 }
 
 export interface SessionDetail extends Session {
@@ -141,7 +149,7 @@ export interface Store extends SyllabusStore {
   getContext(itemId: string, attemptsLimit: number): Promise<ItemContext | null>;
 
   saveSession(input: SessionInput): Promise<{ id: string; lang: Lang }>;
-  listSessions(lang: Lang, limit: number): Promise<Session[]>;
+  listSessions(lang: Lang, limit: number, includePending?: boolean): Promise<Session[]>;
   getSession(id: string): Promise<SessionDetail | null>;
 
   dueItems(lang: Lang, date: string, type: ItemType | undefined, limit: number): Promise<DueItem[]>;
